@@ -1,31 +1,38 @@
-import json
 from pathlib import Path
 
+from core.json_store import JSONStore
 
-STATE_FILE = Path(__file__).resolve().parent.parent / "config" / "global_state.json"
+
+STATE_FILE = (
+    Path(__file__).resolve().parent.parent
+    / "config"
+    / "global_state.json"
+)
+
+_store = JSONStore()
 
 
 def load_state():
-    """读取本地 GlobalWatcher 状态"""
-    if not STATE_FILE.exists():
-        return {"pages": {}}
+    """
+    读取 GlobalWatcher 状态。
 
-    with STATE_FILE.open("r", encoding="utf-8") as f:
-        return json.load(f)
+    统一通过 JSONStore 访问。
+    """
+    return _store.load(
+        STATE_FILE,
+        default={
+            "pages": {}
+        },
+    )
 
 
 def save_state(state):
-    """保存本地 GlobalWatcher 状态"""
-    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    """
+    保存 GlobalWatcher 状态。
 
-    temp_file = STATE_FILE.with_suffix(".tmp")
-
-    with temp_file.open("w", encoding="utf-8") as f:
-        json.dump(
-            state,
-            f,
-            ensure_ascii=False,
-            indent=2,
-        )
-
-    temp_file.replace(STATE_FILE)
+    统一通过 JSONStore 写入。
+    """
+    return _store.save(
+        STATE_FILE,
+        state,
+    )
