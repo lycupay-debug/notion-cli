@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "listeners": {
+    "9c7afd69-cba9-44c3-ae20-ad2886498e96": {
+      "name": "SystemLedgerListener",
+      "module": "listeners.system_ledger",
+      "class": "SystemLedgerListener",
+      "enabled": true
+    },
+    "3e97613b-20a9-805f-9965-000b3f9c86fb": {
+      "name": "CourseRecordListener",
+      "module": "listeners.course_record",
+      "class": "CourseRecordListener",
+      "enabled": true
+    },
+    "3ea7613b-20a9-8026-97d1-000b7e8aef4f": {
+      "name": "DaliPropertyListener",
+      "module": "listeners.dali_property",
+      "class": "DaliPropertyListener",
+      "enabled": true
+    }
+  }
+}

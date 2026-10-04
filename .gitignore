@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+.env.*
+
+# Runtime state
+config/global_state.json
+config/notioncli.pid
+
+# Logs
+logs/
