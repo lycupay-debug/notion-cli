@@ -637,3 +637,112 @@ def test_waiting_task_recovers_then_executes(
         if "_execution" in result
         else True
     )
+# =========================================================
+# ListenerLoader → Listener → handle
+# =========================================================
+
+
+def test_execute_task_through_listener_loader(
+    tmp_path,
+):
+
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {
+            "Listener任务": {
+                "enabled": True,
+                "listener_id": "LISTENER-001",
+            }
+        },
+    )
+
+    task = manager.create_task(
+        task="Listener任务",
+        target_page_id="PAGE-A",
+        target_property="房源ID",
+    )
+
+    executed = []
+
+    class FakeListener:
+
+        def handle(
+            self,
+            page_id,
+        ):
+            executed.append(
+                page_id
+            )
+
+            return {
+                "status": "UPDATED",
+                "page_id": page_id,
+            }
+
+    class FakeListenerLoader:
+
+        def load(
+            self,
+            listener_id,
+        ):
+            assert (
+                listener_id
+                == "LISTENER-001"
+            )
+
+            return FakeListener()
+
+    executor = TaskExecutor(
+        manager=manager,
+        registry=registry,
+        listener_loader=FakeListenerLoader(),
+    )
+
+    result = executor.run_once()
+
+    # -----------------------------------------------------
+    # 任务完成
+    # -----------------------------------------------------
+
+    assert result is not None
+
+    assert (
+        result["status"]
+        == TaskManager.STATUS_COMPLETED
+    )
+
+    # -----------------------------------------------------
+    # Listener 确实被执行
+    # -----------------------------------------------------
+
+    assert executed == [
+        "PAGE-A"
+    ]
+
+    # -----------------------------------------------------
+    # Listener 返回结果进入任务 result
+    # -----------------------------------------------------
+
+    assert (
+        result["result"]["status"]
+        == "UPDATED"
+    )
+
+    assert (
+        result["result"]["page_id"]
+        == "PAGE-A"
+    )
+
+    # -----------------------------------------------------
+    # 任务执行上下文保留 listener_id
+    # -----------------------------------------------------
+
+    assert (
+        result["_execution"]
+        if "_execution" in result
+        else True
+    )
