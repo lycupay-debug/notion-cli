@@ -2,6 +2,7 @@ import json
 
 from tasks.manager import TaskManager
 from tasks.executor import TaskExecutor
+from tasks.registry import TaskRegistry
 
 
 def create_manager(tmp_path):
@@ -28,14 +29,56 @@ def create_manager(tmp_path):
     )
 
 
+def create_registry(
+    tmp_path,
+    tasks,
+):
+
+    config_file = (
+        tmp_path
+        / "config"
+        / "task_registry.json"
+    )
+
+    config_file.write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "tasks": tasks,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    return TaskRegistry(
+        config_file=config_file
+    )
+
+
 # =========================================================
 # PENDING → RUNNING → COMPLETED
 # =========================================================
 
 
-def test_execute_pending_task_success(tmp_path):
+def test_execute_pending_task_success(
+    tmp_path,
+):
 
-    manager = create_manager(tmp_path)
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {
+            "测试任务": {
+                "enabled": True,
+                "listener_id": "LISTENER-001",
+            }
+        },
+    )
 
     task = manager.create_task(
         task="测试任务",
@@ -46,8 +89,9 @@ def test_execute_pending_task_success(tmp_path):
     executed = []
 
     def handler(current_task):
+
         executed.append(
-            current_task["task_no"]
+            current_task
         )
 
         return {
@@ -56,6 +100,7 @@ def test_execute_pending_task_success(tmp_path):
 
     executor = TaskExecutor(
         manager=manager,
+        registry=registry,
         handler=handler,
     )
 
@@ -73,9 +118,17 @@ def test_execute_pending_task_success(tmp_path):
         == task["task_no"]
     )
 
-    assert executed == [
-        task["task_no"]
-    ]
+    assert (
+        executed[0]["task_no"]
+        == task["task_no"]
+    )
+
+    assert (
+        executed[0][
+            "_execution"
+        ]["listener_id"]
+        == "LISTENER-001"
+    )
 
     assert (
         result["result"]["message"]
@@ -88,23 +141,39 @@ def test_execute_pending_task_success(tmp_path):
 # =========================================================
 
 
-def test_execute_pending_task_failure(tmp_path):
+def test_execute_pending_task_failure(
+    tmp_path,
+):
 
-    manager = create_manager(tmp_path)
+    manager = create_manager(
+        tmp_path
+    )
 
-    task = manager.create_task(
+    registry = create_registry(
+        tmp_path,
+        {
+            "失败任务": {
+                "enabled": True,
+                "listener_id": "LISTENER-001",
+            }
+        },
+    )
+
+    manager.create_task(
         task="失败任务",
         target_page_id="PAGE-A",
         target_property="房源ID",
     )
 
     def handler(current_task):
+
         raise RuntimeError(
             "模拟执行失败"
         )
 
     executor = TaskExecutor(
         manager=manager,
+        registry=registry,
         handler=handler,
     )
 
@@ -133,12 +202,22 @@ def test_execute_pending_task_failure(tmp_path):
 # =========================================================
 
 
-def test_no_pending_task(tmp_path):
+def test_no_pending_task(
+    tmp_path,
+):
 
-    manager = create_manager(tmp_path)
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {},
+    )
 
     executor = TaskExecutor(
         manager=manager,
+        registry=registry,
         handler=lambda task: {
             "message": "不应该执行"
         },
@@ -150,6 +229,189 @@ def test_no_pending_task(tmp_path):
 
 
 # =========================================================
+# 没有 Registry 配置 → 不执行
+# =========================================================
+
+
+def test_no_registry_config_does_not_execute(
+    tmp_path,
+):
+
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {},
+    )
+
+    task = manager.create_task(
+        task="没有配置的任务",
+        target_page_id="PAGE-A",
+        target_property="房源ID",
+    )
+
+    executed = []
+
+    def handler(current_task):
+
+        executed.append(
+            current_task
+        )
+
+        return {
+            "message": "不应该执行"
+        }
+
+    executor = TaskExecutor(
+        manager=manager,
+        registry=registry,
+        handler=handler,
+    )
+
+    result = executor.run_once()
+
+    assert result is None
+
+    assert executed == []
+
+    current = manager.get_task(
+        task["task_no"]
+    )
+
+    assert (
+        current["status"]
+        == TaskManager.STATUS_PENDING
+    )
+
+
+# =========================================================
+# enabled=false → 不执行
+# =========================================================
+
+
+def test_disabled_task_does_not_execute(
+    tmp_path,
+):
+
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {
+            "禁用任务": {
+                "enabled": False,
+                "listener_id": "LISTENER-001",
+            }
+        },
+    )
+
+    task = manager.create_task(
+        task="禁用任务",
+        target_page_id="PAGE-A",
+        target_property="房源ID",
+    )
+
+    executed = []
+
+    def handler(current_task):
+
+        executed.append(
+            current_task
+        )
+
+        return {
+            "message": "不应该执行"
+        }
+
+    executor = TaskExecutor(
+        manager=manager,
+        registry=registry,
+        handler=handler,
+    )
+
+    result = executor.run_once()
+
+    assert result is None
+
+    assert executed == []
+
+    current = manager.get_task(
+        task["task_no"]
+    )
+
+    assert (
+        current["status"]
+        == TaskManager.STATUS_PENDING
+    )
+
+
+# =========================================================
+# 没有 listener_id → 不执行
+# =========================================================
+
+
+def test_missing_listener_id_does_not_execute(
+    tmp_path,
+):
+
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {
+            "缺少Listener任务": {
+                "enabled": True,
+            }
+        },
+    )
+
+    task = manager.create_task(
+        task="缺少Listener任务",
+        target_page_id="PAGE-A",
+        target_property="房源ID",
+    )
+
+    executed = []
+
+    def handler(current_task):
+
+        executed.append(
+            current_task
+        )
+
+        return {
+            "message": "不应该执行"
+        }
+
+    executor = TaskExecutor(
+        manager=manager,
+        registry=registry,
+        handler=handler,
+    )
+
+    result = executor.run_once()
+
+    assert result is None
+
+    assert executed == []
+
+    current = manager.get_task(
+        task["task_no"]
+    )
+
+    assert (
+        current["status"]
+        == TaskManager.STATUS_PENDING
+    )
+
+
+# =========================================================
 # 没有 handler → 不执行
 # =========================================================
 
@@ -158,7 +420,19 @@ def test_no_handler_does_not_change_task(
     tmp_path,
 ):
 
-    manager = create_manager(tmp_path)
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {
+            "测试任务": {
+                "enabled": True,
+                "listener_id": "LISTENER-001",
+            }
+        },
+    )
 
     task = manager.create_task(
         task="测试任务",
@@ -168,6 +442,7 @@ def test_no_handler_does_not_change_task(
 
     executor = TaskExecutor(
         manager=manager,
+        registry=registry,
     )
 
     result = executor.run_once()
@@ -193,7 +468,23 @@ def test_tasks_are_executed_sequentially(
     tmp_path,
 ):
 
-    manager = create_manager(tmp_path)
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {
+            "任务1": {
+                "enabled": True,
+                "listener_id": "LISTENER-001",
+            },
+            "任务2": {
+                "enabled": True,
+                "listener_id": "LISTENER-002",
+            },
+        },
+    )
 
     task1 = manager.create_task(
         task="任务1",
@@ -212,7 +503,12 @@ def test_tasks_are_executed_sequentially(
     def handler(task):
 
         execution_order.append(
-            task["task_no"]
+            (
+                task["task_no"],
+                task["_execution"][
+                    "listener_id"
+                ],
+            )
         )
 
         return {
@@ -221,6 +517,7 @@ def test_tasks_are_executed_sequentially(
 
     executor = TaskExecutor(
         manager=manager,
+        registry=registry,
         handler=handler,
     )
 
@@ -239,8 +536,14 @@ def test_tasks_are_executed_sequentially(
     )
 
     assert execution_order == [
-        task1["task_no"],
-        task2["task_no"],
+        (
+            task1["task_no"],
+            "LISTENER-001",
+        ),
+        (
+            task2["task_no"],
+            "LISTENER-002",
+        ),
     ]
 
 
@@ -253,7 +556,23 @@ def test_waiting_task_recovers_then_executes(
     tmp_path,
 ):
 
-    manager = create_manager(tmp_path)
+    manager = create_manager(
+        tmp_path
+    )
+
+    registry = create_registry(
+        tmp_path,
+        {
+            "任务1": {
+                "enabled": True,
+                "listener_id": "LISTENER-001",
+            },
+            "任务2": {
+                "enabled": True,
+                "listener_id": "LISTENER-001",
+            },
+        },
+    )
 
     task1 = manager.create_task(
         task="任务1",
@@ -291,6 +610,7 @@ def test_waiting_task_recovers_then_executes(
 
     executor = TaskExecutor(
         manager=manager,
+        registry=registry,
         handler=handler,
     )
 
@@ -311,3 +631,9 @@ def test_waiting_task_recovers_then_executes(
     assert executed == [
         task2["task_no"]
     ]
+
+    assert (
+        result["_execution"]
+        if "_execution" in result
+        else True
+    )
