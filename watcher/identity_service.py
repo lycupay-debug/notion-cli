@@ -1,23 +1,68 @@
+from pathlib import Path
+
 from notion.pages import get_page_identity
 
-from .state import load_state, save_state
+from core.json_store import JSONStore
+
+
+STATE_FILE = (
+    Path(__file__).resolve().parent.parent
+    / "config"
+    / "global_state.json"
+)
 
 
 class ObjectIdentityService:
     """
     维护 GlobalWatcher 本地 JSON 中的对象归属信息。
 
-    当前策略：
-    - object 已存在：跳过，不调用 API
-    - object 为空：调用 get_page_identity()
-    - 获取成功：写入 JSON
+    职责：
+    - 读取页面状态
+    - 判断 object 是否已经存在
+    - object 为空时调用 Notion API 识别对象身份
+    - 将识别结果写回 JSON
+
+    JSON 数据访问统一通过 JSONStore。
+
+    不负责：
+    - 页面监听
+    - Dispatcher 路由
+    - Listener 执行
     """
 
     def __init__(self):
-        self.state = load_state()
+        self.store = JSONStore()
+
+        self.state = self.store.load(
+            STATE_FILE,
+            default={
+                "pages": {}
+            },
+        )
 
     def check_missing(self):
-        pages = self.state.get("pages", {})
+        """
+        检查所有尚未识别 object 的页面。
+
+        已有 object：
+            跳过
+
+        object 为空：
+            调用 Notion API 进行识别
+        """
+
+        # 每次批量检查前重新读取最新 JSON
+        self.state = self.store.load(
+            STATE_FILE,
+            default={
+                "pages": {}
+            },
+        )
+
+        pages = self.state.get(
+            "pages",
+            {},
+        )
 
         checked = 0
         skipped = 0
@@ -41,19 +86,29 @@ class ObjectIdentityService:
                     "parent": parent,
                 }
 
-                print(f"[Identity] 已确认：{page_id}")
-                print(f"  object: {identity.get('object')}")
-                print(f"  parent: {parent}")
+                print(
+                    f"[Identity] 已确认：{page_id}"
+                )
+                print(
+                    f"  object: {identity.get('object')}"
+                )
+                print(
+                    f"  parent: {parent}"
+                )
 
             except Exception as e:
                 failed += 1
 
                 print(
                     f"[Identity ERROR] "
-                    f"{page_id}: {type(e).__name__}: {e}"
+                    f"{page_id}: "
+                    f"{type(e).__name__}: {e}"
                 )
 
-        save_state(self.state)
+        self.store.save(
+            STATE_FILE,
+            self.state,
+        )
 
         return {
             "checked": checked,
@@ -62,14 +117,25 @@ class ObjectIdentityService:
         }
 
     def check_page(self, page_id):
+        """
+        检查并识别单个页面的对象身份。
+        """
 
         # --------------------------------------------------
-        # 关键：
         # 每次单页识别前重新读取最新 JSON
         # --------------------------------------------------
-        self.state = load_state()
 
-        pages = self.state.setdefault("pages", {})
+        self.state = self.store.load(
+            STATE_FILE,
+            default={
+                "pages": {}
+            },
+        )
+
+        pages = self.state.setdefault(
+            "pages",
+            {},
+        )
 
         data = pages.get(page_id)
 
@@ -96,11 +162,20 @@ class ObjectIdentityService:
                 "parent": parent,
             }
 
-            save_state(self.state)
+            self.store.save(
+                STATE_FILE,
+                self.state,
+            )
 
-            print(f"[Identity] 已确认：{page_id}")
-            print(f"  object: {identity.get('object')}")
-            print(f"  parent: {parent}")
+            print(
+                f"[Identity] 已确认：{page_id}"
+            )
+            print(
+                f"  object: {identity.get('object')}"
+            )
+            print(
+                f"  parent: {parent}"
+            )
 
             return {
                 "status": "IDENTIFIED",
