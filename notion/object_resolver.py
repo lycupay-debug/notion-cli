@@ -14,16 +14,22 @@ def resolve_notion_id(raw_id):
 
     Error:
         target_id = "错误"
+
+    说明：
+    2025-09-03 之后 Database 与 Data Source 是不同对象。
+    2026-03-11 继续沿用该模型。
     """
 
     # 1. 尝试 Page
     try:
-        get_page(raw_id)
+        page = get_page(raw_id)
 
         return {
             "status": "PAGE",
             "raw_id": raw_id,
             "target_id": raw_id,
+            "object": page.get("object"),
+            "parent": page.get("parent"),
         }
 
     except Exception:
@@ -57,6 +63,8 @@ def resolve_notion_id(raw_id):
             "status": "DATABASE",
             "raw_id": raw_id,
             "target_id": data_source_id,
+            "object": database.get("object"),
+            "data_sources": data_sources,
         }
 
     except Exception as e:
