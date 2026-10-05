@@ -9,8 +9,9 @@ __pycache__/
 
 # Runtime state
 config/global_state.json
+config/tasks.json
 
 # Logs
 logs/
-*.json
+
 
