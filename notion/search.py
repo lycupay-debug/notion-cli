@@ -1,28 +1,44 @@
 from .client import notion
 
 
-def search(
-    query: str = "",
-    *,
-    object_type=None,
-    sort=None,
-    start_cursor=None,
-    page_size=None,
-):
-    kwargs = {
-        "query": query,
-    }
-
-    if object_type is not None:
-        kwargs["filter"] = {
+def search_pages(query: str = ""):
+    """搜索 Notion 页面"""
+    response = notion.search(
+        query=query,
+        filter={
             "property": "object",
-            "value": object_type,
-        }
-    if sort is not None:
-        kwargs["sort"] = sort
-    if start_cursor is not None:
-        kwargs["start_cursor"] = start_cursor
-    if page_size is not None:
-        kwargs["page_size"] = page_size
+            "value": "page",
+        },
+        sort={
+            "direction": "descending",
+            "timestamp": "last_edited_time",
+        },
+        page_size=100,
+    )
 
-    return notion.search(**kwargs)
+    return response["results"]
+
+
+def get_global_page_snapshot():
+    """
+    获取 GlobalWatcher 所需的最小页面状态。
+
+    这里只保留：
+    - Page ID
+    - last_edited_time
+    - URL
+    """
+    pages = search_pages()
+
+    snapshot = []
+
+    for page in pages:
+        snapshot.append(
+            {
+                "id": page["id"],
+                "last_edited_time": page["last_edited_time"],
+                "url": page["url"],
+            }
+        )
+
+    return snapshot

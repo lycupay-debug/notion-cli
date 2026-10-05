@@ -1,4 +1,4 @@
-﻿from notion.pages import retrieve_page, update_page
+﻿from notion.pages import get_page, update_page_properties
 
 
 DALI_PROPERTY_DATA_SOURCE_ID = (
@@ -18,7 +18,7 @@ class DaliPropertyListener:
         # 1. 读取当前页面
         # ========================================================
 
-        page = retrieve_page(page_id)
+        page = get_page(page_id)
 
         properties = page.get(
             "properties",
@@ -64,8 +64,9 @@ class DaliPropertyListener:
         # ========================================================
         # 4. 读取当前「房源ID」
         #
-        # 如果当前值已经与 Notion 公式结果一致，
-        # 不进行任何写入，避免产生无意义的页面编辑事件。
+        # 这里只用于日志。
+        # 不参与判断。
+        # 无论原来有没有内容，都直接覆盖。
         # ========================================================
 
         current_property_id = self.extract_text(
@@ -80,21 +81,6 @@ class DaliPropertyListener:
             f"当前房源ID: {current_property_id!r}"
         )
 
-        if current_property_id == formula_value:
-            print(
-                "[DaliPropertyListener] "
-                "当前房源ID已经正确，无需写入"
-            )
-
-            return {
-                "status": "UNCHANGED",
-                "page_id": page_id,
-                "property_id": formula_value,
-                "source": "房源ID公式",
-                "previous_property_id": current_property_id,
-                "verified": True,
-            }
-
         print(
             f"[DaliPropertyListener] "
             f"准备更新为: {formula_value!r}"
@@ -104,7 +90,7 @@ class DaliPropertyListener:
         # 5. 覆盖写入「房源ID」
         # ========================================================
 
-        update_page(
+        update_page_properties(
             page_id,
             {
                 "房源ID": {
@@ -129,7 +115,7 @@ class DaliPropertyListener:
         # 6. 回读验证
         # ========================================================
 
-        updated_page = retrieve_page(
+        updated_page = get_page(
             page_id
         )
 
