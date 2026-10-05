@@ -119,18 +119,10 @@ class CourseRecordListener:
 
         if len(matched_bills) > 1:
 
-            print(
-                "[CourseRecordListener] "
-                "发现多个同名账单，停止写入"
+            raise RuntimeError(
+                "发现多个同名账单，无法确定唯一写入目标："
+                f"name={name!r}, count={len(matched_bills)}"
             )
-
-            return {
-                "status": "ERROR",
-                "reason": "MULTIPLE_BILLS",
-                "page_id": page_id,
-                "name": name,
-                "count": len(matched_bills),
-            }
 
         # ========================================================
         # 6. 获取唯一账单
