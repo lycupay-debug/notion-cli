@@ -1,5 +1,7 @@
-from notion.pages import get_page, update_page_properties
-from notion.object_resolver import resolve_notion_id
+from notion_client import APIErrorCode, APIResponseError
+
+from notion.pages import retrieve_page, update_page
+from notion.databases import retrieve_database
 
 
 class SystemLedgerListener:
@@ -14,7 +16,7 @@ class SystemLedgerListener:
         # 1. 获取当前系统结构总账页面
         # ========================================================
 
-        page = get_page(page_id)
+        page = retrieve_page(page_id)
 
         # ========================================================
         # 2. 获取「数据源链接和快捷链接」
@@ -64,7 +66,7 @@ class SystemLedgerListener:
         #     target_id = "错误"
         # ========================================================
 
-        resolved = resolve_notion_id(raw_id)
+        resolved = self.resolve_object(raw_id)
 
         print(
             f"[SystemLedgerListener] "
@@ -117,7 +119,7 @@ class SystemLedgerListener:
         # 8. 写入「Notion页面ID」
         # ========================================================
 
-        update_page_properties(
+        update_page(
             page_id,
             {
                 "Notion页面ID": {
@@ -179,6 +181,63 @@ class SystemLedgerListener:
             "object_type": resolved["status"],
             "target_id": target_id,
             "verified": True,
+        }
+
+    @staticmethod
+    def resolve_object(raw_id):
+        try:
+            page = retrieve_page(raw_id)
+            return {
+                "status": "PAGE",
+                "raw_id": raw_id,
+                "target_id": raw_id,
+                "object": page.get("object"),
+                "parent": page.get("parent"),
+            }
+        except APIResponseError as error:
+            if error.code != APIErrorCode.ObjectNotFound:
+                raise
+
+        try:
+            database = retrieve_database(raw_id)
+        except APIResponseError as error:
+            if error.code == APIErrorCode.ObjectNotFound:
+                return {
+                    "status": "ERROR",
+                    "raw_id": raw_id,
+                    "target_id": "错误",
+                    "reason": "OBJECT_NOT_FOUND",
+                    "error_type": type(error).__name__,
+                    "error": str(error),
+                }
+            raise
+
+        data_sources = database.get("data_sources", [])
+
+        if not data_sources:
+            return {
+                "status": "ERROR",
+                "raw_id": raw_id,
+                "target_id": "错误",
+                "reason": "DATABASE_HAS_NO_DATA_SOURCE",
+            }
+
+        data_source_id = data_sources[0].get("id")
+
+        if not data_source_id:
+            return {
+                "status": "ERROR",
+                "raw_id": raw_id,
+                "target_id": "错误",
+                "reason": "DATA_SOURCE_ID_MISSING",
+            }
+
+        return {
+            "status": "DATABASE",
+            "raw_id": raw_id,
+            "target_id": data_source_id,
+            "object": database.get("object"),
+            "data_sources": data_sources,
         }
 
     # ============================================================

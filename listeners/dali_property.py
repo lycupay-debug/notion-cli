@@ -1,4 +1,4 @@
-﻿from notion.pages import get_page, update_page_properties
+﻿from notion.pages import retrieve_page, update_page
 
 
 DALI_PROPERTY_DATA_SOURCE_ID = (
@@ -18,7 +18,7 @@ class DaliPropertyListener:
         # 1. 读取当前页面
         # ========================================================
 
-        page = get_page(page_id)
+        page = retrieve_page(page_id)
 
         properties = page.get(
             "properties",
@@ -90,7 +90,7 @@ class DaliPropertyListener:
         # 5. 覆盖写入「房源ID」
         # ========================================================
 
-        update_page_properties(
+        update_page(
             page_id,
             {
                 "房源ID": {

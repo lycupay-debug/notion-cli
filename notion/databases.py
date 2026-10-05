@@ -1,17 +1,7 @@
 from .client import notion
 
-# 向后兼容：
-# 现有业务代码仍可从 notion.databases 导入 query_data_source。
-from .data_sources import query_data_source
 
-
-def get_database(database_id: str):
-    """
-    获取 Database 容器对象。
-
-    2026-03-11:
-    Database 是 Data Source 的容器，不再直接承担 Data Source schema / query。
-    """
+def retrieve_database(database_id: str):
     return notion.databases.retrieve(
         database_id=database_id,
     )
@@ -29,9 +19,6 @@ def update_database(
     in_trash=None,
     is_locked=None,
 ):
-    """
-    更新 Database 容器。
-    """
     kwargs = {}
 
     if parent is not None:
@@ -67,9 +54,6 @@ def create_database(
     icon=None,
     cover=None,
 ):
-    """
-    创建 Database 容器。
-    """
     kwargs = {
         "parent": parent,
         "title": title,

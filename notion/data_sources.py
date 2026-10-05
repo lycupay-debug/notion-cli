@@ -1,13 +1,7 @@
 from .client import notion
 
 
-def get_data_source(data_source_id: str):
-    """
-    获取 Data Source 的完整定义。
-
-    2026-03-11:
-    Data Source 是数据库容器下真正承载 schema / properties 的对象。
-    """
+def retrieve_data_source(data_source_id: str):
     return notion.data_sources.retrieve(
         data_source_id=data_source_id,
     )
@@ -24,11 +18,6 @@ def query_data_source(
     in_trash=None,
     result_type=None,
 ):
-    """
-    查询 Data Source 中的页面 / Data Source。
-
-    所有参数均对应 2026-03-11 Data Source Query API。
-    """
     kwargs = {}
 
     if filter_properties is not None:
@@ -61,11 +50,6 @@ def update_data_source(
     in_trash=None,
     parent=None,
 ):
-    """
-    更新 Data Source。
-
-    对应 2026-03-11 Update a Data Source API。
-    """
     kwargs = {}
 
     if title is not None:
@@ -92,9 +76,6 @@ def create_data_source(
     title=None,
     icon=None,
 ):
-    """
-    在现有 Database 下创建 Data Source。
-    """
     kwargs = {
         "parent": parent,
     }
@@ -116,9 +97,6 @@ def list_data_source_templates(
     start_cursor=None,
     page_size=None,
 ):
-    """
-    获取 Data Source 可用的页面模板。
-    """
     kwargs = {}
 
     if name is not None:

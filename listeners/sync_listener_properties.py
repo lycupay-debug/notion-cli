@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from core.json_store import JSONStore
-from notion.data_sources import get_data_source
+from notion.data_sources import retrieve_data_source
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -115,7 +115,7 @@ class SyncListenerProperties:
                 f"Enabled: {listener_config.get('enabled')}"
             )
 
-            data_source = get_data_source(data_source_id)
+            data_source = retrieve_data_source(data_source_id)
             properties = self.get_properties(data_source)
 
             listener_config["properties"] = properties
