@@ -5,7 +5,7 @@ Listener Loader
 
 Listener ID
     ↓
-ListenerRegistry
+config/listeners.json
     ↓
 module + class
     ↓
@@ -23,79 +23,151 @@ Listener instance
 - 任务排队
 - 任务恢复
 - 任务执行
+- Listener 实际业务逻辑
 """
 
 import importlib
+import json
+from pathlib import Path
 
-from .listener_registry import ListenerRegistry
+
+DEFAULT_CONFIG_FILE = (
+    Path(__file__).resolve().parent.parent
+    / "config"
+    / "listeners.json"
+)
 
 
 class ListenerLoader:
     """
-    根据 Listener ID 动态加载 Listener。
+    根据 Listener ID 从 listeners.json 加载 Listener。
 
-    职责边界：
+    listeners.json 是 Listener 的唯一配置源，包含：
 
-        ListenerRegistry
-            负责：
-                listener_id
-                    ↓
-                module + class
+        listener_id
+            ↓
+        name
+        module
+        class
+        enabled
+        properties
 
-        ListenerLoader
-            负责：
-                module + class
-                    ↓
-                Python class
-                    ↓
-                instance
+    ListenerLoader 只使用其中的 module/class 完成动态加载，
+    并负责检查 Listener 是否启用。
     """
 
-    def __init__(
-        self,
-        registry=None,
-    ):
-        self.registry = (
-            registry
-            or ListenerRegistry()
+    def __init__(self, config_file=None):
+        self.config_file = (
+            Path(config_file)
+            if config_file
+            else DEFAULT_CONFIG_FILE
         )
+
+        self._config = {}
+        self.reload()
+
+    # =========================================================
+    # JSON 配置
+    # =========================================================
+
+    def reload(self):
+        """
+        从磁盘重新读取 listeners.json。
+        """
+
+        if not self.config_file.exists():
+            self._config = {
+                "version": 1,
+                "listeners": {},
+            }
+            return self._config
+
+        with self.config_file.open(
+            "r",
+            encoding="utf-8",
+        ) as f:
+            data = json.load(f)
+
+        if not isinstance(data, dict):
+            raise ValueError(
+                "Listener config must be a JSON object."
+            )
+
+        listeners = data.get("listeners", {})
+
+        if not isinstance(listeners, dict):
+            raise ValueError(
+                "Listener config 'listeners' must be an object."
+            )
+
+        self._config = data
+        return data
+
+    # =========================================================
+    # Listener 配置
+    # =========================================================
+
+    def get_config(self, listener_id):
+        """
+        根据 Listener ID 获取完整 Listener 配置。
+
+        不存在时返回 None。
+        """
+
+        self.reload()
+
+        return self._config.get(
+            "listeners",
+            {},
+        ).get(listener_id)
+
+    def has_config(self, listener_id):
+        """
+        判断 Listener ID 是否存在。
+        """
+
+        return self.get_config(listener_id) is not None
+
+    def is_enabled(self, listener_id):
+        """
+        判断 Listener 是否启用。
+
+        不存在或 enabled 不是 True 时均视为未启用。
+        """
+
+        config = self.get_config(listener_id)
+
+        if config is None:
+            return False
+
+        return config.get("enabled", False) is True
 
     # =========================================================
     # 获取 Listener Class
     # =========================================================
 
-    def load_class(
-        self,
-        listener_id,
-    ):
+    def load_class(self, listener_id):
         """
-        根据 Listener ID 加载 Python Listener Class。
+        根据 Listener ID 动态加载 Python Listener Class。
 
-        返回：
-
-            Listener class
-
-        不存在时：
-
-            ValueError
+        Listener 不存在、未启用、module/class 缺失，
+        或 Python 类不存在时抛出 ValueError。
         """
 
-        target = self.registry.get_target(
-            listener_id
-        )
+        config = self.get_config(listener_id)
 
-        if target is None:
+        if config is None:
             raise ValueError(
                 f"Listener not found: {listener_id}"
             )
 
-        module_name = target.get(
-            "module"
-        )
+        if config.get("enabled", False) is not True:
+            raise ValueError(
+                f"Listener is disabled: {listener_id}"
+            )
 
-        class_name = target.get(
-            "class"
-        )
+        module_name = config.get("module")
+        class_name = config.get("class")
 
         if not module_name:
             raise ValueError(
@@ -107,9 +179,7 @@ class ListenerLoader:
                 f"Listener class is missing: {listener_id}"
             )
 
-        module = importlib.import_module(
-            module_name
-        )
+        module = importlib.import_module(module_name)
 
         try:
             listener_class = getattr(
@@ -128,20 +198,10 @@ class ListenerLoader:
     # 创建 Listener Instance
     # =========================================================
 
-    def load(
-        self,
-        listener_id,
-    ):
+    def load(self, listener_id):
         """
         根据 Listener ID 加载并实例化 Listener。
-
-        返回：
-
-            Listener instance
         """
 
-        listener_class = self.load_class(
-            listener_id
-        )
-
+        listener_class = self.load_class(listener_id)
         return listener_class()
