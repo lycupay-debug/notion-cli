@@ -36,8 +36,8 @@ def retrieve_page_property(
 
 def update_page(
     page_id: str,
-    *,
     properties=None,
+    *,
     icon=None,
     cover=None,
     is_locked=None,

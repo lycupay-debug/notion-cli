@@ -192,7 +192,7 @@ class CourseRecordListener:
         # 8. 读取账单「引用」Relation
         # ========================================================
 
-        bill_page = get_page(bill_page_id)
+        bill_page = retrieve_page(bill_page_id)
 
         bill_properties = bill_page["properties"]
 
@@ -311,7 +311,7 @@ class CourseRecordListener:
         # 12. 回读验证
         # ========================================================
 
-        updated_bill = get_page(
+        updated_bill = retrieve_page(
             bill_page_id
         )
 
@@ -368,6 +368,28 @@ class CourseRecordListener:
             ),
             "verified": True,
         }
+
+    @staticmethod
+    def query_all_data_source(data_source_id):
+        results = []
+        cursor = None
+
+        while True:
+            response = query_data_source(
+                data_source_id,
+                start_cursor=cursor,
+                page_size=100,
+            )
+            results.extend(response.get("results", []))
+
+            if not response.get("has_more"):
+                return results
+
+            cursor = response.get("next_cursor")
+            if not cursor:
+                raise RuntimeError(
+                    f"Data Source 分页返回 has_more=true，但 next_cursor 为空: {data_source_id}"
+                )
 
     @staticmethod
     def query_all_data_source(data_source_id):
