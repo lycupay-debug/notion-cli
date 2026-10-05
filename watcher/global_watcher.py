@@ -46,9 +46,10 @@ class GlobalWatcher:
             },
         )
 
-        # 三个服务共用当前 state
+        # IdentityService 仍然使用当前 state。
+        # Dispatcher 每次 dispatch 都从磁盘读取最新状态，
+        # 因此不再向 Dispatcher 注入共享内存 state。
         self.identity_service.state = self.state
-        self.dispatcher.state = self.state
 
     def check(self):
 
@@ -63,9 +64,7 @@ class GlobalWatcher:
             },
         )
 
-        # 同步给其他服务
         self.identity_service.state = self.state
-        self.dispatcher.state = self.state
 
         current_pages = get_global_page_snapshot()
 
@@ -125,8 +124,8 @@ class GlobalWatcher:
 
                 change["identity"] = identity_result
 
-                # IdentityService 已经重新读取并写入 JSON
-                # 所以这里必须重新读取最新 state
+                # IdentityService 已经重新读取并写入 JSON。
+                # 重新读取，确保 Dispatcher 后续读取到最新磁盘状态。
                 self.state = self.store.load(
                     STATE_FILE,
                     default={
@@ -135,14 +134,13 @@ class GlobalWatcher:
                 )
 
                 self.identity_service.state = self.state
-                self.dispatcher.state = self.state
 
                 pages_state = self.state.setdefault(
                     "pages",
                     {},
                 )
 
-                # 身份识别完成后进行 Dispatcher 路由
+                # 身份识别完成后进行 Dispatcher 路由。
                 route_result = self.dispatcher.dispatch(
                     page_id
                 )
@@ -170,9 +168,7 @@ class GlobalWatcher:
                     self.state,
                 )
 
-                # Dispatcher 使用当前 state
-                self.dispatcher.state = self.state
-
+                # Dispatcher 自己从磁盘读取最新 state。
                 route_result = self.dispatcher.dispatch(
                     page_id
                 )
