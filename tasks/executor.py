@@ -18,6 +18,8 @@ class TaskExecutor:
             ↓
         ListenerLoader
             ↓
+        listeners.json
+            ↓
         Listener
             ↓
         handle(page_id)
@@ -26,7 +28,6 @@ class TaskExecutor:
 
         - 创建任务
         - 任务恢复逻辑
-        - Listener Registry
         - Listener 加载逻辑
         - Notion API
         - 并发执行
@@ -186,6 +187,12 @@ class TaskExecutor:
         listener_id = (
             task_config["listener_id"]
         )
+
+        # Listener 未启用时不领取任务，保持任务 pending。
+        if not self.listener_loader.is_enabled(
+            listener_id
+        ):
+            return None
 
         task = self.manager.update_status(
             task["task_no"],
