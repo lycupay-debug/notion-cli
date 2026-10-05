@@ -18,12 +18,13 @@ class TaskManager:
     核心原则：
 
     1. 所有任务统一进入 tasks.json
-    2. 不使用内存任务缓存
-    3. 每次读取任务时直接从磁盘 reload
-    4. task_id 使用 UUID，负责唯一身份
-    5. task_no 负责任务顺序
-    6. 不使用时间参与任务排序
-    7. 已完成任务保留在 JSON 中，不删除
+    2. 每次读取任务时直接从磁盘 reload
+    3. task_id 使用 UUID，负责唯一身份
+    4. task_no 负责任务顺序和优先级
+    5. 不使用时间参与任务排序
+    6. 已完成/失败任务保留在 JSON 中，不删除
+    7. 每一个事件都创建独立任务，不做业务去重
+    8. 同名任务按照 task_no 串行：前一个同名任务未结束时，后一个进入 WAITING
     """
 
     STATUS_PENDING = "PENDING"
@@ -31,6 +32,17 @@ class TaskManager:
     STATUS_WAITING = "WAITING"
     STATUS_COMPLETED = "COMPLETED"
     STATUS_FAILED = "FAILED"
+
+    TERMINAL_STATUSES = {
+        STATUS_COMPLETED,
+        STATUS_FAILED,
+    }
+
+    BLOCKING_STATUSES = {
+        STATUS_PENDING,
+        STATUS_RUNNING,
+        STATUS_WAITING,
+    }
 
     VALID_STATUSES = {
         STATUS_PENDING,
@@ -40,8 +52,6 @@ class TaskManager:
         STATUS_FAILED,
     }
 
-    # 单进程流水线状态机。
-    # 任务始终按 task_no 顺序串行执行，不允许状态倒退。
     ALLOWED_TRANSITIONS = {
         STATUS_PENDING: {
             STATUS_RUNNING,
@@ -58,107 +68,63 @@ class TaskManager:
         STATUS_FAILED: set(),
     }
 
-    def __init__(
-        self,
-        task_file=TASK_FILE,
-        store=None,
-    ):
+    def __init__(self, task_file=TASK_FILE, store=None):
         self.task_file = Path(task_file)
-
         self.store = store or JSONStore(
             base_dir=self.task_file.parent.parent
         )
-
         self._ensure_file()
 
-    # ---------------------------------------------------------
-    # 基础 JSON
-    # ---------------------------------------------------------
-
     def _ensure_file(self):
-        """
-        确保 tasks.json 存在。
-
-        不存在时创建基础结构。
-        """
         if not self.task_file.exists():
             self.store.save(
                 self.task_file,
-                {
-                    "version": 1,
-                    "tasks": {},
-                },
+                {"version": 1, "tasks": {}},
             )
 
     def _load(self):
-        """
-        强制从磁盘读取最新任务清单。
-
-        注意：
-        这里故意使用 reload()，
-        不使用 JSONStore.load()，
-        避免任务层依赖 JSONStore 的内存缓存。
-        """
         return self.store.reload(self.task_file)
 
     def _save(self, data):
-        """
-        写回 tasks.json。
-        """
-        return self.store.save(
-            self.task_file,
-            data,
-        )
-
-    # ---------------------------------------------------------
-    # Task No
-    # ---------------------------------------------------------
+        return self.store.save(self.task_file, data)
 
     def _next_task_no(self, data):
-        """
-        计算下一个任务编号。
-
-        task_no 不依赖时间。
-
-        已存在：
-            1
-            2
-            5
-
-        下一次：
-            6
-        """
         tasks = data.get("tasks", {})
-
         if not tasks:
             return 1
 
-        numbers = []
+        numbers = [
+            task.get("task_no")
+            for task in tasks.values()
+            if isinstance(task.get("task_no"), int)
+        ]
 
-        for task in tasks.values():
-            task_no = task.get("task_no")
-
-            if isinstance(task_no, int):
-                numbers.append(task_no)
-
-        if not numbers:
-            return 1
-
-        return max(numbers) + 1
+        return max(numbers, default=0) + 1
 
     @staticmethod
     def _format_task_key(task_no):
-        """
-        将任务编号转换成 JSON 中的人类可读键。
-
-        1 -> 000001
-        12 -> 000012
-        """
         return f"{task_no:06d}"
 
-    # ---------------------------------------------------------
-    # 创建任务
-    # ---------------------------------------------------------
+    def _has_prior_same_name_task(self, tasks, task_name, task_no):
+        """
+        判断当前任务之前是否存在同名、尚未结束的任务。
+
+        注意：
+        - 只比较 task 名称和 task_no
+        - 不比较 page_id/property
+        - COMPLETED/FAILED 都属于已经结束
+        """
+        for existing in tasks.values():
+            if existing.get("task_no", 0) >= task_no:
+                continue
+
+            if existing.get("task") != task_name:
+                continue
+
+            if existing.get("status") in self.BLOCKING_STATUSES:
+                return True
+
+        return False
 
     def create_task(
         self,
@@ -168,62 +134,36 @@ class TaskManager:
         metadata=None,
     ):
         """
-        创建一个新任务。
+        创建一个独立的新任务。
 
-        参数：
+        不做业务去重：即使 task/page/property 完全相同，
+        每次事件仍然创建新的 task_no。
 
-        task:
-            任务名称。
-
-        target_page_id:
-            任务目标页面。
-
-        target_property:
-            任务目标属性。
-
-        metadata:
-            其他任务参数。
-
-        返回：
-            创建后的完整任务对象。
+        同名任务：
+            前一个同名任务未结束 -> WAITING
+            前一个同名任务已 COMPLETED/FAILED -> PENDING
         """
-
         data = self._load()
-
-        tasks = data.setdefault(
-            "tasks",
-            {},
-        )
-
-        # 任务是流水线执行的：同一业务目标在已有未完成任务时，
-        # 不重复创建任务。Listener 执行时会重新读取 Notion 当前值，
-        # 因此保留最早任务即可，后续变化不需要堆积重复任务。
-        for existing in tasks.values():
-            if (
-                existing.get("task") == task
-                and existing.get("target_page_id") == target_page_id
-                and existing.get("target_property") == target_property
-                and existing.get("status") in {
-                    self.STATUS_PENDING,
-                    self.STATUS_RUNNING,
-                    self.STATUS_WAITING,
-                }
-            ):
-                return existing
+        tasks = data.setdefault("tasks", {})
 
         task_no = self._next_task_no(data)
 
-        task_id = str(uuid4())
+        initial_status = self.STATUS_WAITING
+        if not self._has_prior_same_name_task(
+            tasks,
+            task,
+            task_no,
+        ):
+            initial_status = self.STATUS_PENDING
 
-        task_key = self._format_task_key(
-            task_no
-        )
+        task_id = str(uuid4())
+        task_key = self._format_task_key(task_no)
 
         task_data = {
             "task_id": task_id,
             "task_no": task_no,
             "task": task,
-            "status": self.STATUS_PENDING,
+            "status": initial_status,
             "target_page_id": target_page_id,
             "target_property": target_property,
             "result": None,
@@ -231,116 +171,40 @@ class TaskManager:
         }
 
         tasks[task_key] = task_data
-
         self._save(data)
 
         return task_data
 
-    # ---------------------------------------------------------
-    # 读取任务
-    # ---------------------------------------------------------
-
     def get_task(self, task_no):
-        """
-        根据 task_no 获取任务。
-
-        每次都会重新读取磁盘。
-        """
-
         data = self._load()
-
-        task_key = self._format_task_key(
-            task_no
+        return data.get("tasks", {}).get(
+            self._format_task_key(task_no)
         )
 
-        return data.get(
-            "tasks",
-            {}
-        ).get(task_key)
-
     def get_task_by_id(self, task_id):
-        """
-        根据 UUID 获取任务。
-        """
-
         data = self._load()
-
-        for task in data.get(
-            "tasks",
-            {}
-        ).values():
-
+        for task in data.get("tasks", {}).values():
             if task.get("task_id") == task_id:
                 return task
-
         return None
 
     def list_tasks(self):
-        """
-        获取全部任务。
-
-        返回按照 task_no 排序后的列表。
-        """
-
         data = self._load()
-
-        tasks = list(
-            data.get(
-                "tasks",
-                {}
-            ).values()
-        )
-
-        tasks.sort(
-            key=lambda item: item.get(
-                "task_no",
-                0,
-            )
-        )
-
+        tasks = list(data.get("tasks", {}).values())
+        tasks.sort(key=lambda item: item.get("task_no", 0))
         return tasks
 
-    # ---------------------------------------------------------
-    # 状态
-    # ---------------------------------------------------------
-
-    def update_status(
-        self,
-        task_no,
-        status,
-        result=None,
-    ):
-        """
-        更新任务状态。
-
-        每次先从磁盘读取，
-        修改后再完整写回。
-
-        不允许非法状态。
-        """
-
+    def update_status(self, task_no, status, result=None):
         if status not in self.VALID_STATUSES:
-            raise ValueError(
-                f"Invalid task status: {status}"
-            )
+            raise ValueError(f"Invalid task status: {status}")
 
         data = self._load()
-
-        task_key = self._format_task_key(
-            task_no
-        )
-
-        tasks = data.get(
-            "tasks",
-            {}
-        )
-
+        task_key = self._format_task_key(task_no)
+        tasks = data.get("tasks", {})
         task = tasks.get(task_key)
 
         if task is None:
-            raise KeyError(
-                f"Task not found: {task_no}"
-            )
+            raise KeyError(f"Task not found: {task_no}")
 
         current_status = task.get("status")
 
@@ -357,8 +221,7 @@ class TaskManager:
 
         if status not in allowed:
             raise ValueError(
-                f"Invalid task transition: "
-                f"{current_status} -> {status}"
+                f"Invalid task transition: {current_status} -> {status}"
             )
 
         task["status"] = status
@@ -367,125 +230,49 @@ class TaskManager:
             task["result"] = result
 
         self._save(data)
-
         return task
-
-    # ---------------------------------------------------------
-    # 下一任务
-    # ---------------------------------------------------------
 
     def get_next_pending_task(self):
         """
-        获取 task_no 最小的 PENDING 任务。
+        返回 task_no 最小的 PENDING 任务。
 
-        不改变任务状态。
+        COMPLETED/FAILED 永远不会再次返回。
+        WAITING 必须先由 Recovery 转为 PENDING。
         """
-
-        tasks = self.list_tasks()
-
-        for task in tasks:
-            if (
-                task.get("status")
-                == self.STATUS_PENDING
-            ):
+        for task in self.list_tasks():
+            if task.get("status") == self.STATUS_PENDING:
                 return task
-
         return None
 
-    # ---------------------------------------------------------
-    # 冲突判断
-    # ---------------------------------------------------------
-
-    def has_conflict(
-        self,
-        task,
-    ):
+    def has_conflict(self, task):
         """
-        判断当前任务是否存在目标冲突。
+        判断是否存在更早的同名、未结束任务。
 
-        冲突条件：
-
-            target_page_id 相同
-            +
-            target_property 相同
-
-        已完成的任务不构成执行冲突。
-
-        当前任务自身不会与自身冲突。
+        这是同名任务串行规则，不是业务去重规则。
         """
+        task_name = task.get("task")
+        current_task_no = task.get("task_no", 0)
 
-        page_id = task.get(
-            "target_page_id"
-        )
-
-        target_property = task.get(
-            "target_property"
-        )
-
-        if not page_id or not target_property:
+        if not task_name:
             return False
 
-        current_task_id = task.get(
-            "task_id"
-        )
-
-        tasks = self.list_tasks()
-
-        for other in tasks:
-
-            if other.get(
-                "task_id"
-            ) == current_task_id:
+        for other in self.list_tasks():
+            if other.get("task_no", 0) >= current_task_no:
                 continue
 
-            if other.get(
-                "target_page_id"
-            ) != page_id:
+            if other.get("task") != task_name:
                 continue
 
-            if other.get(
-                "target_property"
-            ) != target_property:
-                continue
-
-            other_status = other.get(
-                "status"
-            )
-
-            if other_status in {
-                self.STATUS_PENDING,
-                self.STATUS_RUNNING,
-                self.STATUS_WAITING,
-            }:
-                if (
-                    other.get("task_no", 0)
-                    < task.get("task_no", 0)
-                ):
-                    return True
+            if other.get("status") in self.BLOCKING_STATUSES:
+                return True
 
         return False
 
-    # ---------------------------------------------------------
-    # 等待状态
-    # ---------------------------------------------------------
-
-    def mark_waiting_if_conflict(
-        self,
-        task,
-    ):
-        """
-        如果存在更早的同目标任务，
-        则将当前任务标记为 WAITING。
-
-        返回：
-            True  = 已进入等待
-            False = 不需要等待
-        """
-
+    def mark_waiting_if_conflict(self, task):
         if not self.has_conflict(task):
             return False
 
-        if task.get("status") != self.STATUS_WAITING:
+        if task.get("status") == self.STATUS_PENDING:
             self.update_status(
                 task["task_no"],
                 self.STATUS_WAITING,
