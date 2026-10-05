@@ -7,58 +7,14 @@
       "class": "SystemLedgerListener",
       "enabled": true,
       "properties": {
-        "真实路径": {
-          "id": "C%5EN%3D",
-          "name": "真实路径",
-          "description": null,
-          "type": "rich_text",
-          "rich_text": {}
-        },
-        "备注": {
-          "id": "DeMG",
-          "name": "备注",
-          "description": null,
-          "type": "rich_text",
-          "rich_text": {}
-        },
-        "状态": {
-          "id": "JeuJ",
-          "name": "状态",
-          "description": null,
-          "type": "select",
-          "select": {
-            "options": [
-              {"id": "738953b5-31e3-4df4-a0e2-68284401059d", "name": "正常", "color": "green", "description": null},
-              {"id": "b5bf1c9e-41fc-4b27-a70f-406880d2d7d1", "name": "待核验", "color": "gray", "description": null},
-              {"id": "570b369e-6d9a-467e-8e70-c8e052aaf5c2", "name": "作废", "color": "orange", "description": null}
-            ]
-          }
-        },
+        "真实路径": {"id": "C%5EN%3D", "name": "真实路径", "description": null, "type": "rich_text", "rich_text": {}},
+        "备注": {"id": "DeMG", "name": "备注", "description": null, "type": "rich_text", "rich_text": {}},
+        "状态": {"id": "JeuJ", "name": "状态", "description": null, "type": "select", "select": {"options": [{"id": "738953b5-31e3-4df4-a0e2-68284401059d", "name": "正常", "color": "green", "description": null}, {"id": "b5bf1c9e-41fc-4b27-a70f-406880d2d7d1", "name": "待核验", "color": "gray", "description": null}, {"id": "570b369e-6d9a-467e-8e70-c8e052aaf5c2", "name": "作废", "color": "orange", "description": null}]}},
         "ID": {"id": "VXDW", "name": "ID", "description": null, "type": "unique_id", "unique_id": {"prefix": null}},
         "最后核验日期": {"id": "X%3BL%7D", "name": "最后核验日期", "description": null, "type": "date", "date": {}},
         "Notion页面ID": {"id": "laTg", "name": "Notion页面ID", "description": null, "type": "rich_text", "rich_text": {}},
         "数据源链接和快捷链接": {"id": "onkd", "name": "数据源链接和快捷链接", "description": null, "type": "rich_text", "rich_text": {}},
-        "结构角色": {
-          "id": "qHBZ",
-          "name": "结构角色",
-          "description": null,
-          "type": "select",
-          "select": {
-            "options": [
-              {"id": "e7bb2a0d-4c79-44cf-a429-c41a3bea1dd1", "name": "主页", "color": "blue", "description": null},
-              {"id": "caa03e16-4060-4255-9c08-f446cd15a673", "name": "目录", "color": "green", "description": null},
-              {"id": "c3e42302-a0c4-4430-bc5f-8fbc53ff797e", "name": "业务模块", "color": "yellow", "description": null},
-              {"id": "e4c4f0a6-926a-4228-bc73-22ffaa1637d3", "name": "数据库", "color": "orange", "description": null},
-              {"id": "f1a5bd07-af33-48d0-837d-fa37af859c72", "name": "数据库记录", "color": "purple", "description": null},
-              {"id": "49d843bd-11e6-4d35-8862-8538afdb3269", "name": "功能模块", "color": "pink", "description": null},
-              {"id": "2b506f03-54ea-40cf-9807-415b2e8d2662", "name": "系统配置", "color": "gray", "description": null},
-              {"id": "22a73b1d-54bd-41a8-b9a0-65a93fc13cae", "name": "知识页面", "color": "brown", "description": null},
-              {"id": "f49123f7-c5b4-4ba1-9e60-ca3fa80c5aad", "name": "历史页面", "color": "red", "description": null},
-              {"id": "563cd333-c93a-4547-ac98-25e2cc81da5b", "name": "内嵌视图", "color": "default", "description": null},
-              {"id": "6bfcf317-6c4e-448f-849c-5d19ec4dfa18", "name": "根目录", "color": "gray", "description": null}
-            ]
-          }
-        },
+        "结构角色": {"id": "qHBZ", "name": "结构角色", "description": null, "type": "select", "select": {"options": [{"id": "e7bb2a0d-4c79-44cf-a429-c41a3bea1dd1", "name": "主页", "color": "blue", "description": null}, {"id": "caa03e16-4060-4255-9c08-f446cd15a673", "name": "目录", "color": "green", "description": null}, {"id": "c3e42302-a0c4-4430-bc5f-8fbc53ff797e", "name": "业务模块", "color": "yellow", "description": null}, {"id": "e4c4f0a6-926a-4228-bc73-22ffaa1637d3", "name": "数据库", "color": "orange", "description": null}, {"id": "f1a5bd07-af33-48d0-837d-fa37af859c72", "name": "数据库记录", "color": "purple", "description": null}, {"id": "49d843bd-11e6-4d35-8862-8538afdb3269", "name": "功能模块", "color": "pink", "description": null}, {"id": "2b506f03-54ea-40cf-9807-415b2e8d2662", "name": "系统配置", "color": "gray", "description": null}, {"id": "22a73b1d-54bd-41a8-b9a0-65a93fc13cae", "name": "知识页面", "color": "brown", "description": null}, {"id": "f49123f7-c5b4-4ba1-9e60-ca3fa80c5aad", "name": "历史页面", "color": "red", "description": null}, {"id": "563cd333-c93a-4547-ac98-25e2cc81da5b", "name": "内嵌视图", "color": "default", "description": null}, {"id": "6bfcf317-6c4e-448f-849c-5d19ec4dfa18", "name": "根目录", "color": "gray", "description": null}]}},
         "名称": {"id": "title", "name": "名称", "description": null, "type": "title", "title": {}}
       }
     },
@@ -103,7 +59,7 @@
     },
     "3ef7613b-20a9-80af-b112-000b004c476a": {
       "name": "SyncListenerProperties",
-      "module": "commands.sync_listener_properties",
+      "module": "listeners.sync_listener_properties",
       "class": "SyncListenerProperties",
       "enabled": true,
       "properties": {}
