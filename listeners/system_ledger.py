@@ -240,63 +240,6 @@ class SystemLedgerListener:
             "data_sources": data_sources,
         }
 
-    @staticmethod
-    def resolve_object(raw_id):
-        try:
-            page = retrieve_page(raw_id)
-            return {
-                "status": "PAGE",
-                "raw_id": raw_id,
-                "target_id": raw_id,
-                "object": page.get("object"),
-                "parent": page.get("parent"),
-            }
-        except APIResponseError as error:
-            if error.code != APIErrorCode.ObjectNotFound:
-                raise
-
-        try:
-            database = retrieve_database(raw_id)
-        except APIResponseError as error:
-            if error.code == APIErrorCode.ObjectNotFound:
-                return {
-                    "status": "ERROR",
-                    "raw_id": raw_id,
-                    "target_id": "错误",
-                    "reason": "OBJECT_NOT_FOUND",
-                    "error_type": type(error).__name__,
-                    "error": str(error),
-                }
-            raise
-
-        data_sources = database.get("data_sources", [])
-
-        if not data_sources:
-            return {
-                "status": "ERROR",
-                "raw_id": raw_id,
-                "target_id": "错误",
-                "reason": "DATABASE_HAS_NO_DATA_SOURCE",
-            }
-
-        data_source_id = data_sources[0].get("id")
-
-        if not data_source_id:
-            return {
-                "status": "ERROR",
-                "raw_id": raw_id,
-                "target_id": "错误",
-                "reason": "DATA_SOURCE_ID_MISSING",
-            }
-
-        return {
-            "status": "DATABASE",
-            "raw_id": raw_id,
-            "target_id": data_source_id,
-            "object": database.get("object"),
-            "data_sources": data_sources,
-        }
-
     # ============================================================
     # URL 提取
     # ============================================================
