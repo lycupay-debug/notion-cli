@@ -1,12 +1,7 @@
 from .client import notion
 
 
-def get_page(page_id: str, *, filter_properties=None):
-    """
-    根据 Page ID 获取页面。
-
-    filter_properties 为可选的属性 ID 列表。
-    """
+def retrieve_page(page_id: str, *, filter_properties=None):
     kwargs = {}
 
     if filter_properties is not None:
@@ -18,18 +13,13 @@ def get_page(page_id: str, *, filter_properties=None):
     )
 
 
-def get_page_property(
+def retrieve_page_property(
     page_id: str,
     property_id: str,
     *,
     start_cursor=None,
     page_size=None,
 ):
-    """
-    获取单个 Page Property 的完整结果。
-
-    用于 relation / rollup 等可能存在分页结果的属性。
-    """
     kwargs = {}
 
     if start_cursor is not None:
@@ -44,9 +34,9 @@ def get_page_property(
     )
 
 
-def update_page_properties(
+def update_page(
     page_id: str,
-    properties: dict,
+    properties=None,
     *,
     icon=None,
     cover=None,
@@ -54,17 +44,12 @@ def update_page_properties(
     template=None,
     erase_content=None,
     in_trash=None,
+    filter_properties=None,
 ):
-    """
-    更新 Page。
+    kwargs = {}
 
-    properties 保持原有业务调用方式；
-    其余参数对应 2026-03-11 Page Update API。
-    """
-    kwargs = {
-        "properties": properties,
-    }
-
+    if properties is not None:
+        kwargs["properties"] = properties
     if icon is not None:
         kwargs["icon"] = icon
     if cover is not None:
@@ -77,6 +62,8 @@ def update_page_properties(
         kwargs["erase_content"] = erase_content
     if in_trash is not None:
         kwargs["in_trash"] = in_trash
+    if filter_properties is not None:
+        kwargs["filter_properties"] = filter_properties
 
     return notion.pages.update(
         page_id=page_id,
@@ -96,10 +83,8 @@ def create_page(
     template=None,
     position=None,
     allow_async=None,
+    filter_properties=None,
 ):
-    """
-    创建 Page。
-    """
     kwargs = {
         "parent": parent,
     }
@@ -122,18 +107,13 @@ def create_page(
         kwargs["position"] = position
     if allow_async is not None:
         kwargs["allow_async"] = allow_async
+    if filter_properties is not None:
+        kwargs["filter_properties"] = filter_properties
 
     return notion.pages.create(**kwargs)
 
 
-def get_page_markdown(
-    page_id: str,
-    *,
-    include_transcript=None,
-):
-    """
-    使用 2026-03-11 Page Markdown API 获取页面内容。
-    """
+def retrieve_page_markdown(page_id: str, *, include_transcript=None):
     kwargs = {}
 
     if include_transcript is not None:
@@ -155,9 +135,6 @@ def update_page_markdown(
     update_content=None,
     replace_content=None,
 ):
-    """
-    使用 2026-03-11 Page Markdown API 更新页面内容。
-    """
     kwargs = {}
 
     if allow_async is not None:
@@ -180,28 +157,7 @@ def update_page_markdown(
 
 
 def move_page(page_id: str, *, parent):
-    """
-    移动 Page 到新的 parent。
-    """
     return notion.pages.move(
         page_id=page_id,
         parent=parent,
     )
-
-
-def get_page_identity(page_id: str):
-    """
-    获取页面的身份与归属信息。
-    """
-    page = get_page(page_id)
-
-    return {
-        "page_id": page["id"],
-        "object": page.get("object"),
-        "parent": page.get("parent"),
-        "url": page.get("url"),
-        "created_time": page.get("created_time"),
-        "last_edited_time": page.get("last_edited_time"),
-        "in_trash": page.get("in_trash"),
-        "is_locked": page.get("is_locked"),
-    }

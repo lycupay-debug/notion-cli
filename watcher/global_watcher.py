@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from notion.search import get_global_page_snapshot
+from notion.search import search
 
 from core.json_store import JSONStore
 
@@ -66,7 +66,18 @@ class GlobalWatcher:
 
         self.identity_service.state = self.state
 
-        current_pages = get_global_page_snapshot()
+        search_response = search(
+            object_type="page",
+            page_size=100,
+        )
+        current_pages = [
+            {
+                "id": page["id"],
+                "last_edited_time": page["last_edited_time"],
+                "url": page["url"],
+            }
+            for page in search_response.get("results", [])
+        ]
 
         pages_state = self.state.setdefault(
             "pages",

@@ -1,4 +1,4 @@
-﻿from notion.pages import get_page, update_page_properties
+﻿from notion.pages import retrieve_page, update_page
 from notion.databases import query_data_source
 
 
@@ -18,7 +18,7 @@ class CourseRecordListener:
         # 1. 读取当前课程记录
         # ========================================================
 
-        course_page = get_page(page_id)
+        course_page = retrieve_page(page_id)
         course_properties = course_page["properties"]
 
         # ========================================================
@@ -75,7 +75,7 @@ class CourseRecordListener:
         # 4. 查询「💰账单」
         # ========================================================
 
-        bills = query_data_source(
+        bills = self.query_all_data_source(
             BILL_DATA_SOURCE_ID
         )
 
@@ -148,7 +148,7 @@ class CourseRecordListener:
         # 7. 查询「🔖课程记录」中所有同名记录
         # ========================================================
 
-        course_records = query_data_source(
+        course_records = self.query_all_data_source(
             COURSE_RECORD_DATA_SOURCE_ID
         )
 
@@ -192,7 +192,7 @@ class CourseRecordListener:
         # 8. 读取账单「引用」Relation
         # ========================================================
 
-        bill_page = get_page(bill_page_id)
+        bill_page = retrieve_page(bill_page_id)
 
         bill_properties = bill_page["properties"]
 
@@ -293,7 +293,7 @@ class CourseRecordListener:
             for course_record_id in merged_ids
         ]
 
-        update_page_properties(
+        update_page(
             bill_page_id,
             {
                 "引用": {
@@ -311,7 +311,7 @@ class CourseRecordListener:
         # 12. 回读验证
         # ========================================================
 
-        updated_bill = get_page(
+        updated_bill = retrieve_page(
             bill_page_id
         )
 
@@ -368,6 +368,50 @@ class CourseRecordListener:
             ),
             "verified": True,
         }
+
+    @staticmethod
+    def query_all_data_source(data_source_id):
+        results = []
+        cursor = None
+
+        while True:
+            response = query_data_source(
+                data_source_id,
+                start_cursor=cursor,
+                page_size=100,
+            )
+            results.extend(response.get("results", []))
+
+            if not response.get("has_more"):
+                return results
+
+            cursor = response.get("next_cursor")
+            if not cursor:
+                raise RuntimeError(
+                    f"Data Source 分页返回 has_more=true，但 next_cursor 为空: {data_source_id}"
+                )
+
+    @staticmethod
+    def query_all_data_source(data_source_id):
+        results = []
+        cursor = None
+
+        while True:
+            response = query_data_source(
+                data_source_id,
+                start_cursor=cursor,
+                page_size=100,
+            )
+            results.extend(response.get("results", []))
+
+            if not response.get("has_more"):
+                return results
+
+            cursor = response.get("next_cursor")
+            if not cursor:
+                raise RuntimeError(
+                    f"Data Source 分页返回 has_more=true，但 next_cursor 为空: {data_source_id}"
+                )
 
     # ============================================================
     # Title → 普通文本

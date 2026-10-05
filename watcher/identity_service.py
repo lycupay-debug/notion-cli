@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from notion.pages import get_page_identity
+from notion.pages import retrieve_page
 
 from core.json_store import JSONStore
 
@@ -77,7 +77,12 @@ class ObjectIdentityService:
             checked += 1
 
             try:
-                identity = get_page_identity(page_id)
+                page = retrieve_page(page_id)
+
+                identity = {
+                    "object": page.get("object"),
+                    "parent": page.get("parent"),
+                }
 
                 parent = identity.get("parent")
 
@@ -153,7 +158,12 @@ class ObjectIdentityService:
             }
 
         try:
-            identity = get_page_identity(page_id)
+            page = retrieve_page(page_id)
+
+            identity = {
+                "object": page.get("object"),
+                "parent": page.get("parent"),
+            }
 
             parent = identity.get("parent")
 
