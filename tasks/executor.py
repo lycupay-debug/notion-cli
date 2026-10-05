@@ -8,56 +8,41 @@ class TaskExecutor:
     """
     串行任务执行器。
 
-    当前职责：
+    正式执行链：
 
-        1. 从 JSON 获取当前任务
-        2. 找到一个 PENDING
-        3. 根据 task 名称读取 TaskRegistry
-        4. 获取 listener_id
-        5. 根据 listener_id 加载 Listener
-        6. 标记 RUNNING
-        7. 执行 Listener
-        8. 根据执行结果写回 COMPLETED / FAILED
-
-    当前执行链：
-
+        TaskManager
+            ↓
         TaskRegistry
             ↓
         listener_id
             ↓
         ListenerLoader
             ↓
-        Listener instance
+        Listener
             ↓
         handle(page_id)
-
-    兼容机制：
-
-        如果显式传入 handler，
-        则继续使用原有 handler 执行方式。
-
-        这样可以保持已有测试与旧调用方式稳定。
 
     不负责：
 
         - 创建任务
-        - 任务恢复
-        - Listener Registry 内部配置管理
-        - Listener 实例加载逻辑
-        - Notion 操作
-        - 多线程
-        - 内存任务队列
+        - 任务恢复逻辑
+        - Listener Registry
+        - Listener 加载逻辑
+        - Notion API
+        - 并发执行
     """
 
     def __init__(
         self,
         manager=None,
         recovery=None,
-        handler=None,
         registry=None,
         listener_loader=None,
     ):
-        self.manager = manager or TaskManager()
+        self.manager = (
+            manager
+            or TaskManager()
+        )
 
         self.recovery = (
             recovery
@@ -65,8 +50,6 @@ class TaskExecutor:
                 manager=self.manager
             )
         )
-
-        self.handler = handler
 
         self.registry = (
             registry
@@ -79,22 +62,13 @@ class TaskExecutor:
         )
 
     # =========================================================
-    # 获取任务业务配置
+    # 任务配置
     # =========================================================
 
-    def resolve_task_config(self, task):
-        """
-        根据任务中的 task 名称读取 JSON 配置。
-
-        返回：
-
-            None
-                没有配置 / 未启用 / 没有 listener_id
-
-            dict
-                有效任务配置
-        """
-
+    def resolve_task_config(
+        self,
+        task,
+    ):
         task_name = task.get(
             "task"
         )
@@ -125,7 +99,7 @@ class TaskExecutor:
         return config
 
     # =========================================================
-    # 执行 Listener
+    # Listener 执行
     # =========================================================
 
     def execute_listener(
@@ -133,38 +107,17 @@ class TaskExecutor:
         task,
         listener_id,
     ):
-        """
-        根据 Listener ID 加载并执行 Listener。
-
-        执行链：
-
-            listener_id
-                ↓
-            ListenerLoader
-                ↓
-            Listener instance
-                ↓
-            handle(target_page_id)
-
-        Listener 当前统一接收：
-
-            target_page_id
-
-        返回 Listener 的执行结果。
-        """
-
         listener = self.listener_loader.load(
             listener_id
         )
 
-        target_page_id = task.get(
+        page_id = task.get(
             "target_page_id"
         )
 
-        if not target_page_id:
+        if not page_id:
             raise ValueError(
-                "Task target_page_id is required "
-                "for Listener execution."
+                "Task target_page_id is required."
             )
 
         handle = getattr(
@@ -175,13 +128,11 @@ class TaskExecutor:
 
         if not callable(handle):
             raise TypeError(
-                f"Listener does not provide "
-                f"a callable handle(): {listener!r}"
+                "Listener must provide "
+                "a callable handle(page_id)."
             )
 
-        return handle(
-            target_page_id
-        )
+        return handle(page_id)
 
     # =========================================================
     # 执行一个任务
@@ -193,31 +144,22 @@ class TaskExecutor:
 
         返回：
 
-            None
-                当前没有可执行任务。
+        None
+            没有可执行任务。
 
-            dict
-                执行后的任务。
+        dict
+            执行后的任务。
         """
-
-        # -----------------------------------------------------
-        # 1. 先恢复 WAITING
-        # -----------------------------------------------------
 
         self.recovery.recover_all()
 
-        # -----------------------------------------------------
-        # 2. 从 JSON 获取最新 PENDING
-        # -----------------------------------------------------
-
-        task = self.manager.get_next_pending_task()
+        task = (
+            self.manager
+            .get_next_pending_task()
+        )
 
         if task is None:
             return None
-
-        # -----------------------------------------------------
-        # 3. 再次根据 task_no 从磁盘读取
-        # -----------------------------------------------------
 
         task = self.manager.get_task(
             task["task_no"]
@@ -226,17 +168,11 @@ class TaskExecutor:
         if task is None:
             return None
 
-        # 防止旧快照导致错误执行。
-
         if (
             task.get("status")
             != self.manager.STATUS_PENDING
         ):
             return None
-
-        # -----------------------------------------------------
-        # 4. 读取任务业务配置
-        # -----------------------------------------------------
 
         task_config = (
             self.resolve_task_config(
@@ -247,66 +183,21 @@ class TaskExecutor:
         if task_config is None:
             return None
 
-        listener_id = task_config[
-            "listener_id"
-        ]
-
-        # -----------------------------------------------------
-        # 5. PENDING → RUNNING
-        # -----------------------------------------------------
+        listener_id = (
+            task_config["listener_id"]
+        )
 
         task = self.manager.update_status(
             task["task_no"],
             self.manager.STATUS_RUNNING,
         )
 
-        # -----------------------------------------------------
-        # 6. 构造执行上下文
-        #
-        # 不写入任务原始 JSON。
-        # -----------------------------------------------------
-
-        execution_context = {
-            "listener_id": listener_id,
-        }
-
-        task_for_execution = {
-            **task,
-            "_execution": execution_context,
-        }
-
         try:
 
-            # -------------------------------------------------
-            # 7. 执行
-            #
-            # 兼容旧 handler：
-            #
-            #   handler(task)
-            #
-            # 新 Listener：
-            #
-            #   ListenerLoader
-            #       ↓
-            #   Listener.handle(page_id)
-            # -------------------------------------------------
-
-            if self.handler is not None:
-
-                result = self.handler(
-                    task_for_execution
-                )
-
-            else:
-
-                result = self.execute_listener(
-                    task_for_execution,
-                    listener_id,
-                )
-
-            # -------------------------------------------------
-            # 8. 成功
-            # -------------------------------------------------
+            result = self.execute_listener(
+                task,
+                listener_id,
+            )
 
             return self.manager.update_status(
                 task["task_no"],
@@ -315,10 +206,6 @@ class TaskExecutor:
             )
 
         except Exception as exc:
-
-            # -------------------------------------------------
-            # 9. 失败
-            # -------------------------------------------------
 
             return self.manager.update_status(
                 task["task_no"],

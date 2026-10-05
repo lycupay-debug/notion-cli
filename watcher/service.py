@@ -1,5 +1,7 @@
 import time
 
+from tasks.executor import TaskExecutor
+
 from .global_watcher import GlobalWatcher
 
 
@@ -7,26 +9,45 @@ class WatcherService:
     """
     GlobalWatcher 常驻服务。
 
-    职责：
-    - 持续运行
-    - 按固定间隔调用 GlobalWatcher
-    - 暂时只输出检测结果
-    - 不负责具体业务处理
+    每一轮：
+
+        1. 检查 Notion 页面变化
+        2. Dispatcher 创建任务
+        3. TaskExecutor 顺序执行全部待处理任务
     """
 
-    def __init__(self, interval=5):
+    def __init__(
+        self,
+        interval=10,
+        watcher=None,
+        task_executor=None,
+    ):
         self.interval = interval
-        self.watcher = GlobalWatcher()
+
+        self.watcher = (
+            watcher
+            or GlobalWatcher()
+        )
+
+        self.task_executor = (
+            task_executor
+            or TaskExecutor()
+        )
+
         self.running = False
 
     def run_once(self):
-        """执行一次监听。"""
+
         changes = self.watcher.check()
 
         changed = [
             item
             for item in changes
-            if item["status"] in ("NEW", "CHANGED")
+            if item["status"]
+            in (
+                "NEW",
+                "CHANGED",
+            )
         ]
 
         print(
@@ -42,29 +63,67 @@ class WatcherService:
                 f"{item['last_edited_time']}"
             )
 
-        return changed
+        # -----------------------------------------------------
+        # 顺序执行任务
+        # -----------------------------------------------------
+
+        executed = []
+
+        while True:
+
+            result = (
+                self.task_executor
+                .run_once()
+            )
+
+            if result is None:
+                break
+
+            executed.append(result)
+
+        print(
+            f"[TaskExecutor] "
+            f"本轮执行任务：{len(executed)}"
+        )
+
+        return {
+            "changes": changed,
+            "tasks": executed,
+        }
 
     def run(self):
-        """持续运行监听服务。"""
+
         self.running = True
 
-        print("WatcherService 已启动")
-        print(f"监听间隔：{self.interval} 秒")
-        print("按 Ctrl+C 停止")
+        print(
+            "WatcherService 已启动"
+        )
+
+        print(
+            f"监听间隔：{self.interval} 秒"
+        )
+
+        print(
+            "按 Ctrl+C 停止"
+        )
+
         print("-" * 60)
 
         while self.running:
+
             try:
                 self.run_once()
 
-            except Exception as e:
+            except Exception as exc:
+
                 print(
                     f"[Watcher ERROR] "
-                    f"{type(e).__name__}: {e}"
+                    f"{type(exc).__name__}: {exc}"
                 )
 
-            time.sleep(self.interval)
+            time.sleep(
+                self.interval
+            )
 
     def stop(self):
-        """停止服务。"""
         self.running = False

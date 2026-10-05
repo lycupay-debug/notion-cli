@@ -3,7 +3,8 @@
   "tasks": {
     "更新房源ID": {
       "enabled": true,
-      "listener_id": "3ea7613b-20a9-8026-97d1-000b7e8aef4f"
+      "listener_id": "3ea7613b-20a9-8026-97d1-000b7e8aef4f",
+      "target_property": "房源ID"
     }
   }
 }

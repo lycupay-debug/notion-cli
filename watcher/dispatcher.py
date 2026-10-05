@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from core.json_store import JSONStore
-
-from .executor import ListenerExecutor
+from tasks.manager import TaskManager
+from tasks.registry import TaskRegistry
 
 
 CONFIG_DIR = (
@@ -10,47 +10,67 @@ CONFIG_DIR = (
     / "config"
 )
 
-STATE_FILE = CONFIG_DIR / "global_state.json"
-LISTENERS_FILE = CONFIG_DIR / "listeners.json"
+STATE_FILE = (
+    CONFIG_DIR
+    / "global_state.json"
+)
+
+LISTENERS_FILE = (
+    CONFIG_DIR
+    / "listeners.json"
+)
 
 
 class Dispatcher:
     """
-    本地 Dispatcher。
+    页面变化路由器。
 
-    Dispatcher 不直接操作 JSON 文件。
+    正式职责：
 
-    所有 JSON 数据访问统一交给 JSONStore。
+        page_id
+            ↓
+        object
+            ↓
+        data_source_id
+            ↓
+        listener_id
+            ↓
+        task_name
+            ↓
+        TaskManager.create_task()
 
-    因此：
-        global_state.json
-        listeners.json
+    Dispatcher 不执行 Listener。
 
-    都具备自动 mtime 检测能力。
+    Dispatcher 不负责：
 
-    外部修改 JSON 后，下一次 dispatch()
-    会自动读取最新内容。
+        - Listener 实例化
+        - Listener 执行
+        - Notion 业务处理
+        - 任务状态管理
     """
 
-    def __init__(self):
-        self.store = JSONStore()
-        self.executor = ListenerExecutor()
+    def __init__(
+        self,
+        store=None,
+        task_manager=None,
+        task_registry=None,
+    ):
+        self.store = (
+            store
+            or JSONStore()
+        )
+
+        self.task_manager = (
+            task_manager
+            or TaskManager()
+        )
+
+        self.task_registry = (
+            task_registry
+            or TaskRegistry()
+        )
 
     def dispatch(self, page_id):
-        """
-        根据 page_id：
-
-        1. 读取页面状态
-        2. 获取 object 身份
-        3. 获取 data_source_id
-        4. 查找对应 listener
-        5. 检查 listener 是否启用
-        6. 执行 listener
-        """
-
-        # --------------------------------------------------
-        # 1. 读取 GlobalWatcher 状态
-        # --------------------------------------------------
 
         state = self.store.load(
             STATE_FILE,
@@ -59,10 +79,6 @@ class Dispatcher:
             },
         )
 
-        # --------------------------------------------------
-        # 2. 读取 listeners 配置
-        # --------------------------------------------------
-
         listeners = self.store.load(
             LISTENERS_FILE,
             default={
@@ -70,16 +86,11 @@ class Dispatcher:
             },
         )
 
-        # --------------------------------------------------
-        # 3. 获取页面状态
-        # --------------------------------------------------
-
-        pages = state.get(
-            "pages",
-            {},
+        page = (
+            state
+            .get("pages", {})
+            .get(page_id)
         )
-
-        page = pages.get(page_id)
 
         if page is None:
             return {
@@ -87,11 +98,9 @@ class Dispatcher:
                 "page_id": page_id,
             }
 
-        # --------------------------------------------------
-        # 4. 获取 object 身份
-        # --------------------------------------------------
-
-        object_info = page.get("object")
+        object_info = page.get(
+            "object"
+        )
 
         if not object_info:
             return {
@@ -99,18 +108,10 @@ class Dispatcher:
                 "page_id": page_id,
             }
 
-        # --------------------------------------------------
-        # 5. 获取 parent
-        # --------------------------------------------------
-
         parent = object_info.get(
             "parent",
-            {},
+            {}
         )
-
-        # --------------------------------------------------
-        # 6. 获取 data_source_id
-        # --------------------------------------------------
 
         data_source_id = parent.get(
             "data_source_id"
@@ -121,10 +122,6 @@ class Dispatcher:
                 "status": "NO_DATA_SOURCE_ID",
                 "page_id": page_id,
             }
-
-        # --------------------------------------------------
-        # 7. 根据 data_source_id 查 listener
-        # --------------------------------------------------
 
         listener_config = (
             listeners
@@ -139,10 +136,6 @@ class Dispatcher:
                 "data_source_id": data_source_id,
             }
 
-        # --------------------------------------------------
-        # 8. 检查 listener 是否启用
-        # --------------------------------------------------
-
         if not listener_config.get(
             "enabled",
             False,
@@ -151,26 +144,63 @@ class Dispatcher:
                 "status": "LISTENER_DISABLED",
                 "page_id": page_id,
                 "data_source_id": data_source_id,
-                "listener": listener_config,
             }
 
-        # --------------------------------------------------
-        # 9. 执行 listener
-        # --------------------------------------------------
+        listener_id = data_source_id
 
-        execution = self.executor.execute(
-            listener_config,
-            page_id,
+        task_config = (
+            self.task_registry
+            .find_task_by_listener_id(
+                listener_id
+            )
         )
 
-        # --------------------------------------------------
-        # 10. 返回统一结果
-        # --------------------------------------------------
+        if task_config is None:
+            return {
+                "status": "NO_TASK_CONFIG",
+                "page_id": page_id,
+                "data_source_id": data_source_id,
+                "listener_id": listener_id,
+            }
+
+        if task_config.get(
+            "enabled",
+            False,
+        ) is not True:
+            return {
+                "status": "TASK_DISABLED",
+                "page_id": page_id,
+                "data_source_id": data_source_id,
+                "listener_id": listener_id,
+                "task": task_config[
+                    "task_name"
+                ],
+            }
+
+        task_name = task_config[
+            "task_name"
+        ]
+
+        target_property = (
+            task_config.get(
+                "target_property"
+            )
+        )
+
+        task = self.task_manager.create_task(
+            task=task_name,
+            target_page_id=page_id,
+            target_property=target_property,
+            metadata={
+                "data_source_id": data_source_id,
+                "listener_id": listener_id,
+            },
+        )
 
         return {
-            "status": "ROUTED",
+            "status": "TASK_CREATED",
             "page_id": page_id,
             "data_source_id": data_source_id,
-            "listener": listener_config,
-            "execution": execution,
+            "listener_id": listener_id,
+            "task": task,
         }
