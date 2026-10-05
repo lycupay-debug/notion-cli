@@ -73,6 +73,12 @@ class SystemLedgerListener:
             f"对象类型: {resolved['status']}"
         )
 
+        if resolved["status"] == "ERROR":
+            raise RuntimeError(
+                "无法解析目标 Notion 对象："
+                f"{resolved.get('reason', 'UNKNOWN')}"
+            )
+
         target_id = resolved["target_id"]
 
         print(
