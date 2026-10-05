@@ -15,6 +15,10 @@
       "enabled": true,
       "listener_id": "3e97613b-20a9-805f-9965-000b3f9c86fb",
       "target_property": "引用"
+    },
+    "同步Listener字段": {
+      "enabled": true,
+      "listener_id": "3ef7613b-20a9-80af-b112-000b004c476a"
     }
   }
 }
