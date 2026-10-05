@@ -75,6 +75,17 @@ def test_failed_task_is_terminal_and_not_reexecuted(tmp_path):
     assert manager.get_task(first["task_no"])["status"] == manager.STATUS_FAILED
 
 
+def test_completed_task_is_terminal_and_not_reexecuted(tmp_path):
+    manager = TaskManager(task_file=tmp_path / "tasks.json")
+
+    first = manager.create_task("task-a")
+    manager.update_status(first["task_no"], manager.STATUS_RUNNING)
+    manager.update_status(first["task_no"], manager.STATUS_COMPLETED)
+
+    assert manager.get_next_pending_task() is None
+    assert manager.get_task(first["task_no"])["status"] == manager.STATUS_COMPLETED
+
+
 def test_same_name_waits_until_previous_task_finishes(tmp_path):
     manager = TaskManager(task_file=tmp_path / "tasks.json")
 
@@ -85,3 +96,21 @@ def test_same_name_waits_until_previous_task_finishes(tmp_path):
     assert first["status"] == manager.STATUS_PENDING
     assert second["status"] == manager.STATUS_WAITING
     assert third["status"] == manager.STATUS_WAITING
+
+
+def test_failed_previous_same_name_releases_next_task(tmp_path):
+    manager = TaskManager(task_file=tmp_path / "tasks.json")
+
+    first = manager.create_task("task-a")
+    second = manager.create_task("task-a")
+
+    manager.update_status(first["task_no"], manager.STATUS_RUNNING)
+    manager.update_status(first["task_no"], manager.STATUS_FAILED)
+
+    assert manager.has_conflict(second) is False
+    recovered = manager.update_status(
+        second["task_no"],
+        manager.STATUS_PENDING,
+    )
+    assert recovered["status"] == manager.STATUS_PENDING
+    assert manager.get_next_pending_task()["task_no"] == second["task_no"]
