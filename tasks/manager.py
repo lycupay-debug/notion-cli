@@ -54,17 +54,9 @@ class TaskManager:
     }
 
     ALLOWED_TRANSITIONS = {
-        STATUS_PENDING: {
-            STATUS_RUNNING,
-            STATUS_WAITING,
-        },
-        STATUS_WAITING: {
-            STATUS_PENDING,
-        },
-        STATUS_RUNNING: {
-            STATUS_COMPLETED,
-            STATUS_FAILED,
-        },
+        STATUS_PENDING: {STATUS_RUNNING, STATUS_WAITING},
+        STATUS_WAITING: {STATUS_PENDING},
+        STATUS_RUNNING: {STATUS_COMPLETED, STATUS_FAILED},
         STATUS_COMPLETED: set(),
         STATUS_FAILED: set(),
     }
@@ -111,19 +103,14 @@ class TaskManager:
             and task.get("target_property") == target_property
         )
 
-    def _find_existing_business_task(
+    def find_existing_business_task(
         self,
-        tasks,
         task_name,
-        target_page_id,
-        target_property,
+        target_page_id=None,
+        target_property=None,
     ):
-        """
-        查找同一业务目标的历史任务。
-
-        无论历史任务是 PENDING/RUNNING/WAITING/COMPLETED/FAILED，
-        都视为同一业务任务，禁止再次创建。
-        """
+        """查找同一业务目标的历史任务，包括 COMPLETED/FAILED。"""
+        tasks = self._load().get("tasks", {})
         matches = [
             task
             for task in tasks.values()
@@ -136,16 +123,9 @@ class TaskManager:
         ]
         if not matches:
             return None
-
         return min(matches, key=lambda item: item.get("task_no", 0))
 
     def _has_earlier_same_name_active_task(self, tasks, task_name, task_no):
-        """
-        同名任务串行规则：
-
-        只要存在更早的同名任务处于 ACTIVE 状态，
-        新任务必须 WAITING。
-        """
         for other in tasks.values():
             if other.get("task_no", 0) >= task_no:
                 continue
@@ -171,8 +151,7 @@ class TaskManager:
         data = self._load()
         tasks = data.setdefault("tasks", {})
 
-        existing = self._find_existing_business_task(
-            tasks,
+        existing = self.find_existing_business_task(
             task,
             target_page_id,
             target_property,
@@ -185,11 +164,7 @@ class TaskManager:
         task_key = self._format_task_key(task_no)
 
         initial_status = self.STATUS_WAITING if (
-            self._has_earlier_same_name_active_task(
-                tasks,
-                task,
-                task_no,
-            )
+            self._has_earlier_same_name_active_task(tasks, task, task_no)
         ) else self.STATUS_PENDING
 
         task_data = {
@@ -230,8 +205,7 @@ class TaskManager:
 
         data = self._load()
         task_key = self._format_task_key(task_no)
-        tasks = data.get("tasks", {})
-        task = tasks.get(task_key)
+        task = data.get("tasks", {}).get(task_key)
 
         if task is None:
             raise KeyError(f"Task not found: {task_no}")
@@ -280,15 +254,12 @@ class TaskManager:
             task_no = task.get("task_no", 0)
             task_name = task.get("task")
 
-            blocked = False
-            for other in ordered:
-                if other.get("task_no", 0) >= task_no:
-                    continue
-                if other.get("task") != task_name:
-                    continue
-                if other.get("status") in self.ACTIVE_STATUSES:
-                    blocked = True
-                    break
+            blocked = any(
+                other.get("task_no", 0) < task_no
+                and other.get("task") == task_name
+                and other.get("status") in self.ACTIVE_STATUSES
+                for other in ordered
+            )
 
             if not blocked:
                 task["status"] = self.STATUS_PENDING
@@ -304,15 +275,9 @@ class TaskManager:
         ]
 
     def get_next_pending_task(self):
-        """
-        获取 task_no 最小的 PENDING 任务。
-
-        每次调用前先释放已经完成前置依赖的 WAITING 任务。
-        """
+        """获取 task_no 最小的 PENDING 任务，并先释放可运行的 WAITING。"""
         self.release_waiting_tasks()
-        tasks = self.list_tasks()
-
-        for task in tasks:
+        for task in self.list_tasks():
             if task.get("status") == self.STATUS_PENDING:
                 return task
         return None
@@ -344,8 +309,5 @@ class TaskManager:
             return False
 
         if task.get("status") != self.STATUS_WAITING:
-            self.update_status(
-                task["task_no"],
-                self.STATUS_WAITING,
-            )
+            self.update_status(task["task_no"], self.STATUS_WAITING)
         return True
