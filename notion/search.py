@@ -1,19 +1,52 @@
 from .client import notion
 
 
-def search_pages(query: str = ""):
-    """搜索 Notion 页面"""
+def search(
+    query: str = "",
+    *,
+    object_type: str = "page",
+    sort=None,
+    start_cursor=None,
+    page_size=100,
+):
+    """
+    使用 Notion Search API。
+
+    2026-03-11 支持按 object 类型筛选：
+    - page
+    - data_source
+    """
+    if object_type not in {"page", "data_source"}:
+        raise ValueError(
+            f"不支持的 object_type: {object_type}"
+        )
+
     response = notion.search(
         query=query,
         filter={
             "property": "object",
-            "value": "page",
+            "value": object_type,
         },
-        sort={
+        sort=sort
+        or {
             "direction": "descending",
             "timestamp": "last_edited_time",
         },
-        page_size=100,
+        start_cursor=start_cursor,
+        page_size=page_size,
+    )
+
+    return response
+
+
+def search_pages(query: str = "", **kwargs):
+    """
+    向后兼容：只搜索 Page。
+    """
+    response = search(
+        query=query,
+        object_type="page",
+        **kwargs,
     )
 
     return response["results"]
