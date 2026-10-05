@@ -40,6 +40,24 @@ class TaskManager:
         STATUS_FAILED,
     }
 
+    # 单进程流水线状态机。
+    # 任务始终按 task_no 顺序串行执行，不允许状态倒退。
+    ALLOWED_TRANSITIONS = {
+        STATUS_PENDING: {
+            STATUS_RUNNING,
+            STATUS_WAITING,
+        },
+        STATUS_WAITING: {
+            STATUS_PENDING,
+        },
+        STATUS_RUNNING: {
+            STATUS_COMPLETED,
+            STATUS_FAILED,
+        },
+        STATUS_COMPLETED: set(),
+        STATUS_FAILED: set(),
+    }
+
     def __init__(
         self,
         task_file=TASK_FILE,
@@ -177,6 +195,22 @@ class TaskManager:
             {},
         )
 
+        # 任务是流水线执行的：同一业务目标在已有未完成任务时，
+        # 不重复创建任务。Listener 执行时会重新读取 Notion 当前值，
+        # 因此保留最早任务即可，后续变化不需要堆积重复任务。
+        for existing in tasks.values():
+            if (
+                existing.get("task") == task
+                and existing.get("target_page_id") == target_page_id
+                and existing.get("target_property") == target_property
+                and existing.get("status") in {
+                    self.STATUS_PENDING,
+                    self.STATUS_RUNNING,
+                    self.STATUS_WAITING,
+                }
+            ):
+                return existing
+
         task_no = self._next_task_no(data)
 
         task_id = str(uuid4())
@@ -306,6 +340,25 @@ class TaskManager:
         if task is None:
             raise KeyError(
                 f"Task not found: {task_no}"
+            )
+
+        current_status = task.get("status")
+
+        if current_status == status:
+            if result is not None:
+                task["result"] = result
+                self._save(data)
+            return task
+
+        allowed = self.ALLOWED_TRANSITIONS.get(
+            current_status,
+            set(),
+        )
+
+        if status not in allowed:
+            raise ValueError(
+                f"Invalid task transition: "
+                f"{current_status} -> {status}"
             )
 
         task["status"] = status
