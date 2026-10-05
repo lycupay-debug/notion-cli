@@ -9,7 +9,8 @@ __pycache__/
 
 # Runtime state
 config/global_state.json
-config/notioncli.pid
 
 # Logs
 logs/
+*.json
+
