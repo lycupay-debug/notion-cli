@@ -14,6 +14,9 @@ config/tasks.json
 # Webhook credentials
 /data/webhook_credentials.json
 
+# Webhook events
+/data/webhook_events/
+
 # Logs
 logs/
 
