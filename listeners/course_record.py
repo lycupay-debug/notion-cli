@@ -1,5 +1,5 @@
-﻿from notion.pages import get_page, update_page_properties
-from notion.databases import query_data_source
+﻿from notion.pages import retrieve_page, update_page
+from notion.data_sources import query_data_source
 
 
 COURSE_RECORD_DATA_SOURCE_ID = "3e97613b-20a9-805f-9965-000b3f9c86fb"
@@ -18,7 +18,7 @@ class CourseRecordListener:
         # 1. 读取当前课程记录
         # ========================================================
 
-        course_page = get_page(page_id)
+        course_page = retrieve_page(page_id)
         course_properties = course_page["properties"]
 
         # ========================================================
@@ -75,7 +75,7 @@ class CourseRecordListener:
         # 4. 查询「💰账单」
         # ========================================================
 
-        bills = query_data_source(
+        bills = self.query_all_data_source(
             BILL_DATA_SOURCE_ID
         )
 
@@ -119,18 +119,10 @@ class CourseRecordListener:
 
         if len(matched_bills) > 1:
 
-            print(
-                "[CourseRecordListener] "
-                "发现多个同名账单，停止写入"
+            raise RuntimeError(
+                "发现多个同名账单，无法确定唯一写入目标："
+                f"name={name!r}, count={len(matched_bills)}"
             )
-
-            return {
-                "status": "ERROR",
-                "reason": "MULTIPLE_BILLS",
-                "page_id": page_id,
-                "name": name,
-                "count": len(matched_bills),
-            }
 
         # ========================================================
         # 6. 获取唯一账单
@@ -148,7 +140,7 @@ class CourseRecordListener:
         # 7. 查询「🔖课程记录」中所有同名记录
         # ========================================================
 
-        course_records = query_data_source(
+        course_records = self.query_all_data_source(
             COURSE_RECORD_DATA_SOURCE_ID
         )
 
@@ -192,7 +184,7 @@ class CourseRecordListener:
         # 8. 读取账单「引用」Relation
         # ========================================================
 
-        bill_page = get_page(bill_page_id)
+        bill_page = retrieve_page(bill_page_id)
 
         bill_properties = bill_page["properties"]
 
@@ -293,7 +285,7 @@ class CourseRecordListener:
             for course_record_id in merged_ids
         ]
 
-        update_page_properties(
+        update_page(
             bill_page_id,
             {
                 "引用": {
@@ -311,7 +303,7 @@ class CourseRecordListener:
         # 12. 回读验证
         # ========================================================
 
-        updated_bill = get_page(
+        updated_bill = retrieve_page(
             bill_page_id
         )
 
@@ -368,6 +360,28 @@ class CourseRecordListener:
             ),
             "verified": True,
         }
+
+    @staticmethod
+    def query_all_data_source(data_source_id):
+        results = []
+        cursor = None
+
+        while True:
+            response = query_data_source(
+                data_source_id,
+                start_cursor=cursor,
+                page_size=100,
+            )
+            results.extend(response.get("results", []))
+
+            if not response.get("has_more"):
+                return results
+
+            cursor = response.get("next_cursor")
+            if not cursor:
+                raise RuntimeError(
+                    f"Data Source 分页返回 has_more=true，但 next_cursor 为空: {data_source_id}"
+                )
 
     # ============================================================
     # Title → 普通文本

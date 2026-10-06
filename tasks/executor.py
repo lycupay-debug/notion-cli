@@ -206,6 +206,15 @@ class TaskExecutor:
                 listener_id,
             )
 
+            if isinstance(result, dict) and result.get("status") in {
+                "ERROR",
+                "FAILED",
+            }:
+                raise RuntimeError(
+                    "Listener returned failure status: "
+                    f"{result.get('status')}"
+                )
+
             return self.manager.update_status(
                 task["task_no"],
                 self.manager.STATUS_COMPLETED,

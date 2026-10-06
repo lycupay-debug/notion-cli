@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from notion.search import get_global_page_snapshot
+from notion.search import search
 
 from core.json_store import JSONStore
 
@@ -66,7 +66,34 @@ class GlobalWatcher:
 
         self.identity_service.state = self.state
 
-        current_pages = get_global_page_snapshot()
+        # Search 本身采用分页；这里必须完整读取，不能只监视前 100 个页面。
+        current_pages = []
+        cursor = None
+
+        while True:
+            search_response = search(
+                object_type="page",
+                start_cursor=cursor,
+                page_size=100,
+            )
+
+            current_pages.extend(
+                {
+                    "id": page["id"],
+                    "last_edited_time": page["last_edited_time"],
+                    "url": page["url"],
+                }
+                for page in search_response.get("results", [])
+            )
+
+            if not search_response.get("has_more"):
+                break
+
+            cursor = search_response.get("next_cursor")
+            if not cursor:
+                raise RuntimeError(
+                    "Notion Search 分页返回 has_more=true，但 next_cursor 为空"
+                )
 
         pages_state = self.state.setdefault(
             "pages",
@@ -153,16 +180,46 @@ class GlobalWatcher:
 
             elif status == "CHANGED":
 
-                # 保留原有 object
-                object_info = old.get("object")
+                # 页面发生变化后，不能继续使用旧 object。
+                # 先重新向 Notion 确认当前 parent / data_source 身份。
+                # 如果身份读取失败，则不更新本地时间戳，也不路由任务；
+                # 下一轮会继续重试，避免使用陈旧身份写入错误的数据源。
+                identity_result = (
+                    self.identity_service.check_page(
+                        page_id,
+                        force=True,
+                    )
+                )
 
-                pages_state[page_id] = {
-                    "last_edited_time": current_time,
-                    "url": current_url,
-                    "object": object_info,
-                }
+                change["identity"] = identity_result
 
-                # 保存更新时间
+                if identity_result.get("status") == "ERROR":
+                    changes.append(change)
+                    continue
+
+                # 身份确认成功后，才提交本轮页面状态。
+                self.state = self.store.load(
+                    STATE_FILE,
+                    default={
+                        "pages": {}
+                    },
+                )
+
+                self.identity_service.state = self.state
+
+                pages_state = self.state.setdefault(
+                    "pages",
+                    {}
+                )
+
+                current_state = pages_state.setdefault(
+                    page_id,
+                    {}
+                )
+
+                current_state["last_edited_time"] = current_time
+                current_state["url"] = current_url
+
                 self.store.save(
                     STATE_FILE,
                     self.state,

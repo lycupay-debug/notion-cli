@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from notion.pages import get_page_identity
+from notion.pages import retrieve_page
 
 from core.json_store import JSONStore
 
@@ -77,7 +77,12 @@ class ObjectIdentityService:
             checked += 1
 
             try:
-                identity = get_page_identity(page_id)
+                page = retrieve_page(page_id)
+
+                identity = {
+                    "object": page.get("object"),
+                    "parent": page.get("parent"),
+                }
 
                 parent = identity.get("parent")
 
@@ -116,9 +121,16 @@ class ObjectIdentityService:
             "failed": failed,
         }
 
-    def check_page(self, page_id):
+    def check_page(self, page_id, *, force=False):
         """
         检查并识别单个页面的对象身份。
+
+        force=False：
+            已有 object 时使用本地 JSON，不调用 Notion API。
+
+        force=True：
+            重新调用 Notion API 确认当前 object / parent，
+            用于页面发生变化后的身份刷新。
         """
 
         # --------------------------------------------------
@@ -145,7 +157,7 @@ class ObjectIdentityService:
                 "page_id": page_id,
             }
 
-        if data.get("object"):
+        if data.get("object") and not force:
             return {
                 "status": "ALREADY_EXISTS",
                 "page_id": page_id,
@@ -153,7 +165,12 @@ class ObjectIdentityService:
             }
 
         try:
-            identity = get_page_identity(page_id)
+            page = retrieve_page(page_id)
+
+            identity = {
+                "object": page.get("object"),
+                "parent": page.get("parent"),
+            }
 
             parent = identity.get("parent")
 
