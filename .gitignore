@@ -11,6 +11,9 @@ __pycache__/
 config/global_state.json
 config/tasks.json
 
+# Webhook credentials
+/data/webhook_credentials.json
+
 # Logs
 logs/
 
