@@ -1,6 +1,6 @@
 import json
 from datetime import datetime, timezone
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from uuid import uuid4
 
@@ -29,7 +29,10 @@ class WebhookHandler(BaseHTTPRequestHandler):
         content_length = self.headers.get("Content-Length")
 
         if content_length is None:
-            self._send_json(411, {"status": "error", "message": "Content-Length required"})
+            self._send_json(
+                411,
+                {"status": "error", "message": "Content-Length required"},
+            )
             return
 
         try:
@@ -37,7 +40,10 @@ class WebhookHandler(BaseHTTPRequestHandler):
             raw_body = self.rfile.read(length)
             payload = json.loads(raw_body.decode("utf-8"))
         except (ValueError, UnicodeDecodeError, json.JSONDecodeError):
-            self._send_json(400, {"status": "error", "message": "Invalid JSON"})
+            self._send_json(
+                400,
+                {"status": "error", "message": "Invalid JSON"},
+            )
             return
 
         record_id = str(uuid4())
@@ -77,14 +83,17 @@ class WebhookHandler(BaseHTTPRequestHandler):
         )
 
     def do_GET(self):
-        self._send_json(200, {"status": "ok", "service": "notion_webhook_receiver"})
+        self._send_json(
+            200,
+            {"status": "ok", "service": "notion_webhook_receiver"},
+        )
 
     def log_message(self, format, *args):
         print(f"[WebhookReceiver] {self.address_string()} - {format % args}")
 
 
 def create_server():
-    return ThreadingHTTPServer((HOST, PORT), WebhookHandler)
+    return HTTPServer((HOST, PORT), WebhookHandler)
 
 
 def main():
