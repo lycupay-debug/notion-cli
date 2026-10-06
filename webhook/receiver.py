@@ -1,3 +1,5 @@
+import hashlib
+import hmac
 import json
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -9,6 +11,7 @@ from core.json_store import JSONStore
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 EVENT_DIR = PROJECT_ROOT / "data" / "webhook_events"
+CREDENTIALS_FILE = PROJECT_ROOT / "data" / "webhook_credentials.json"
 HOST = "127.0.0.1"
 PORT = 8080
 
@@ -24,6 +27,38 @@ class WebhookHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(payload)))
         self.end_headers()
         self.wfile.write(payload)
+
+    def _load_verification_token(self):
+        try:
+            credentials = JSONStore(base_dir=PROJECT_ROOT).load(CREDENTIALS_FILE)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return None
+
+        return credentials.get("verification_token")
+
+    def _save_verification_token(self, verification_token):
+        JSONStore(base_dir=PROJECT_ROOT).save(
+            CREDENTIALS_FILE,
+            {
+                "verification_token": verification_token,
+                "saved_at": datetime.now(timezone.utc).isoformat(),
+            },
+        )
+
+    def _verify_signature(self, raw_body, verification_token):
+        signature = self.headers.get("X-Notion-Signature")
+
+        if not signature or not signature.startswith("sha256="):
+            return False
+
+        digest = hmac.new(
+            verification_token.encode("utf-8"),
+            raw_body,
+            hashlib.sha256,
+        ).hexdigest()
+
+        expected_signature = f"sha256={digest}"
+        return hmac.compare_digest(expected_signature, signature)
 
     def do_POST(self):
         content_length = self.headers.get("Content-Length")
@@ -43,6 +78,46 @@ class WebhookHandler(BaseHTTPRequestHandler):
             self._send_json(
                 400,
                 {"status": "error", "message": "Invalid JSON"},
+            )
+            return
+
+        verification_token = payload.get("verification_token")
+
+        if verification_token:
+            try:
+                self._save_verification_token(verification_token)
+            except Exception:
+                self._send_json(
+                    500,
+                    {
+                        "status": "error",
+                        "message": "Verification token persistence failed",
+                    },
+                )
+                return
+
+            self._send_json(
+                200,
+                {"status": "ok", "message": "Verification token received"},
+            )
+            return
+
+        stored_token = self._load_verification_token()
+
+        if not stored_token:
+            self._send_json(
+                503,
+                {
+                    "status": "error",
+                    "message": "Webhook verification is not configured",
+                },
+            )
+            return
+
+        if not self._verify_signature(raw_body, stored_token):
+            self._send_json(
+                401,
+                {"status": "error", "message": "Invalid webhook signature"},
             )
             return
 
@@ -103,6 +178,7 @@ def main():
     print("Notion Webhook Receiver")
     print(f"Listening: http://{HOST}:{PORT}")
     print(f"Event directory: {EVENT_DIR}")
+    print(f"Credential file: {CREDENTIALS_FILE}")
     print("=" * 60)
 
     try:
