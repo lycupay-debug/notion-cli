@@ -4,6 +4,11 @@ from pathlib import Path
 from typing import Any
 
 from core.json_store import JSONStore
+from methods.get_parse_history_path import get_parse_history_path
+from methods.get_task_path import get_task_path
+from methods.get_webhook_event_path import get_webhook_event_path
+from methods.is_assigned_to_rule_chief import is_assigned_to_rule_chief
+from methods.read_json_file import read_json_file
 from methods.webhook_event import (
     get_authors,
     get_data_source_id,
@@ -46,28 +51,35 @@ class ParserWorker:
         config_dir: str | Path | None = None,
         history_dir: str | Path | None = None,
     ):
-        project_root = Path(__file__).resolve().parent.parent
+        self.project_root = Path(__file__).resolve().parent.parent
         self.event_dir = (
             Path(event_dir).resolve()
             if event_dir is not None
-            else project_root / "data" / "webhook_events"
+            else self.project_root / "data" / "webhook_events"
         )
         self.config_dir = (
             Path(config_dir).resolve()
             if config_dir is not None
-            else project_root / "config" / "tasks"
+            else self.project_root / "config" / "tasks"
         )
         self.history_dir = (
             Path(history_dir).resolve()
             if history_dir is not None
-            else project_root / "config" / "parse_history"
+            else self.project_root / "config" / "parse_history"
         )
-        self.store = JSONStore(base_dir=project_root)
+        self.store = JSONStore(base_dir=self.project_root)
 
     def load_event(self, file_path: str | Path) -> dict[str, Any]:
-        return self.store.load(file_path)
+        path = Path(file_path).resolve()
+        try:
+            relative_path = path.relative_to(self.project_root)
+        except ValueError:
+            return self.store.load(path)
+        return read_json_file(str(relative_path))
 
     def get_history_path(self, record_id: str) -> Path:
+        if self.history_dir == self.project_root / "config" / "parse_history":
+            return self.project_root / get_parse_history_path(record_id)
         return self.history_dir / f"{record_id}.json"
 
     def is_parsed(self, record_id: str) -> bool:
@@ -75,7 +87,7 @@ class ParserWorker:
 
     def create_history(self, record_id: str) -> dict[str, Any]:
         if not record_id:
-            raise ValueError("解析历史缺少 record_id")
+            raise ValueError("parse history requires record_id")
 
         history = {
             "task_completed": None,
@@ -87,11 +99,11 @@ class ParserWorker:
         record_id = get_record_id(record)
 
         if not record_id:
-            raise ValueError("webhook event 缺少 record_id")
+            raise ValueError("webhook event is missing record_id")
 
-        return {
-            "recordid": record_id,
-            "执行员是谁": None,
+        task = {
+            "record_id": record_id,
+            "assignee": None,
             "task_completed": None,
             "incomplete_reason": "",
             "event_id": get_event_id(record),
@@ -118,16 +130,19 @@ class ParserWorker:
             "updated_blocks": get_updated_blocks(record),
         }
 
-    def save_parsed(
-        self,
-        parsed: dict[str, Any],
-    ) -> dict[str, Any]:
-        record_id = parsed.get("recordid")
+        task["is_assigned_to_rule_chief"] = is_assigned_to_rule_chief(task)
+        return task
+
+    def save_parsed(self, parsed: dict[str, Any]) -> dict[str, Any]:
+        record_id = parsed.get("record_id")
 
         if not record_id:
-            raise ValueError("解析结果缺少 recordid")
+            raise ValueError("parsed result is missing record_id")
 
-        file_path = self.config_dir / f"{record_id}.json"
+        if self.config_dir == self.project_root / "config" / "tasks":
+            file_path = self.project_root / get_task_path(record_id)
+        else:
+            file_path = self.config_dir / f"{record_id}.json"
         return self.store.save(file_path, parsed)
 
     def parse_file(self, file_path: str | Path) -> dict[str, Any] | None:
@@ -135,7 +150,7 @@ class ParserWorker:
         record_id = get_record_id(record)
 
         if not record_id:
-            raise ValueError("webhook event 缺少 record_id")
+            raise ValueError("webhook event is missing record_id")
 
         if self.is_parsed(record_id):
             return None
