@@ -25,12 +25,6 @@ class TestRuleChiefToChannel(unittest.IsolatedAsyncioTestCase):
             ):
                 received = []
 
-                async def capture(event):
-                    received.append(event)
-
-                runtime.bus.register("CAPTURE_RULE_DONE", capture)
-                original = runtime.bus.get_handler("RULE_DONE")
-
                 async def capture_rule_done(event):
                     received.append(event)
 
