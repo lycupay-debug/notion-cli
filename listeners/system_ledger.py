@@ -1,3 +1,5 @@
+import asyncio
+
 from notion_client import APIErrorCode, APIResponseError
 
 from notion.pages import retrieve_page, update_page
@@ -195,3 +197,14 @@ class SystemLedgerListener:
             item.get("plain_text", "")
             for item in prop.get("rich_text", [])
         )
+
+
+async def execute_system_ledger(task):
+    """Channel 适配器：执行旧 SystemLedgerListener 的业务逻辑。"""
+    if not getattr(task, "record_id", None):
+        raise ValueError("system_ledger task is missing record_id")
+
+    return await asyncio.to_thread(
+        SystemLedgerListener().handle,
+        task.record_id,
+    )
