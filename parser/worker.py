@@ -27,20 +27,24 @@ class ParserWorker:
 
     当前阶段负责：
     1. 读取 webhook_events 中的原始 webhook JSON；
-    2. 使用个人方法库提取通用字段；
-    3. 将解析结果通过 JSONStore 原子写入 config/tasks/<record_id>.json。
+    2. 检查解析历史，避免重复解析；
+    3. 使用个人方法库提取通用字段；
+    4. 将解析结果通过 JSONStore 原子写入 config/tasks/<record_id>.json；
+    5. 成功建立任务后，通过 JSONStore 原子写入解析历史。
 
     不负责：
     - Notion API 调用；
     - 任务执行；
     - 规则总管调度；
-    - 修改原始 webhook JSON。
+    - 修改原始 webhook JSON；
+    - 修改解析历史中的任务完成状态或处理方式。
     """
 
     def __init__(
         self,
         event_dir: str | Path | None = None,
         config_dir: str | Path | None = None,
+        history_dir: str | Path | None = None,
     ):
         project_root = Path(__file__).resolve().parent.parent
         self.event_dir = (
@@ -53,10 +57,31 @@ class ParserWorker:
             if config_dir is not None
             else project_root / "config" / "tasks"
         )
+        self.history_dir = (
+            Path(history_dir).resolve()
+            if history_dir is not None
+            else project_root / "config" / "解析历史"
+        )
         self.store = JSONStore(base_dir=project_root)
 
     def load_event(self, file_path: str | Path) -> dict[str, Any]:
         return self.store.load(file_path)
+
+    def get_history_path(self, record_id: str) -> Path:
+        return self.history_dir / f"{record_id}.json"
+
+    def is_parsed(self, record_id: str) -> bool:
+        return self.get_history_path(record_id).exists()
+
+    def create_history(self, record_id: str) -> dict[str, Any]:
+        if not record_id:
+            raise ValueError("解析历史缺少 record_id")
+
+        history = {
+            "任务完成状态": None,
+            "任务处理方式": None,
+        }
+        return self.store.save(self.get_history_path(record_id), history)
 
     def parse(self, record: dict[str, Any]) -> dict[str, Any]:
         record_id = get_record_id(record)
@@ -102,6 +127,27 @@ class ParserWorker:
         file_path = self.config_dir / f"{record_id}.json"
         return self.store.save(file_path, parsed)
 
-    def parse_file(self, file_path: str | Path) -> dict[str, Any]:
-        parsed = self.parse(self.load_event(file_path))
-        return self.save_parsed(parsed)
+    def parse_file(self, file_path: str | Path) -> dict[str, Any] | None:
+        record = self.load_event(file_path)
+        record_id = get_record_id(record)
+
+        if not record_id:
+            raise ValueError("webhook event 缺少 record_id")
+
+        if self.is_parsed(record_id):
+            return None
+
+        parsed = self.parse(record)
+        saved = self.save_parsed(parsed)
+        self.create_history(record_id)
+        return saved
+
+    def parse_pending_events(self) -> list[dict[str, Any]]:
+        parsed_tasks = []
+
+        for file_path in sorted(self.event_dir.glob("*.json")):
+            result = self.parse_file(file_path)
+            if result is not None:
+                parsed_tasks.append(result)
+
+        return parsed_tasks
