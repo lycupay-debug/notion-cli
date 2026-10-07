@@ -1,4 +1,10 @@
 {
   "version": 1,
-  "rules": {}
+  "rules": {
+    "9c7afd69-cba9-44c3-ae20-ad2886498e96": {
+      "enabled": true,
+      "assignee": "system-ledger",
+      "channel": "system_ledger"
+    }
+  }
 }
