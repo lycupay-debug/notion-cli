@@ -1,56 +1,83 @@
 from __future__ import annotations
 
 import asyncio
-from event_bus import EventBus, EventDispatcher
+import json
 
-from handlers.webhook_received import handle_webhook_received
+from event_bus import Event, EventBus
+from methods.get_event_handlers_config_path import (
+    get_event_handlers_config_path,
+)
+from methods.load_callable import load_callable
 
 
 class EventRuntime:
-    """
-    Event Bus 运行时。
+    """Event Bus 运行时。
 
-    HTTP Receiver 只负责接收并持久化 Webhook。
-    EventRuntime 持有 EventBus、Dispatcher 和 Handler 注册表，
-    并在同一事件循环中串行消费事件。
+    Receiver 发布事件后，EventBus 直接触发注册 Handler。
+    运行时不存在永久 Queue Consumer。
+
+    Handler 注册关系来自 config/event_handlers.json。
+    reload_handlers() 会先构建完整的新注册表，全部成功后再一次性替换。
     """
 
     def __init__(self) -> None:
         self.bus = EventBus()
-        self.dispatcher = EventDispatcher()
-        self.dispatcher.register(
-            "WEBHOOK_RECEIVED",
-            handle_webhook_received,
-        )
-
         self._loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
-        self._consumer_task: asyncio.Task[None] | None = None
+        self._started = False
+        self.reload_handlers()
+
+    def _load_handler_registry(self) -> dict:
+        config_path = get_event_handlers_config_path()
+
+        with config_path.open("r", encoding="utf-8") as file:
+            config = json.load(file)
+
+        if not isinstance(config, dict):
+            raise ValueError("event handler config must be an object")
+
+        handlers_config = config.get("handlers")
+        if not isinstance(handlers_config, dict):
+            raise ValueError("event handler config must contain object: handlers")
+
+        handlers = {}
+
+        for event_type, item in handlers_config.items():
+            if not isinstance(item, dict):
+                raise ValueError(
+                    f"handler config must be an object: {event_type}"
+                )
+
+            if not item.get("enabled", True):
+                continue
+
+            handler = load_callable(
+                item.get("module", ""),
+                item.get("function", ""),
+            )
+            handlers[event_type] = handler
+
+        return handlers
+
+    def reload_handlers(self) -> None:
+        """热加载 Handler 配置。
+
+        先构建并验证完整新注册表，成功后才替换当前注册表。
+        配置错误不会破坏当前正在运行的 Handler 注册关系。
+        """
+        handlers = self._load_handler_registry()
+        self.bus.replace_handlers(handlers)
 
     def start(self) -> None:
+        if self._started:
+            return
+
         asyncio.set_event_loop(self._loop)
-        self._consumer_task = self._loop.create_task(self._consume())
+        self._started = True
         self._loop.run_forever()
 
-    async def _consume(self) -> None:
-        while True:
-            event = await self.bus.next_event()
-            try:
-                await self.dispatcher.dispatch(event)
-            except Exception as exc:
-                print(
-                    f"[EventRuntime ERROR] "
-                    f"{event.event_type}: {type(exc).__name__}: {exc}"
-                )
-            finally:
-                self.bus.task_done()
-
-    def publish_from_receiver(self, event) -> None:
-        """
-        从同步 HTTP Receiver 线程安全地发布事件。
-
-        Receiver 本身不执行 Handler，也不访问 Notion。
-        """
-        if self._loop is None:
+    def publish_from_receiver(self, event: Event) -> None:
+        """从同步 Receiver 线程安全地触发事件。"""
+        if not self._started:
             raise RuntimeError("EventRuntime is not started")
 
         self._loop.call_soon_threadsafe(
@@ -59,7 +86,8 @@ class EventRuntime:
         )
 
     def stop(self) -> None:
-        if self._loop is None:
+        if not self._started:
             return
 
         self._loop.call_soon_threadsafe(self._loop.stop)
+        self._started = False
