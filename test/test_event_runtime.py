@@ -85,7 +85,7 @@ class TestEventRuntime(unittest.IsolatedAsyncioTestCase):
         async def new_task_handler(event):
             return rule_done_event
 
-        channel_done_handler = AsyncMock()
+        channel_done_handler = AsyncMock(return_value=None)
 
         with patch(
             "handlers.rule_done.read_json_file",
