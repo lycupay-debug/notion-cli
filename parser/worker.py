@@ -25,10 +25,10 @@ class ParserWorker:
     """
     解析员。
 
-    当前阶段只负责：
-    1. 读取 webhook_events 中的任务 JSON；
+    当前阶段负责：
+    1. 读取 webhook_events 中的原始 webhook JSON；
     2. 使用个人方法库提取通用字段；
-    3. 输出结构化解析结果。
+    3. 将解析结果通过 JSONStore 原子写入 config/<record_id>.json。
 
     不负责：
     - Notion API 调用；
@@ -37,12 +37,21 @@ class ParserWorker:
     - 修改原始 webhook JSON。
     """
 
-    def __init__(self, event_dir: str | Path | None = None):
+    def __init__(
+        self,
+        event_dir: str | Path | None = None,
+        config_dir: str | Path | None = None,
+    ):
         project_root = Path(__file__).resolve().parent.parent
         self.event_dir = (
             Path(event_dir).resolve()
             if event_dir is not None
             else project_root / "data" / "webhook_events"
+        )
+        self.config_dir = (
+            Path(config_dir).resolve()
+            if config_dir is not None
+            else project_root / "config"
         )
         self.store = JSONStore(base_dir=project_root)
 
@@ -50,8 +59,13 @@ class ParserWorker:
         return self.store.load(file_path)
 
     def parse(self, record: dict[str, Any]) -> dict[str, Any]:
+        record_id = get_record_id(record)
+
+        if not record_id:
+            raise ValueError("webhook event 缺少 record_id")
+
         return {
-            "record_id": get_record_id(record),
+            "recordid": record_id,
             "event_id": get_event_id(record),
             "event_type": get_event_type(record),
             "author": {
@@ -76,5 +90,18 @@ class ParserWorker:
             "updated_blocks": get_updated_blocks(record),
         }
 
+    def save_parsed(
+        self,
+        parsed: dict[str, Any],
+    ) -> dict[str, Any]:
+        record_id = parsed.get("recordid")
+
+        if not record_id:
+            raise ValueError("解析结果缺少 recordid")
+
+        file_path = self.config_dir / f"{record_id}.json"
+        return self.store.save(file_path, parsed)
+
     def parse_file(self, file_path: str | Path) -> dict[str, Any]:
-        return self.parse(self.load_event(file_path))
+        parsed = self.parse(self.load_event(file_path))
+        return self.save_parsed(parsed)
