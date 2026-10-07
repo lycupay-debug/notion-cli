@@ -78,8 +78,8 @@ class ParserWorker:
             raise ValueError("解析历史缺少 record_id")
 
         history = {
-            "任务完成状态": None,
-            "任务处理方式": None,
+            "task_completed": None,
+            "task_action": None,
         }
         return self.store.save(self.get_history_path(record_id), history)
 
