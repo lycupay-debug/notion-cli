@@ -62,9 +62,10 @@ def test_parser_saves_by_recordid(tmp_path):
     )
 
 
-def test_parse_file_reads_and_persists(tmp_path):
+def test_parse_file_reads_persists_and_creates_history(tmp_path):
     event_dir = tmp_path / "webhook_events"
     tasks_dir = tmp_path / "config" / "tasks"
+    history_dir = tmp_path / "config" / "解析历史"
     event_dir.mkdir()
 
     source_file = (
@@ -78,6 +79,7 @@ def test_parse_file_reads_and_persists(tmp_path):
     worker = ParserWorker(
         event_dir=event_dir,
         config_dir=tasks_dir,
+        history_dir=history_dir,
     )
 
     result = worker.parse_file(source_file)
@@ -85,4 +87,97 @@ def test_parse_file_reads_and_persists(tmp_path):
     assert result["recordid"] == SAMPLE["record_id"]
     assert (
         tasks_dir / f'{SAMPLE["record_id"]}.json'
+    ).exists()
+
+    history_file = (
+        history_dir / f'{SAMPLE["record_id"]}.json'
+    )
+    assert history_file.exists()
+    assert worker.store.load(history_file) == {
+        "任务完成状态": None,
+        "任务处理方式": None,
+    }
+
+
+def test_parser_skips_event_already_in_history(tmp_path):
+    event_dir = tmp_path / "webhook_events"
+    tasks_dir = tmp_path / "config" / "tasks"
+    history_dir = tmp_path / "config" / "解析历史"
+    event_dir.mkdir()
+
+    source_file = (
+        event_dir / "b10f81f8-ed8f-47d2-889e-04027e9a835d.json"
+    )
+    source_file.write_text(
+        __import__("json").dumps(SAMPLE, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    worker = ParserWorker(
+        event_dir=event_dir,
+        config_dir=tasks_dir,
+        history_dir=history_dir,
+    )
+    worker.create_history(SAMPLE["record_id"])
+
+    assert worker.is_parsed(SAMPLE["record_id"]) is True
+    assert worker.parse_file(source_file) is None
+    assert not (
+        tasks_dir / f'{SAMPLE["record_id"]}.json'
+    ).exists()
+
+
+def test_parse_pending_events_only_parses_unrecorded_events(tmp_path):
+    event_dir = tmp_path / "webhook_events"
+    tasks_dir = tmp_path / "config" / "tasks"
+    history_dir = tmp_path / "config" / "解析历史"
+    event_dir.mkdir()
+
+    first = event_dir / "b10f81f8-ed8f-47d2-889e-04027e9a835d.json"
+    first.write_text(
+        __import__("json").dumps(SAMPLE, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    second_sample = {
+        **SAMPLE,
+        "record_id": "another-record-id",
+    }
+    second = event_dir / "another-record-id.json"
+    second.write_text(
+        __import__("json").dumps(second_sample, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    worker = ParserWorker(
+        event_dir=event_dir,
+        config_dir=tasks_dir,
+        history_dir=history_dir,
+    )
+    worker.create_history(SAMPLE["record_id"])
+
+    results = worker.parse_pending_events()
+
+    assert len(results) == 1
+    assert results[0]["recordid"] == "another-record-id"
+    assert (
+        tasks_dir / "another-record-id.json"
+    ).exists()
+    assert not (
+        tasks_dir / f'{SAMPLE["record_id"]}.json'
+    ).exists()
+
+
+def test_parse_history_uses_jsonstore(tmp_path):
+    history_dir = tmp_path / "config" / "解析历史"
+    worker = ParserWorker(history_dir=history_dir)
+
+    history = worker.create_history("test-record-id")
+
+    assert history == {
+        "任务完成状态": None,
+        "任务处理方式": None,
+    }
+    assert (
+        history_dir / "test-record-id.json"
     ).exists()
