@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from event_bus import Event
 from handlers.webhook_received import handle_webhook_received
@@ -15,7 +15,7 @@ class TestWebhookReceivedHandler(unittest.IsolatedAsyncioTestCase):
             },
         )
 
-        parser = unittest.mock.Mock()
+        parser = Mock()
         parser.parse_file.return_value = {
             "record_id": "record-001",
         }
