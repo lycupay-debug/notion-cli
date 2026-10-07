@@ -21,8 +21,7 @@ class TestEventRuntime(unittest.IsolatedAsyncioTestCase):
         async def active_handler():
             await asyncio.Event().wait()
 
-        loop = runtime._loop
-        task = loop.create_task(active_handler())
+        task = asyncio.create_task(active_handler())
         runtime.bus._track_task(task)
 
         with self.assertRaisesRegex(RuntimeError, "active"):
@@ -30,7 +29,7 @@ class TestEventRuntime(unittest.IsolatedAsyncioTestCase):
 
         task.cancel()
         await asyncio.gather(task, return_exceptions=True)
-        loop.close()
+        runtime._loop.close()
 
     async def test_handler_result_event_is_published(self):
         runtime = EventRuntime()
