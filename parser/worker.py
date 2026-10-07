@@ -30,7 +30,7 @@ class ParserWorker:
     2. 检查解析历史，避免重复解析；
     3. 使用个人方法库提取通用字段；
     4. 将解析结果通过 JSONStore 原子写入 config/tasks/<record_id>.json；
-    5. 成功建立任务后，通过 JSONStore 原子写入解析历史。
+    5. 成功建立任务后，通过 JSONStore 原子写入 config/parse_history/<record_id>.json。
 
     不负责：
     - Notion API 调用；
@@ -60,7 +60,7 @@ class ParserWorker:
         self.history_dir = (
             Path(history_dir).resolve()
             if history_dir is not None
-            else project_root / "config" / "解析历史"
+            else project_root / "config" / "parse_history"
         )
         self.store = JSONStore(base_dir=project_root)
 
