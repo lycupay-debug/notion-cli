@@ -20,6 +20,9 @@ config/tasks.json
 #Config tasks
 config/tasks
 
+#Config Parse_history
+config/parse_history
+
 # Logs
 logs/
 
