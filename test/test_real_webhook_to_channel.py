@@ -61,7 +61,7 @@ class TestRealWebhookToChannel(unittest.TestCase):
 
         project_root = Path(__file__).resolve().parent.parent
 
-        with tempfile.TemporaryDirectory() as temp_dir:
+        with tempfile.TemporaryDirectory(dir=project_root) as temp_dir:
             temp_root = Path(temp_dir)
             event_dir = temp_root / "webhook_events"
             credentials_file = temp_root / "webhook_credentials.json"
