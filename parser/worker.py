@@ -91,6 +91,9 @@ class ParserWorker:
 
         return {
             "recordid": record_id,
+            "执行员是谁": None,
+            "task_completed": None,
+            "未完成的原因": "",
             "event_id": get_event_id(record),
             "event_type": get_event_type(record),
             "author": {
