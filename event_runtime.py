@@ -2,14 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import threading
-from typing import TYPE_CHECKING
-
 from event_bus import EventBus, EventDispatcher
 
 from handlers.webhook_received import handle_webhook_received
-
-if TYPE_CHECKING:
-    from webhook.receiver import WebhookHandler
 
 
 class EventRuntime:
@@ -61,7 +56,7 @@ class EventRuntime:
             raise RuntimeError("EventRuntime is not started")
 
         self._loop.call_soon_threadsafe(
-            self.bus._queue.put_nowait,
+            self.bus.publish_nowait,
             event,
         )
 
