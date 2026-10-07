@@ -42,7 +42,7 @@ class TestWebhookReceivedHandler(unittest.IsolatedAsyncioTestCase):
             },
         )
 
-        parser = unittest.mock.Mock()
+        parser = Mock()
         parser.parse_file.return_value = None
 
         with patch(
