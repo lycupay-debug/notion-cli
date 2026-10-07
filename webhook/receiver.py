@@ -1,12 +1,15 @@
 import hashlib
 import hmac
 import json
+import threading
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from uuid import uuid4
 
 from core.json_store import JSONStore
+from event_bus import Event
+from event_runtime import EventRuntime
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -148,6 +151,19 @@ class WebhookHandler(BaseHTTPRequestHandler):
             )
             return
 
+        relative_event_path = event_path.relative_to(PROJECT_ROOT)
+
+        self.server.event_runtime.publish_from_receiver(
+            Event(
+                "WEBHOOK_RECEIVED",
+                {
+                    "record_id": record_id,
+                    "file_path": str(relative_event_path),
+                    "event_id": event_id,
+                },
+            )
+        )
+
         self._send_json(
             200,
             {
@@ -167,12 +183,21 @@ class WebhookHandler(BaseHTTPRequestHandler):
         print(f"[WebhookReceiver] {self.address_string()} - {format % args}")
 
 
-def create_server():
-    return HTTPServer((HOST, PORT), WebhookHandler)
+def create_server(event_runtime: EventRuntime):
+    server = HTTPServer((HOST, PORT), WebhookHandler)
+    server.event_runtime = event_runtime
+    return server
 
 
 def main():
-    server = create_server()
+    event_runtime = EventRuntime()
+    server = create_server(event_runtime)
+    server_thread = threading.Thread(
+        target=server.serve_forever,
+        name="WebhookHTTPServer",
+        daemon=True,
+    )
+    server_thread.start()
 
     print("=" * 60)
     print("Notion Webhook Receiver")
@@ -182,10 +207,11 @@ def main():
     print("=" * 60)
 
     try:
-        server.serve_forever()
+        event_runtime.start()
     except KeyboardInterrupt:
         print("\nStopping Webhook Receiver...")
     finally:
+        server.shutdown()
         server.server_close()
 
 
