@@ -8,8 +8,8 @@ from rule_chief import RuleChief
 RULE_DONE_EVENT = "RULE_DONE"
 
 
-async def handle_new_task(event: Event) -> None:
-    """处理 NEW_TASK；当前只完成 RuleChief 判断，不进入 Channel。"""
+async def handle_new_task(event: Event) -> Event | None:
+    """处理 NEW_TASK；RuleChief 路由成功后产生 RULE_DONE。"""
     task = event.data.get("task")
     if not isinstance(task, dict):
         raise ValueError("NEW_TASK event is missing task")
@@ -23,6 +23,7 @@ async def handle_new_task(event: Event) -> None:
         raise ValueError("rule chief config must contain object: rules")
 
     decision = RuleChief(rules).decide(task)
+
     if decision.status != "ROUTED":
         print(
             "[NewTaskHandler] "
