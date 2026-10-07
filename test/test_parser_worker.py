@@ -31,7 +31,10 @@ SAMPLE = {
 def test_parser_extracts_event():
     result = ParserWorker().parse(SAMPLE)
 
-    assert result["recordid"] == "b10f81f8-ed8f-47d2-889e-04027e9a835d"
+    assert result["record_id"] == "b10f81f8-ed8f-47d2-889e-04027e9a835d"
+    assert result["assignee"] is None
+    assert result["task_completed"] is None
+    assert result["incomplete_reason"] == ""
     assert result["event_id"] == "93d6c3c1-deda-445c-addb-a76c9a401cf5"
     assert result["event_type"] == "page.properties_updated"
     assert result["author"]["is_person"] is True
@@ -55,9 +58,12 @@ def test_parser_saves_by_recordid(tmp_path):
         tasks_dir / "b10f81f8-ed8f-47d2-889e-04027e9a835d.json"
     )
 
-    assert saved["recordid"] == "b10f81f8-ed8f-47d2-889e-04027e9a835d"
+    assert saved["record_id"] == "b10f81f8-ed8f-47d2-889e-04027e9a835d"
+    assert saved["assignee"] is None
+    assert saved["task_completed"] is None
+    assert saved["incomplete_reason"] == ""
     assert expected_file.exists()
-    assert worker.store.load(expected_file)["recordid"] == (
+    assert worker.store.load(expected_file)["record_id"] == (
         "b10f81f8-ed8f-47d2-889e-04027e9a835d"
     )
 
@@ -84,7 +90,7 @@ def test_parse_file_reads_persists_and_creates_history(tmp_path):
 
     result = worker.parse_file(source_file)
 
-    assert result["recordid"] == SAMPLE["record_id"]
+    assert result["record_id"] == SAMPLE["record_id"]
     assert (
         tasks_dir / f'{SAMPLE["record_id"]}.json'
     ).exists()
@@ -159,7 +165,7 @@ def test_parse_pending_events_only_parses_unrecorded_events(tmp_path):
     results = worker.parse_pending_events()
 
     assert len(results) == 1
-    assert results[0]["recordid"] == "another-record-id"
+    assert results[0]["record_id"] == "another-record-id"
     assert (
         tasks_dir / "another-record-id.json"
     ).exists()
