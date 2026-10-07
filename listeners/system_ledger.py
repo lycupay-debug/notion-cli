@@ -200,11 +200,26 @@ class SystemLedgerListener:
 
 
 async def execute_system_ledger(task):
-    """Channel 适配器：执行旧 SystemLedgerListener 的业务逻辑。"""
-    if not getattr(task, "record_id", None):
+    """Channel 适配器：根据 record_id 读取任务，再使用任务的 data_source_id 执行旧逻辑。"""
+    record_id = getattr(task, "record_id", None)
+    if not record_id:
         raise ValueError("system_ledger task is missing record_id")
+
+    from methods.get_task_path import get_task_path
+    from methods.read_json_file import read_json_file
+
+    task_data = read_json_file(get_task_path(record_id))
+    if not isinstance(task_data, dict):
+        raise ValueError(f"task is not an object: {record_id}")
+
+    parent = task_data.get("parent") or {}
+    data_source_id = parent.get("data_source_id")
+    if not data_source_id:
+        raise ValueError(
+            f"task is missing parent.data_source_id: {record_id}"
+        )
 
     return await asyncio.to_thread(
         SystemLedgerListener().handle,
-        task.record_id,
+        data_source_id,
     )
