@@ -8,7 +8,7 @@ from typing import Any
 from methods.load_callable import load_callable
 
 
-ChannelExecutor = Callable[["ChannelTask"], Awaitable[None]]
+ChannelExecutor = Callable[["ChannelTask"], Awaitable[Any]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -20,8 +20,14 @@ class ChannelTask:
 
 
 @dataclass(slots=True)
+class _QueuedTask:
+    task: ChannelTask
+    result: asyncio.Future[Any] | None = None
+
+
+@dataclass(slots=True)
 class _ChannelState:
-    queue: asyncio.Queue[ChannelTask]
+    queue: asyncio.Queue[_QueuedTask]
     executor: ChannelExecutor
     enabled: bool = True
     running: bool = False
@@ -45,11 +51,7 @@ class ChannelManager:
         self._channels: dict[str, _ChannelState] = {}
 
     def load_config(self, config: dict[str, Any]) -> None:
-        """加载完整 Channel 配置。
-
-        空闲 Channel 立即更新；正在运行的 Channel 延迟更新。
-        已从配置删除的 Channel：停止接收新任务，等待队列清空后退出。
-        """
+        """加载完整 Channel 配置。"""
         channels = config.get("channels")
         if not isinstance(channels, dict):
             raise ValueError("channel config must contain object: channels")
@@ -97,16 +99,31 @@ class ChannelManager:
                 self._channels.pop(name, None)
 
     async def submit(self, task: ChannelTask) -> None:
+        await self._enqueue(task, wait=False)
+
+    async def submit_and_wait(self, task: ChannelTask) -> Any:
+        """提交任务，并等待该任务实际执行完成。"""
+        return await self._enqueue(task, wait=True)
+
+    async def _enqueue(self, task: ChannelTask, *, wait: bool) -> Any:
         state = self._channels.get(task.channel)
         if state is None:
             raise LookupError(f"channel is not configured: {task.channel}")
         if not state.enabled:
             raise RuntimeError(f"channel is disabled: {task.channel}")
 
-        await state.queue.put(task)
+        future: asyncio.Future[Any] | None = None
+        if wait:
+            future = asyncio.get_running_loop().create_future()
+
+        await state.queue.put(_QueuedTask(task=task, result=future))
 
         if state.worker is None or state.worker.done():
             state.worker = asyncio.create_task(self._worker(task.channel, state))
+
+        if future is not None:
+            return await future
+        return None
 
     async def _worker(self, name: str, state: _ChannelState) -> None:
         while True:
@@ -117,10 +134,16 @@ class ChannelManager:
                         self._channels.pop(name, None)
                     return
 
-            task = await state.queue.get()
+            queued = await state.queue.get()
             state.running = True
             try:
-                await state.executor(task)
+                result = await state.executor(queued.task)
+            except BaseException as error:
+                if queued.result is not None and not queued.result.done():
+                    queued.result.set_exception(error)
+            else:
+                if queued.result is not None and not queued.result.done():
+                    queued.result.set_result(result)
             finally:
                 state.running = False
                 state.queue.task_done()
