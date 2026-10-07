@@ -17,6 +17,9 @@ config/tasks.json
 # Webhook events
 /data/webhook_events/
 
+#Config tasks
+config/tasks
+
 # Logs
 logs/
 
