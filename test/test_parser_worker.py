@@ -45,14 +45,14 @@ def test_parser_extracts_event():
 
 
 def test_parser_saves_by_recordid(tmp_path):
-    config_dir = tmp_path / "config"
-    worker = ParserWorker(config_dir=config_dir)
+    tasks_dir = tmp_path / "config" / "tasks"
+    worker = ParserWorker(config_dir=tasks_dir)
 
     parsed = worker.parse(SAMPLE)
     saved = worker.save_parsed(parsed)
 
     expected_file = (
-        config_dir / "b10f81f8-ed8f-47d2-889e-04027e9a835d.json"
+        tasks_dir / "b10f81f8-ed8f-47d2-889e-04027e9a835d.json"
     )
 
     assert saved["recordid"] == "b10f81f8-ed8f-47d2-889e-04027e9a835d"
@@ -64,7 +64,7 @@ def test_parser_saves_by_recordid(tmp_path):
 
 def test_parse_file_reads_and_persists(tmp_path):
     event_dir = tmp_path / "webhook_events"
-    config_dir = tmp_path / "config"
+    tasks_dir = tmp_path / "config" / "tasks"
     event_dir.mkdir()
 
     source_file = (
@@ -77,12 +77,12 @@ def test_parse_file_reads_and_persists(tmp_path):
 
     worker = ParserWorker(
         event_dir=event_dir,
-        config_dir=config_dir,
+        config_dir=tasks_dir,
     )
 
     result = worker.parse_file(source_file)
 
     assert result["recordid"] == SAMPLE["record_id"]
     assert (
-        config_dir / f'{SAMPLE["record_id"]}.json'
+        tasks_dir / f'{SAMPLE["record_id"]}.json'
     ).exists()
