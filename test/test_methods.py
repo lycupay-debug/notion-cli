@@ -52,10 +52,8 @@ def test_is_assigned_to_rule_chief():
 
 
 def test_get_event_handlers_config_path():
-    assert get_event_handlers_config_path() == (
-        Path("config") / "event_handlers.json"
-    )
-
+    expected = Path(__file__).resolve().parent.parent / "config" / "event_handlers.json"
+    assert get_event_handlers_config_path() == expected
 
 def test_load_callable():
     handler = load_callable("handlers.webhook_received", "handle_webhook_received")
