@@ -1,42 +1,75 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable, Callable
 
+from .dispatcher import EventDispatcher, EventHandler
 from .event import Event
 
 
 class EventBus:
     """事件总线。
 
-    职责只有两个：
-    1. 发布事件；
-    2. 取出下一个事件。
+    EventBus 不保存待消费事件，不轮询，也不等待 Queue。
+    publish() 到达后立即根据注册表创建 Handler 执行任务。
 
-    EventBus 不判断事件类型，不调用 Handler，不执行业务规则。
+    Queue 应在需要业务串行化的 Channel 层使用，而不是 Event Bus 层。
     """
 
-    def __init__(self) -> None:
-        self._queue: asyncio.Queue[Event] = asyncio.Queue()
+    def __init__(
+        self,
+        dispatcher: EventDispatcher | None = None,
+    ) -> None:
+        self.dispatcher = dispatcher or EventDispatcher()
+        self._tasks: set[asyncio.Task[None]] = set()
 
-    async def publish(self, event: Event) -> None:
-        """将事件放入事件流。"""
-        await self._queue.put(event)
+    def register(self, event_type: str, handler: EventHandler) -> None:
+        self.dispatcher.register(event_type, handler)
 
-    def publish_nowait(self, event: Event) -> None:
-        """在当前事件循环线程中立即放入事件。"""
-        self._queue.put_nowait(event)
+    def unregister(self, event_type: str) -> None:
+        self.dispatcher.unregister(event_type)
 
-    async def next_event(self) -> Event:
-        """等待并取出下一个事件。
+    def has_handler(self, event_type: str) -> bool:
+        return self.dispatcher.has_handler(event_type)
 
-        asyncio.Queue 在没有事件时挂起等待，不进行轮询。
+    def replace_handlers(self, handlers: dict[str, EventHandler]) -> None:
+        self.dispatcher.replace(handlers)
+
+    def publish(self, event: Event) -> asyncio.Task[None]:
+        """发布事件并立即触发已注册 Handler。
+
+        不等待 Handler 完成。Handler 在当前事件循环中独立执行。
         """
-        return await self._queue.get()
+        task = asyncio.create_task(self.dispatcher.dispatch(event))
+        self._track_task(task)
+        return task
 
-    def task_done(self) -> None:
-        """标记最近取出的事件已经完成消费。"""
-        self._queue.task_done()
+    def publish_nowait(self, event: Event) -> asyncio.Task[None]:
+        """在当前事件循环线程中立即触发事件。"""
+        return self.publish(event)
 
-    def qsize(self) -> int:
-        """返回当前等待处理的事件数量。"""
-        return self._queue.qsize()
+    def _track_task(self, task: asyncio.Task[None]) -> None:
+        self._tasks.add(task)
+        task.add_done_callback(self._on_task_done)
+
+    def _on_task_done(self, task: asyncio.Task[None]) -> None:
+        self._tasks.discard(task)
+
+        if task.cancelled():
+            return
+
+        exception = task.exception()
+        if exception is not None:
+            print(
+                f"[EventBus ERROR] "
+                f"{type(exception).__name__}: {exception}"
+            )
+
+    def active_task_count(self) -> int:
+        """返回当前仍在执行的 Handler 数量。"""
+        return len(self._tasks)
+
+    async def wait_for_handlers(self) -> None:
+        """仅用于测试、优雅关闭或明确需要等待全部 Handler 的场景。"""
+        if self._tasks:
+            await asyncio.gather(*tuple(self._tasks))
