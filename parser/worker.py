@@ -28,7 +28,7 @@ class ParserWorker:
     当前阶段负责：
     1. 读取 webhook_events 中的原始 webhook JSON；
     2. 使用个人方法库提取通用字段；
-    3. 将解析结果通过 JSONStore 原子写入 config/<record_id>.json。
+    3. 将解析结果通过 JSONStore 原子写入 config/tasks/<record_id>.json。
 
     不负责：
     - Notion API 调用；
@@ -51,7 +51,7 @@ class ParserWorker:
         self.config_dir = (
             Path(config_dir).resolve()
             if config_dir is not None
-            else project_root / "config"
+            else project_root / "config" / "tasks"
         )
         self.store = JSONStore(base_dir=project_root)
 
