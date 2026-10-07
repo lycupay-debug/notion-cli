@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import threading
 from event_bus import EventBus, EventDispatcher
 
 from handlers.webhook_received import handle_webhook_received
@@ -24,11 +23,10 @@ class EventRuntime:
             handle_webhook_received,
         )
 
-        self._loop: asyncio.AbstractEventLoop | None = None
+        self._loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
         self._consumer_task: asyncio.Task[None] | None = None
 
     def start(self) -> None:
-        self._loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self._loop)
         self._consumer_task = self._loop.create_task(self._consume())
         self._loop.run_forever()
