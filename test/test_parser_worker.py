@@ -32,6 +32,9 @@ def test_parser_extracts_event():
     result = ParserWorker().parse(SAMPLE)
 
     assert result["recordid"] == "b10f81f8-ed8f-47d2-889e-04027e9a835d"
+    assert result["执行员是谁"] is None
+    assert result["task_completed"] is None
+    assert result["未完成的原因"] == ""
     assert result["event_id"] == "93d6c3c1-deda-445c-addb-a76c9a401cf5"
     assert result["event_type"] == "page.properties_updated"
     assert result["author"]["is_person"] is True
@@ -56,6 +59,9 @@ def test_parser_saves_by_recordid(tmp_path):
     )
 
     assert saved["recordid"] == "b10f81f8-ed8f-47d2-889e-04027e9a835d"
+    assert saved["执行员是谁"] is None
+    assert saved["task_completed"] is None
+    assert saved["未完成的原因"] == ""
     assert expected_file.exists()
     assert worker.store.load(expected_file)["recordid"] == (
         "b10f81f8-ed8f-47d2-889e-04027e9a835d"
