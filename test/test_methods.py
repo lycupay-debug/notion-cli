@@ -44,6 +44,6 @@ def test_read_json_file_rejects_absolute_path(tmp_path):
 
 
 def test_is_assigned_to_rule_chief():
-    assert is_assigned_to_rule_chief({"assignee": "rule_chief"}) is True
-    assert is_assigned_to_rule_chief({"assignee": "another_rule"}) is False
-    assert is_assigned_to_rule_chief({"assignee": None}) is False
+    assert is_assigned_to_rule_chief({"assignee": "rule_chief"}, "rule_chief") is True
+    assert is_assigned_to_rule_chief({"assignee": "another_rule"}, "rule_chief") is False
+    assert is_assigned_to_rule_chief({"assignee": None}, "rule_chief") is False
