@@ -94,8 +94,8 @@ def test_parse_file_reads_persists_and_creates_history(tmp_path):
     )
     assert history_file.exists()
     assert worker.store.load(history_file) == {
-        "任务完成状态": None,
-        "任务处理方式": None,
+        "task_completed": None,
+        "task_action": None,
     }
 
 
@@ -175,8 +175,8 @@ def test_parse_history_uses_jsonstore(tmp_path):
     history = worker.create_history("test-record-id")
 
     assert history == {
-        "任务完成状态": None,
-        "任务处理方式": None,
+        "task_completed": None,
+        "task_action": None,
     }
     assert (
         history_dir / "test-record-id.json"
