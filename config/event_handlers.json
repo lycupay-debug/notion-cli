@@ -5,6 +5,11 @@
       "enabled": true,
       "module": "handlers.webhook_received",
       "function": "handle_webhook_received"
+    },
+    "NEW_TASK": {
+      "enabled": true,
+      "module": "handlers.new_task",
+      "function": "handle_new_task"
     }
   }
 }
