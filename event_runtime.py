@@ -59,11 +59,16 @@ class EventRuntime:
         return handlers
 
     def reload_handlers(self) -> None:
-        """热加载 Handler 配置。
+        """在安全窗口内热加载 Handler 配置。
 
-        先构建并验证完整新注册表，成功后才替换当前注册表。
-        配置错误不会破坏当前正在运行的 Handler 注册关系。
+        当前存在正在执行的 Handler 时不切换注册表。
+        先构建并验证完整新注册表，成功后才一次性替换。
         """
+        if self.bus.active_task_count() > 0:
+            raise RuntimeError(
+                "cannot reload handlers while event handlers are active"
+            )
+
         handlers = self._load_handler_registry()
         self.bus.replace_handlers(handlers)
 
