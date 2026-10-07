@@ -15,6 +15,11 @@
       "enabled": true,
       "module": "handlers.rule_done",
       "function": "handle_rule_done"
+    },
+    "CHANNEL_DONE": {
+      "enabled": true,
+      "module": "handlers.channel_done",
+      "function": "handle_channel_done"
     }
   }
 }
