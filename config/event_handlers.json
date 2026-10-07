@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "handlers": {
+    "WEBHOOK_RECEIVED": {
+      "enabled": true,
+      "module": "handlers.webhook_received",
+      "function": "handle_webhook_received"
+    }
+  }
+}
