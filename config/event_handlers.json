@@ -10,6 +10,11 @@
       "enabled": true,
       "module": "handlers.new_task",
       "function": "handle_new_task"
+    },
+    "RULE_DONE": {
+      "enabled": true,
+      "module": "handlers.rule_done",
+      "function": "handle_rule_done"
     }
   }
 }
