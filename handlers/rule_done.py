@@ -9,8 +9,8 @@ from channel import ChannelManager, ChannelTask
 _channel_manager = ChannelManager()
 
 
-async def handle_rule_done(event: Event) -> None:
-    """接收 RULE_DONE，并将任务提交到对应 Channel。"""
+async def handle_rule_done(event: Event) -> Event:
+    """接收 RULE_DONE，并等待 Channel 实际执行完成。"""
     if event.event_type != "RULE_DONE":
         raise ValueError(f"unexpected event type: {event.event_type}")
 
@@ -34,7 +34,7 @@ async def handle_rule_done(event: Event) -> None:
 
     _channel_manager.load_config(config)
 
-    await _channel_manager.submit(
+    result = await _channel_manager.submit_and_wait(
         ChannelTask(
             record_id=record_id,
             assignee=assignee,
@@ -48,5 +48,16 @@ async def handle_rule_done(event: Event) -> None:
         f"record_id={record_id} "
         f"assignee={assignee} "
         f"channel={channel} "
-        "status=QUEUED"
+        "status=COMPLETED"
+    )
+
+    return Event(
+        "CHANNEL_DONE",
+        {
+            "record_id": record_id,
+            "assignee": assignee,
+            "channel": channel,
+            "task": task,
+            "result": result,
+        },
     )
