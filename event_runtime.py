@@ -2,12 +2,16 @@ from __future__ import annotations
 
 import asyncio
 import json
+from collections.abc import Awaitable, Callable
 
 from event_bus import Event, EventBus
 from methods.get_event_handlers_config_path import (
     get_event_handlers_config_path,
 )
 from methods.load_callable import load_callable
+
+
+Handler = Callable[[Event], Awaitable[Event | None]]
 
 
 class EventRuntime:
@@ -18,6 +22,9 @@ class EventRuntime:
 
     Handler 注册关系来自 config/event_handlers.json。
     reload_handlers() 会先构建完整的新注册表，全部成功后再一次性替换。
+
+    Handler 可以返回一个后续 Event；EventRuntime 统一负责再次发布，
+    因此业务 Handler 不需要直接持有 EventBus。
     """
 
     def __init__(self) -> None:
@@ -25,6 +32,22 @@ class EventRuntime:
         self._loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
         self._started = False
         self.reload_handlers()
+
+    def _wrap_handler(self, handler: Callable) -> Callable:
+        async def wrapped(event: Event) -> None:
+            next_event = await handler(event)
+
+            if next_event is None:
+                return
+
+            if not isinstance(next_event, Event):
+                raise TypeError(
+                    "handler result must be Event or None"
+                )
+
+            self.bus.publish(next_event)
+
+        return wrapped
 
     def _load_handler_registry(self) -> dict:
         config_path = get_event_handlers_config_path()
@@ -54,7 +77,7 @@ class EventRuntime:
                 item.get("module", ""),
                 item.get("function", ""),
             )
-            handlers[event_type] = handler
+            handlers[event_type] = self._wrap_handler(handler)
 
         return handlers
 
