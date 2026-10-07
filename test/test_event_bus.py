@@ -1,99 +1,114 @@
+import asyncio
 import unittest
 
 from event_bus import Event, EventBus, EventDispatcher
 
 
 class TestEventBus(unittest.IsolatedAsyncioTestCase):
-    async def test_event_bus_only_moves_events(self):
+    async def test_publish_directly_triggers_registered_handler(self):
         bus = EventBus()
-        event = Event("NEW_TASK", {"record_id": "test-001"})
-
-        await bus.publish(event)
-
-        self.assertEqual(bus.qsize(), 1)
-        received = await bus.next_event()
-
-        self.assertIs(received, event)
-        self.assertEqual(bus.qsize(), 0)
-
-        bus.task_done()
-
-    async def test_dispatcher_routes_event_directly_to_registered_handler(self):
-        dispatcher = EventDispatcher()
         received = []
 
-        async def handle_new_task(event: Event) -> None:
+        async def handle(event: Event) -> None:
             received.append(event)
 
-        dispatcher.register("NEW_TASK", handle_new_task)
+        bus.register("NEW_TASK", handle)
+        task = bus.publish(Event("NEW_TASK"))
 
-        event = Event("NEW_TASK", {"record_id": "test-002"})
-        await dispatcher.dispatch(event)
+        self.assertIsInstance(task, asyncio.Task)
+        await task
 
-        self.assertEqual(received, [event])
+        self.assertEqual(received[0].event_type, "NEW_TASK")
+        self.assertEqual(bus.active_task_count(), 0)
 
-    async def test_dispatcher_can_route_different_events_independently(self):
-        dispatcher = EventDispatcher()
-        received = []
+    async def test_different_events_can_run_without_waiting_for_each_other(self):
+        bus = EventBus()
+        started = []
+        release = asyncio.Event()
 
         async def handle_a(event: Event) -> None:
-            received.append(("A", event.event_id))
+            started.append("A")
+            await release.wait()
 
         async def handle_b(event: Event) -> None:
-            received.append(("B", event.event_id))
+            started.append("B")
 
-        dispatcher.register("EVENT_A", handle_a)
-        dispatcher.register("EVENT_B", handle_b)
+        bus.register("A", handle_a)
+        bus.register("B", handle_b)
 
-        event_a = Event("EVENT_A")
-        event_b = Event("EVENT_B")
+        task_a = bus.publish(Event("A"))
+        task_b = bus.publish(Event("B"))
 
-        await dispatcher.dispatch(event_b)
-        await dispatcher.dispatch(event_a)
+        await asyncio.sleep(0)
 
-        self.assertEqual(
-            received,
-            [
-                ("B", event_b.event_id),
-                ("A", event_a.event_id),
-            ],
-        )
+        self.assertEqual(started, ["A", "B"])
+        self.assertFalse(task_a.done())
+        self.assertTrue(task_b.done())
 
-    async def test_bus_and_dispatcher_work_together(self):
+        release.set()
+        await task_a
+
+    async def test_replace_handlers_switches_registration(self):
         bus = EventBus()
-        dispatcher = EventDispatcher()
         received = []
 
-        async def handle_new_task(event: Event) -> None:
-            received.append(event.data["record_id"])
+        async def old_handler(event: Event) -> None:
+            received.append("old")
 
-        dispatcher.register("NEW_TASK", handle_new_task)
+        async def new_handler(event: Event) -> None:
+            received.append("new")
 
-        await bus.publish(Event("NEW_TASK", {"record_id": "A"}))
-        await bus.publish(Event("NEW_TASK", {"record_id": "B"}))
+        bus.register("TEST", old_handler)
+        await bus.publish(Event("TEST"))
 
-        await dispatcher.dispatch(await bus.next_event())
-        bus.task_done()
+        bus.replace_handlers({"TEST": new_handler})
 
-        await dispatcher.dispatch(await bus.next_event())
-        bus.task_done()
+        await bus.publish(Event("TEST"))
 
-        self.assertEqual(received, ["A", "B"])
+        self.assertEqual(received, ["old", "new"])
 
-    async def test_dispatcher_raises_for_unknown_event_type(self):
-        dispatcher = EventDispatcher()
+    async def test_unknown_event_raises_when_handler_task_is_awaited(self):
+        bus = EventBus()
+
+        task = bus.publish(Event("UNKNOWN"))
 
         with self.assertRaisesRegex(LookupError, "UNKNOWN"):
-            await dispatcher.dispatch(Event("UNKNOWN"))
+            await task
 
-    def test_event_serialization_contains_standard_fields(self):
-        event = Event("NEW_TASK", {"record_id": "test-003"})
-        payload = event.to_dict()
+    async def test_handler_failure_does_not_break_bus(self):
+        bus = EventBus()
+        received = []
 
-        self.assertEqual(payload["event_id"], event.event_id)
-        self.assertEqual(payload["event_type"], "NEW_TASK")
-        self.assertEqual(payload["data"]["record_id"], "test-003")
-        self.assertTrue(payload["created_at"])
+        async def failing(event: Event) -> None:
+            raise RuntimeError("handler failed")
+
+        async def succeeding(event: Event) -> None:
+            received.append("ok")
+
+        bus.register("FAIL", failing)
+        bus.register("OK", succeeding)
+
+        failed = bus.publish(Event("FAIL"))
+        succeeded = bus.publish(Event("OK"))
+
+        await asyncio.gather(
+            failed,
+            succeeded,
+            return_exceptions=True,
+        )
+
+        self.assertEqual(received, ["ok"])
+
+    def test_dispatcher_replace(self):
+        dispatcher = EventDispatcher()
+
+        async def handle(event: Event) -> None:
+            return None
+
+        dispatcher.replace({"EVENT": handle})
+
+        self.assertTrue(dispatcher.has_handler("EVENT"))
+        self.assertFalse(dispatcher.has_handler("OTHER"))
 
 
 if __name__ == "__main__":
