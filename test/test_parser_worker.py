@@ -65,7 +65,7 @@ def test_parser_saves_by_recordid(tmp_path):
 def test_parse_file_reads_persists_and_creates_history(tmp_path):
     event_dir = tmp_path / "webhook_events"
     tasks_dir = tmp_path / "config" / "tasks"
-    history_dir = tmp_path / "config" / "解析历史"
+    history_dir = tmp_path / "config" / "parse_history"
     event_dir.mkdir()
 
     source_file = (
@@ -102,7 +102,7 @@ def test_parse_file_reads_persists_and_creates_history(tmp_path):
 def test_parser_skips_event_already_in_history(tmp_path):
     event_dir = tmp_path / "webhook_events"
     tasks_dir = tmp_path / "config" / "tasks"
-    history_dir = tmp_path / "config" / "解析历史"
+    history_dir = tmp_path / "config" / "parse_history"
     event_dir.mkdir()
 
     source_file = (
@@ -130,7 +130,7 @@ def test_parser_skips_event_already_in_history(tmp_path):
 def test_parse_pending_events_only_parses_unrecorded_events(tmp_path):
     event_dir = tmp_path / "webhook_events"
     tasks_dir = tmp_path / "config" / "tasks"
-    history_dir = tmp_path / "config" / "解析历史"
+    history_dir = tmp_path / "config" / "parse_history"
     event_dir.mkdir()
 
     first = event_dir / "b10f81f8-ed8f-47d2-889e-04027e9a835d.json"
@@ -169,7 +169,7 @@ def test_parse_pending_events_only_parses_unrecorded_events(tmp_path):
 
 
 def test_parse_history_uses_jsonstore(tmp_path):
-    history_dir = tmp_path / "config" / "解析历史"
+    history_dir = tmp_path / "config" / "parse_history"
     worker = ParserWorker(history_dir=history_dir)
 
     history = worker.create_history("test-record-id")
