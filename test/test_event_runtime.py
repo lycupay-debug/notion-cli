@@ -66,5 +66,75 @@ class TestEventRuntime(unittest.IsolatedAsyncioTestCase):
         runtime._loop.close()
 
 
+    async def test_rule_done_to_channel_done_is_full_event_chain(self):
+        from unittest.mock import patch
+        from handlers.rule_done import handle_rule_done
+
+        runtime = EventRuntime()
+
+        rule_done_event = Event(
+            "RULE_DONE",
+            {
+                "record_id": "record-chain-001",
+                "assignee": "system-ledger",
+                "channel": "system_ledger",
+                "task": {"entity": {"id": "page-chain-001"}},
+            },
+        )
+
+        async def new_task_handler(event):
+            return rule_done_event
+
+        channel_done_handler = AsyncMock()
+
+        with patch(
+            "handlers.rule_done.read_json_file",
+            return_value={
+                "channels": {
+                    "system_ledger": {
+                        "enabled": True,
+                        "module": "unused",
+                        "function": "unused",
+                    }
+                }
+            },
+        ), patch(
+            "handlers.rule_done._channel_manager.load_config"
+        ), patch(
+            "handlers.rule_done._channel_manager.submit_and_wait",
+            new=AsyncMock(
+                return_value={"status": "UPDATED", "verified": True}
+            ),
+        ):
+            runtime.bus.replace_handlers({
+                "NEW_TASK": runtime._wrap_handler(new_task_handler),
+                "RULE_DONE": runtime._wrap_handler(handle_rule_done),
+                "CHANNEL_DONE": runtime._wrap_handler(channel_done_handler),
+            })
+
+            await runtime.bus.publish(
+                Event(
+                    "NEW_TASK",
+                    {"task": {"record_id": "record-chain-001"}},
+                )
+            )
+
+            await asyncio.sleep(0)
+            await asyncio.sleep(0)
+
+        channel_done_handler.assert_awaited_once()
+        received = channel_done_handler.await_args.args[0]
+
+        self.assertEqual(received.event_type, "CHANNEL_DONE")
+        self.assertEqual(received.data["record_id"], "record-chain-001")
+        self.assertEqual(received.data["channel"], "system_ledger")
+        self.assertEqual(
+            received.data["result"],
+            {"status": "UPDATED", "verified": True},
+        )
+
+        runtime._loop.close()
+
+
 if __name__ == "__main__":
     unittest.main()
