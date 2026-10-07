@@ -28,7 +28,7 @@ class TestWebhookReceivedHandler(unittest.IsolatedAsyncioTestCase):
 
         parser.parse_file.assert_called_once()
         self.assertEqual(
-            str(parser.parse_file.call_args.args[0]),
+            parser.parse_file.call_args.args[0].as_posix(),
             "data/webhook_events/record-001.json",
         )
 
