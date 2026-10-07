@@ -22,6 +22,10 @@ class EventBus:
         """将事件放入事件流。"""
         await self._queue.put(event)
 
+    def publish_nowait(self, event: Event) -> None:
+        """在当前事件循环线程中立即放入事件。"""
+        self._queue.put_nowait(event)
+
     async def next_event(self) -> Event:
         """等待并取出下一个事件。
 
