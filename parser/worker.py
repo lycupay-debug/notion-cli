@@ -6,7 +6,6 @@ from typing import Any
 from core.json_store import JSONStore
 from methods.get_parse_history_path import get_parse_history_path
 from methods.get_task_path import get_task_path
-from methods.get_webhook_event_path import get_webhook_event_path
 from methods.read_json_file import read_json_file
 from methods.webhook_event import (
     get_authors,
