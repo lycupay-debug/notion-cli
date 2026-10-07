@@ -1,5 +1,6 @@
 import asyncio
 import unittest
+from unittest.mock import patch
 
 from channel import ChannelManager, ChannelTask
 
@@ -20,13 +21,16 @@ class TestChannelManager(unittest.IsolatedAsyncioTestCase):
             order.append(f"end:{task.record_id}")
             running -= 1
 
-        manager.load_config({
-            "channels": {
-                "a": {"enabled": True, "module": "test.test_channel_manager", "function": "unused"}
-            }
-        })
-        state = manager._channels["a"]
-        state.executor = executor
+        with patch("channel.manager.load_callable", return_value=executor):
+            manager.load_config({
+                "channels": {
+                    "a": {
+                        "enabled": True,
+                        "module": "unused",
+                        "function": "unused",
+                    }
+                }
+            })
 
         await manager.submit(ChannelTask("1", "u", "a", {}))
         await manager.submit(ChannelTask("2", "u", "a", {}))
@@ -50,16 +54,17 @@ class TestChannelManager(unittest.IsolatedAsyncioTestCase):
             await release.wait()
             active -= 1
 
-        manager._channels["a"] = manager._channels["b"] = None
-        manager._channels.clear()
-        from channel.manager import _ChannelState
-        manager._channels["a"] = _ChannelState(asyncio.Queue(), executor)
-        manager._channels["b"] = _ChannelState(asyncio.Queue(), executor)
+        with patch("channel.manager.load_callable", return_value=executor):
+            manager.load_config({
+                "channels": {
+                    "a": {"enabled": True, "module": "unused", "function": "unused"},
+                    "b": {"enabled": True, "module": "unused", "function": "unused"},
+                }
+            })
 
         await manager.submit(ChannelTask("1", "u", "a", {}))
         await manager.submit(ChannelTask("2", "u", "b", {}))
-        await asyncio.wait_for(started.wait(), timeout=1)
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.02)
 
         self.assertEqual(max_active, 2)
         release.set()
