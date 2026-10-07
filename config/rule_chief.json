@@ -1,10 +1,30 @@
 {
   "version": 1,
-  "rules": {
-    "9c7afd69-cba9-44c3-ae20-ad2886498e96": {
+  "rules": [
+    {
+      "name": "SystemLedger",
       "enabled": true,
-      "assignee": "system-ledger",
-      "channel": "system_ledger"
+      "match": {
+        "event_type": "page.properties_updated",
+        "parent": {
+          "data_source_id": "9c7afd69-cba9-44c3-ae20-ad2886498e96"
+        },
+        "author": {
+          "is_person": true,
+          "types": ["person"]
+        },
+        "updated_properties": [
+          "laTg"
+        ]
+      },
+      "task": {
+        "enabled": true,
+        "mode": "single"
+      },
+      "route": {
+        "assignee": "system-ledger",
+        "channel": "system_ledger"
+      }
     }
-  }
+  ]
 }
