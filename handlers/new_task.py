@@ -9,7 +9,7 @@ RULE_DONE_EVENT = "RULE_DONE"
 
 
 async def handle_new_task(event: Event) -> Event | None:
-    """处理 NEW_TASK；RuleChief 路由成功后产生 RULE_DONE。"""
+    """处理 NEW_TASK；RuleChief 完成规则匹配后产生 RULE_DONE。"""
     task = event.data.get("task")
     if not isinstance(task, dict):
         raise ValueError("NEW_TASK event is missing task")
@@ -19,35 +19,40 @@ async def handle_new_task(event: Event) -> Event | None:
         raise ValueError("rule chief config must be an object")
 
     rules = config.get("rules")
-    if not isinstance(rules, dict):
-        raise ValueError("rule chief config must contain object: rules")
+    if not isinstance(rules, list):
+        raise ValueError("rule chief config must contain array: rules")
 
-    decision = RuleChief(rules).decide(task)
+    decisions = RuleChief(rules).decide(task)
+    routed = [decision for decision in decisions if decision.status == "ROUTED"]
 
-    if decision.status != "ROUTED":
+    for decision in decisions:
         print(
             "[NewTaskHandler] "
             f"record_id={decision.record_id} "
+            f"rule={decision.rule_name or '-'} "
             f"status={decision.status} "
-            f"reason={decision.reason}"
+            f"assignee={decision.assignee or '-'} "
+            f"channel={decision.channel or '-'} "
+            f"reason={decision.reason or '-'}"
         )
-        return None
 
-    print(
-        "[NewTaskHandler] "
-        f"record_id={decision.record_id} "
-        f"status={decision.status} "
-        f"assignee={decision.assignee} "
-        f"channel={decision.channel}"
-    )
+    if not routed:
+        return None
 
     return Event(
         RULE_DONE_EVENT,
         {
-            "record_id": decision.record_id,
-            "assignee": decision.assignee,
-            "channel": decision.channel,
-            "reason": decision.reason,
-            "task": task,
+            "record_id": task["record_id"],
+            "decisions": [
+                {
+                    "record_id": decision.record_id,
+                    "assignee": decision.assignee,
+                    "channel": decision.channel,
+                    "reason": decision.reason,
+                    "task": decision.task or task,
+                    "rule_name": decision.rule_name,
+                }
+                for decision in routed
+            ],
         },
     )
