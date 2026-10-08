@@ -4595,3 +4595,69 @@
 2026-10-08T15:03:26+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=CHANNEL_DONE event_id=955a026e-d402-4592-8eb2-262250d356c9 record_id=e37a83e0-7d2c-438c-bf3c-d8fb24a45d11
 2026-10-08T15:03:26+08:00 [INFO] [EventBus] TASK_DONE active=1
 2026-10-08T15:03:26+08:00 [INFO] [EventBus] TASK_DONE active=0
+2026-10-08T15:04:18+08:00 [INFO] [EventRuntime] GARBAGE_SCAN_TRIGGER
+2026-10-08T15:04:18+08:00 [INFO] [EventBus] PUBLISH event_type=GARBAGE_SCAN event_id=db1b5a1b-f323-4cc7-bff4-036b29855bfd record_id=-
+2026-10-08T15:04:18+08:00 [INFO] [EventBus] TASK_TRACKED active=1
+2026-10-08T15:04:18+08:00 [INFO] [EventDispatcher] DISPATCH event_type=GARBAGE_SCAN event_id=db1b5a1b-f323-4cc7-bff4-036b29855bfd record_id=-
+2026-10-08T15:04:18+08:00 [INFO] [EventRuntime] HANDLER_START event_type=GARBAGE_SCAN event_id=db1b5a1b-f323-4cc7-bff4-036b29855bfd record_id=-
+2026-10-08T15:04:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_START task_dir=D:\notion-cli\config\tasks task_count=0 dispatch_dir=D:\notion-cli\config\任务派发清单
+2026-10-08T15:04:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_DONE task_count=0 routed=0
+2026-10-08T15:04:18+08:00 [INFO] [GarbageScan] COMPENSATION_DONE routed=0
+2026-10-08T15:04:18+08:00 [INFO] [EventRuntime] HANDLER_END event_type=GARBAGE_SCAN event_id=db1b5a1b-f323-4cc7-bff4-036b29855bfd record_id=- next_event=-
+2026-10-08T15:04:18+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=GARBAGE_SCAN event_id=db1b5a1b-f323-4cc7-bff4-036b29855bfd record_id=-
+2026-10-08T15:04:18+08:00 [INFO] [EventBus] TASK_DONE active=0
+2026-10-08T15:05:18+08:00 [INFO] [EventRuntime] GARBAGE_SCAN_TRIGGER
+2026-10-08T15:05:18+08:00 [INFO] [EventBus] PUBLISH event_type=GARBAGE_SCAN event_id=f46e9617-8f96-4a96-8a9c-3b682f591d58 record_id=-
+2026-10-08T15:05:18+08:00 [INFO] [EventBus] TASK_TRACKED active=1
+2026-10-08T15:05:18+08:00 [INFO] [EventDispatcher] DISPATCH event_type=GARBAGE_SCAN event_id=f46e9617-8f96-4a96-8a9c-3b682f591d58 record_id=-
+2026-10-08T15:05:18+08:00 [INFO] [EventRuntime] HANDLER_START event_type=GARBAGE_SCAN event_id=f46e9617-8f96-4a96-8a9c-3b682f591d58 record_id=-
+2026-10-08T15:05:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_START task_dir=D:\notion-cli\config\tasks task_count=0 dispatch_dir=D:\notion-cli\config\任务派发清单
+2026-10-08T15:05:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_DONE task_count=0 routed=0
+2026-10-08T15:05:18+08:00 [INFO] [GarbageScan] COMPENSATION_DONE routed=0
+2026-10-08T15:05:18+08:00 [INFO] [EventRuntime] HANDLER_END event_type=GARBAGE_SCAN event_id=f46e9617-8f96-4a96-8a9c-3b682f591d58 record_id=- next_event=-
+2026-10-08T15:05:18+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=GARBAGE_SCAN event_id=f46e9617-8f96-4a96-8a9c-3b682f591d58 record_id=-
+2026-10-08T15:05:18+08:00 [INFO] [EventBus] TASK_DONE active=0
+2026-10-08T15:06:18+08:00 [INFO] [EventRuntime] GARBAGE_SCAN_TRIGGER
+2026-10-08T15:06:18+08:00 [INFO] [EventBus] PUBLISH event_type=GARBAGE_SCAN event_id=8f64ccb5-0ddb-4fe0-81dc-8717680a5258 record_id=-
+2026-10-08T15:06:18+08:00 [INFO] [EventBus] TASK_TRACKED active=1
+2026-10-08T15:06:18+08:00 [INFO] [EventDispatcher] DISPATCH event_type=GARBAGE_SCAN event_id=8f64ccb5-0ddb-4fe0-81dc-8717680a5258 record_id=-
+2026-10-08T15:06:18+08:00 [INFO] [EventRuntime] HANDLER_START event_type=GARBAGE_SCAN event_id=8f64ccb5-0ddb-4fe0-81dc-8717680a5258 record_id=-
+2026-10-08T15:06:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_START task_dir=D:\notion-cli\config\tasks task_count=0 dispatch_dir=D:\notion-cli\config\任务派发清单
+2026-10-08T15:06:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_DONE task_count=0 routed=0
+2026-10-08T15:06:18+08:00 [INFO] [GarbageScan] COMPENSATION_DONE routed=0
+2026-10-08T15:06:18+08:00 [INFO] [EventRuntime] HANDLER_END event_type=GARBAGE_SCAN event_id=8f64ccb5-0ddb-4fe0-81dc-8717680a5258 record_id=- next_event=-
+2026-10-08T15:06:18+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=GARBAGE_SCAN event_id=8f64ccb5-0ddb-4fe0-81dc-8717680a5258 record_id=-
+2026-10-08T15:06:18+08:00 [INFO] [EventBus] TASK_DONE active=0
+2026-10-08T15:07:18+08:00 [INFO] [EventRuntime] GARBAGE_SCAN_TRIGGER
+2026-10-08T15:07:18+08:00 [INFO] [EventBus] PUBLISH event_type=GARBAGE_SCAN event_id=5c2e338f-68da-4892-97a3-336fdd53b1b2 record_id=-
+2026-10-08T15:07:18+08:00 [INFO] [EventBus] TASK_TRACKED active=1
+2026-10-08T15:07:18+08:00 [INFO] [EventDispatcher] DISPATCH event_type=GARBAGE_SCAN event_id=5c2e338f-68da-4892-97a3-336fdd53b1b2 record_id=-
+2026-10-08T15:07:18+08:00 [INFO] [EventRuntime] HANDLER_START event_type=GARBAGE_SCAN event_id=5c2e338f-68da-4892-97a3-336fdd53b1b2 record_id=-
+2026-10-08T15:07:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_START task_dir=D:\notion-cli\config\tasks task_count=0 dispatch_dir=D:\notion-cli\config\任务派发清单
+2026-10-08T15:07:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_DONE task_count=0 routed=0
+2026-10-08T15:07:18+08:00 [INFO] [GarbageScan] COMPENSATION_DONE routed=0
+2026-10-08T15:07:18+08:00 [INFO] [EventRuntime] HANDLER_END event_type=GARBAGE_SCAN event_id=5c2e338f-68da-4892-97a3-336fdd53b1b2 record_id=- next_event=-
+2026-10-08T15:07:18+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=GARBAGE_SCAN event_id=5c2e338f-68da-4892-97a3-336fdd53b1b2 record_id=-
+2026-10-08T15:07:18+08:00 [INFO] [EventBus] TASK_DONE active=0
+2026-10-08T15:08:18+08:00 [INFO] [EventRuntime] GARBAGE_SCAN_TRIGGER
+2026-10-08T15:08:18+08:00 [INFO] [EventBus] PUBLISH event_type=GARBAGE_SCAN event_id=948e0924-2ac4-44d9-bc87-439c85b8f6c0 record_id=-
+2026-10-08T15:08:18+08:00 [INFO] [EventBus] TASK_TRACKED active=1
+2026-10-08T15:08:18+08:00 [INFO] [EventDispatcher] DISPATCH event_type=GARBAGE_SCAN event_id=948e0924-2ac4-44d9-bc87-439c85b8f6c0 record_id=-
+2026-10-08T15:08:18+08:00 [INFO] [EventRuntime] HANDLER_START event_type=GARBAGE_SCAN event_id=948e0924-2ac4-44d9-bc87-439c85b8f6c0 record_id=-
+2026-10-08T15:08:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_START task_dir=D:\notion-cli\config\tasks task_count=0 dispatch_dir=D:\notion-cli\config\任务派发清单
+2026-10-08T15:08:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_DONE task_count=0 routed=0
+2026-10-08T15:08:18+08:00 [INFO] [GarbageScan] COMPENSATION_DONE routed=0
+2026-10-08T15:08:18+08:00 [INFO] [EventRuntime] HANDLER_END event_type=GARBAGE_SCAN event_id=948e0924-2ac4-44d9-bc87-439c85b8f6c0 record_id=- next_event=-
+2026-10-08T15:08:18+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=GARBAGE_SCAN event_id=948e0924-2ac4-44d9-bc87-439c85b8f6c0 record_id=-
+2026-10-08T15:08:18+08:00 [INFO] [EventBus] TASK_DONE active=0
+2026-10-08T15:09:18+08:00 [INFO] [EventRuntime] GARBAGE_SCAN_TRIGGER
+2026-10-08T15:09:18+08:00 [INFO] [EventBus] PUBLISH event_type=GARBAGE_SCAN event_id=d801fe5c-638e-44f9-8709-44b25ddd821c record_id=-
+2026-10-08T15:09:18+08:00 [INFO] [EventBus] TASK_TRACKED active=1
+2026-10-08T15:09:18+08:00 [INFO] [EventDispatcher] DISPATCH event_type=GARBAGE_SCAN event_id=d801fe5c-638e-44f9-8709-44b25ddd821c record_id=-
+2026-10-08T15:09:18+08:00 [INFO] [EventRuntime] HANDLER_START event_type=GARBAGE_SCAN event_id=d801fe5c-638e-44f9-8709-44b25ddd821c record_id=-
+2026-10-08T15:09:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_START task_dir=D:\notion-cli\config\tasks task_count=0 dispatch_dir=D:\notion-cli\config\任务派发清单
+2026-10-08T15:09:18+08:00 [INFO] [RuleChief] COMPENSATION_SCAN_DONE task_count=0 routed=0
+2026-10-08T15:09:18+08:00 [INFO] [GarbageScan] COMPENSATION_DONE routed=0
+2026-10-08T15:09:18+08:00 [INFO] [EventRuntime] HANDLER_END event_type=GARBAGE_SCAN event_id=d801fe5c-638e-44f9-8709-44b25ddd821c record_id=- next_event=-
+2026-10-08T15:09:18+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=GARBAGE_SCAN event_id=d801fe5c-638e-44f9-8709-44b25ddd821c record_id=-
+2026-10-08T15:09:18+08:00 [INFO] [EventBus] TASK_DONE active=0
