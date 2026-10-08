@@ -23,6 +23,11 @@ config/tasks
 #Config Parse_history
 config/parse_history
 
+#Config 任务派发清单
+config/任务派发清单
+
 # Logs
-logs/
+# logs/
+
+
 
