@@ -5,7 +5,7 @@ import json
 from collections.abc import Awaitable, Callable
 
 from core.logger import error, info
-from event_bus import Event, EventBus
+from event_bus import Event, EventBus, set_default_bus
 from methods.get_event_handlers_config_path import get_event_handlers_config_path
 from methods.load_callable import load_callable
 
@@ -17,6 +17,7 @@ class EventRuntime:
 
     def __init__(self) -> None:
         self.bus = EventBus()
+        set_default_bus(self.bus)
         self._loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
         self._started = False
         info("[EventRuntime] INIT")
