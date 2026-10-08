@@ -38,7 +38,7 @@ class SystemLedgerListener:
         info(f"[SystemLedgerListener] VERIFY_VALUE page_id={page_id} value={updated_value}")
         if updated_value != target_id:
             error(f"[SystemLedgerListener] VERIFY_FAILED page_id={page_id} actual={updated_value!r} expected={target_id!r}")
-            raise RuntimeError(f"回读验证失败：实际值={updated_value!r}，期望值={target_id!r}")
+            return {"status": "FAILED", "page_id": page_id, "raw_id": raw_id, "object_type": resolved["status"], "target_id": target_id, "verified": False, "actual_value": updated_value}
         info(f"[SystemLedgerListener] SUCCESS page_id={page_id} target_id={target_id}")
         return {"status": "UPDATED", "page_id": page_id, "raw_id": raw_id, "object_type": resolved["status"], "target_id": target_id, "verified": True}
 
