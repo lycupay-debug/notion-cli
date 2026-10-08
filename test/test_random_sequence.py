@@ -1,8 +1,12 @@
-import asyncio
-from types import SimpleNamespace
+import sys
+from pathlib import Path
 from unittest.mock import patch
 
-from listeners.random_sequence import RandomSequenceListener, execute_random_sequence
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from listeners.random_sequence import RandomSequenceListener
 
 
 def test_existing_four_digit_value_is_unchanged():
@@ -48,7 +52,8 @@ def test_invalid_value_is_replaced_with_four_digits():
     with patch(
         "listeners.random_sequence.retrieve_page",
         side_effect=[page, updated_page],
-    ), patch("listeners.random_sequence.random.randint", return_value=5678),          patch("listeners.random_sequence.update_page") as update:
+    ), patch("listeners.random_sequence.random.randint", return_value=5678), \
+         patch("listeners.random_sequence.update_page") as update:
         result = RandomSequenceListener().handle("page-id")
 
     assert result["status"] == "UPDATED"
