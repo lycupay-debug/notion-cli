@@ -25,6 +25,11 @@
       "enabled": true,
       "module": "handlers.record_keeper",
       "function": "handle_execution_result"
+    },
+    "RECORD_DONE": {
+      "enabled": true,
+      "module": "handlers.record_done",
+      "function": "handle_record_done"
     }
   }
 }
