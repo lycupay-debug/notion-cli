@@ -30,6 +30,11 @@
       "enabled": true,
       "module": "handlers.record_done",
       "function": "handle_record_done"
+    },
+    "GARBAGE_SCAN": {
+      "enabled": true,
+      "module": "handlers.garbage_scan",
+      "function": "handle_garbage_scan"
     }
   }
 }
