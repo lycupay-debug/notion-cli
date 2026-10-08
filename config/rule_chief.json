@@ -17,7 +17,13 @@
         },
         "updated_properties": [
           "dxEY"
-        ]
+        ],
+        "task_completed": {
+          "in": [
+            null,
+            "任务的已派发"
+          ]
+        }
       },
       "task": {
         "enabled": true,
