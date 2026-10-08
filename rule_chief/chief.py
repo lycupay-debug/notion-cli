@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from threading import Lock
 from typing import Any
 
 from core.json_store import JSONStore
@@ -22,9 +23,10 @@ class RuleDecision:
 class RuleChief:
     """规则总管：事件触发时扫描全部任务，只处理尚未进入任务派发清单的任务。"""
 
-    DISPATCH_DIR = Path("config") / "task_dispatch_list"
+    DISPATCH_DIR = Path("config") / "任务派发清单"
     TASK_DIR = Path("config") / "tasks"
     DISPATCHED_STATUS = "任务的已派发"
+    _dispatch_lock = Lock()
 
     def __init__(
         self,
@@ -58,6 +60,10 @@ class RuleChief:
         任务是否已经派发，不依赖内存状态，而是通过
         config/task_dispatch_list/{record_id}.json 判断。
         """
+        with self._dispatch_lock:
+            return self._scan_and_dispatch()
+
+    def _scan_and_dispatch(self) -> list[RuleDecision]:
         task_files = sorted(self.task_dir.glob("*.json"))
         info(
             f"[RuleChief] SCAN_START task_dir={self.task_dir} "
