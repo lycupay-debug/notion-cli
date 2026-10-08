@@ -17,6 +17,7 @@ class ChannelTask:
     assignee: str
     channel: str
     data: dict[str, Any]
+    route_rule: str | None = None
 
 @dataclass(slots=True)
 class _QueuedTask:
