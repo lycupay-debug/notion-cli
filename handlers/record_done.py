@@ -11,7 +11,10 @@ async def handle_record_done(event: Event) -> Event | None:
         raise ValueError(f"unexpected event type: {event.event_type}")
 
     record_id = event.data.get("record_id")
-    info(f"[RecordDoneHandler] START record_id={record_id}")
+    if not record_id:
+        raise ValueError("RECORD_DONE event is missing record_id")
+
+    info(f"[RecordDoneHandler] START record_id={record_id} mode=INCREMENTAL")
 
     try:
         config = read_json_file("config/rule_chief.json")
@@ -19,7 +22,7 @@ async def handle_record_done(event: Event) -> Event | None:
         if not isinstance(rules, list):
             raise ValueError("rule chief config must contain array: rules")
 
-        decisions = RuleChief(rules).decide()
+        decisions = RuleChief(rules).decide(record_id)
         routed = [decision for decision in decisions if decision.status == "ROUTED"]
 
         info(
@@ -33,7 +36,7 @@ async def handle_record_done(event: Event) -> Event | None:
         return Event(
             "RULE_DONE",
             {
-                "record_id": record_id or routed[0].record_id,
+                "record_id": record_id,
                 "decisions": [
                     {
                         "record_id": decision.record_id,

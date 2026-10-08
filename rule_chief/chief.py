@@ -21,7 +21,7 @@ class RuleDecision:
 
 
 class RuleChief:
-    """规则总管：事件触发时扫描全部任务，只处理尚未进入任务派发清单的任务。"""
+    """规则总管：事件驱动单任务判定 + 低频全量补偿扫描。"""
 
     DISPATCH_DIR = Path("config") / "任务派发清单"
     TASK_DIR = Path("config") / "tasks"
@@ -53,104 +53,135 @@ class RuleChief:
         )
         self.store = JSONStore(base_dir=self.project_root)
 
-    def decide(self) -> list[RuleDecision]:
-        """
-        由一次事件触发全量扫描 config/tasks。
+    def decide(self, record_id: str) -> list[RuleDecision]:
+        """事件驱动路径：只判定指定 record_id。"""
+        if not record_id:
+            raise ValueError("record_id is required for incremental decision")
 
-        任务是否已经派发，不依赖内存状态，而是通过
-        config/任务派发清单/{record_id}.json 判断。
-        """
         with self._dispatch_lock:
-            return self._scan_and_dispatch()
+            decision = self._process_task(record_id)
+            return [decision] if decision.status == "ROUTED" else []
 
-    def _scan_and_dispatch(self) -> list[RuleDecision]:
-        task_files = sorted(self.task_dir.glob("*.json"))
-        info(
-            f"[RuleChief] SCAN_START task_dir={self.task_dir} "
-            f"task_count={len(task_files)} dispatch_dir={self.dispatch_dir}"
-        )
-
-        decisions: list[RuleDecision] = []
-
-        for task_path in task_files:
-            record_id = task_path.stem
-
-            if self._is_dispatched(record_id, task_path):
-                info(
-                    f"[RuleChief] SKIP record_id={record_id} "
-                    f"reason=ALREADY_DISPATCHED"
-                )
-                continue
-
-            try:
-                task = self.store.load(task_path)
-            except Exception as exc:
-                info(
-                    f"[RuleChief] SKIP record_id={record_id} "
-                    f"reason=TASK_LOAD_FAILED error={type(exc).__name__}: {exc}"
-                )
-                continue
-
-            if not isinstance(task, dict):
-                info(
-                    f"[RuleChief] SKIP record_id={record_id} "
-                    f"reason=TASK_NOT_OBJECT"
-                )
-                continue
-
-            task_record_id = task.get("record_id") or record_id
-            if task_record_id != record_id:
-                info(
-                    f"[RuleChief] SKIP record_id={record_id} "
-                    f"reason=RECORD_ID_MISMATCH task_record_id={task_record_id}"
-                )
-                continue
-
-            decision = self._decide_task(task, task_path)
-
-            if decision.status != "ROUTED":
-                info(
-                    f"[RuleChief] UNROUTED record_id={record_id} "
-                    f"reason={decision.reason or 'NO_RULE_MATCHED'}"
-                )
-                continue
-
-            # 先更新任务本身，再写派发清单。
-            # 如果此处之后进程崩溃，派发清单仍不存在，
-            # 下一次事件触发时该任务仍会被重新检查。
-            updated_task = dict(task)
-            updated_task["assignee"] = decision.assignee
-            updated_task["task_completed"] = self.DISPATCHED_STATUS
-            self.store.save(task_path, updated_task)
-
-            self._write_dispatch_record(
-                record_id=record_id,
-                assignee=decision.assignee,
-                task_completed=self.DISPATCHED_STATUS,
+    def scan_pending(self) -> list[RuleDecision]:
+        """补偿路径：低频扫描全部任务，弥补事件丢失/进程重启造成的遗漏。"""
+        with self._dispatch_lock:
+            task_files = sorted(self.task_dir.glob("*.json"))
+            info(
+                f"[RuleChief] COMPENSATION_SCAN_START task_dir={self.task_dir} "
+                f"task_count={len(task_files)} dispatch_dir={self.dispatch_dir}"
             )
 
-            decisions.append(
-                RuleDecision(
-                    status="ROUTED",
-                    record_id=record_id,
-                    assignee=decision.assignee,
-                    channel=decision.channel,
-                    reason=decision.reason,
-                    task=updated_task,
-                    rule_name=decision.rule_name,
-                )
-            )
+            decisions: list[RuleDecision] = []
+            for task_path in task_files:
+                decision = self._process_task(task_path.stem)
+                if decision.status == "ROUTED":
+                    decisions.append(decision)
 
             info(
-                f"[RuleChief] DISPATCH_RECORDED record_id={record_id} "
-                f"assignee={decision.assignee} channel={decision.channel}"
+                f"[RuleChief] COMPENSATION_SCAN_DONE task_count={len(task_files)} "
+                f"routed={len(decisions)}"
+            )
+            return decisions
+
+    def _process_task(self, record_id: str) -> RuleDecision:
+        task_path = self.task_dir / f"{record_id}.json"
+
+        if not task_path.exists():
+            info(
+                f"[RuleChief] SKIP record_id={record_id} "
+                "reason=TASK_NOT_FOUND"
+            )
+            return RuleDecision(
+                status="UNROUTED",
+                record_id=record_id,
+                reason="TASK_NOT_FOUND",
             )
 
-        info(
-            f"[RuleChief] SCAN_DONE task_count={len(task_files)} "
-            f"routed={len(decisions)}"
+        if self._is_dispatched(record_id, task_path):
+            info(
+                f"[RuleChief] SKIP record_id={record_id} "
+                "reason=ALREADY_DISPATCHED"
+            )
+            return RuleDecision(
+                status="SKIPPED",
+                record_id=record_id,
+                reason="ALREADY_DISPATCHED",
+            )
+
+        try:
+            task = self.store.load(task_path)
+        except Exception as exc:
+            info(
+                f"[RuleChief] SKIP record_id={record_id} "
+                f"reason=TASK_LOAD_FAILED error={type(exc).__name__}: {exc}"
+            )
+            return RuleDecision(
+                status="UNROUTED",
+                record_id=record_id,
+                reason="TASK_LOAD_FAILED",
+            )
+
+        if not isinstance(task, dict):
+            info(
+                f"[RuleChief] SKIP record_id={record_id} "
+                "reason=TASK_NOT_OBJECT"
+            )
+            return RuleDecision(
+                status="UNROUTED",
+                record_id=record_id,
+                reason="TASK_NOT_OBJECT",
+            )
+
+        task_record_id = task.get("record_id") or record_id
+        if task_record_id != record_id:
+            info(
+                f"[RuleChief] SKIP record_id={record_id} "
+                f"reason=RECORD_ID_MISMATCH task_record_id={task_record_id}"
+            )
+            return RuleDecision(
+                status="UNROUTED",
+                record_id=record_id,
+                reason="RECORD_ID_MISMATCH",
+                task=task,
+            )
+
+        decision = self._decide_task(task, task_path)
+
+        if decision.status != "ROUTED":
+            info(
+                f"[RuleChief] UNROUTED record_id={record_id} "
+                f"reason={decision.reason or 'NO_RULE_MATCHED'}"
+            )
+            return decision
+
+        # 先更新任务，再写派发清单。
+        # 若进程在两步之间崩溃，补偿扫描会重新检查该任务。
+        updated_task = dict(task)
+        updated_task["assignee"] = decision.assignee
+        updated_task["task_completed"] = self.DISPATCHED_STATUS
+        self.store.save(task_path, updated_task)
+
+        self._write_dispatch_record(
+            record_id=record_id,
+            assignee=decision.assignee,
+            task_completed=self.DISPATCHED_STATUS,
         )
-        return decisions
+
+        result = RuleDecision(
+            status="ROUTED",
+            record_id=record_id,
+            assignee=decision.assignee,
+            channel=decision.channel,
+            reason=decision.reason,
+            task=updated_task,
+            rule_name=decision.rule_name,
+        )
+
+        info(
+            f"[RuleChief] DISPATCH_RECORDED record_id={record_id} "
+            f"assignee={decision.assignee} channel={decision.channel}"
+        )
+        return result
 
     def _decide_task(self, task: dict[str, Any], task_path: Path) -> RuleDecision:
         record_id = task.get("record_id")
@@ -178,7 +209,7 @@ class RuleChief:
             if not rule.get("enabled", True):
                 info(
                     f"[RuleChief] SKIP record_id={record_id} rule={rule_name} "
-                    f"reason=DISABLED"
+                    "reason=DISABLED"
                 )
                 continue
 
@@ -197,8 +228,8 @@ class RuleChief:
             task_config = rule.get("task") or {}
             if not task_config.get("enabled", True):
                 info(
-                    f"[RuleChief] SKIP record_id={record_id} "
-                    f"rule={rule_name} reason=TASK_DISABLED"
+                    f"[RuleChief] SKIP record_id={record_id} rule={rule_name} "
+                    "reason=TASK_DISABLED"
                 )
                 continue
 
@@ -222,6 +253,7 @@ class RuleChief:
                 record_id=record_id,
                 assignee=assignee,
                 channel=channel,
+                reason=reason,
                 task=task,
                 rule_name=rule_name,
             )
