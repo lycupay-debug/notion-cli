@@ -3,7 +3,7 @@
   "channels": {
     "system_ledger": {
       "enabled": true,
-      "max_workers": 4,
+      "max_workers": 10,
       "module": "listeners.system_ledger",
       "function": "execute_system_ledger"
     },
