@@ -16,10 +16,10 @@ async def handle_garbage_scan(event: Event) -> Event | None:
         if not isinstance(rules, list):
             raise ValueError("rule chief config must contain array: rules")
 
-        decisions = RuleChief(rules).decide()
+        decisions = RuleChief(rules).scan_pending()
         routed = [decision for decision in decisions if decision.status == "ROUTED"]
 
-        info(f"[GarbageScan] DONE routed={len(routed)}")
+        info(f"[GarbageScan] COMPENSATION_DONE routed={len(routed)}")
 
         if not routed:
             return None
