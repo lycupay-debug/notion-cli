@@ -2,6 +2,33 @@
   "version": 1,
   "rules": [
     {
+      "name": "RandomSequence4Digits",
+      "enabled": true,
+      "match": {
+        "event_type": "page.properties_updated",
+        "parent": {
+          "data_source_id": "3f37613b-20a9-80be-9269-000b34c8c046"
+        },
+        "author": {
+          "is_person": true,
+          "types": [
+            "person"
+          ]
+        },
+        "updated_properties": [
+          "dxEY"
+        ]
+      },
+      "task": {
+        "enabled": true,
+        "mode": "single"
+      },
+      "route": {
+        "assignee": "random-sequence",
+        "channel": "random_sequence"
+      }
+    },
+    {
       "name": "SystemLedger",
       "enabled": true,
       "match": {
