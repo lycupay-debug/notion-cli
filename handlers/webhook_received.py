@@ -13,7 +13,7 @@ async def handle_webhook_received(event: Event) -> Event | None:
     if not record_path:
         raise ValueError("WEBHOOK_RECEIVED event is missing file_path")
 
-    info(f"[WebhookReceivedHandler] START record_id={record_id}")
+    info(f"[WebhookReceivedHandler] START record_id={record_id} path={record_path}")
     try:
         result = ParserWorker().parse_file(Path(record_path))
     except Exception as exc:
@@ -24,5 +24,5 @@ async def handle_webhook_received(event: Event) -> Event | None:
         info(f"[WebhookReceivedHandler] ALREADY_PARSED record_id={record_id}")
         return None
 
-    info(f"[WebhookReceivedHandler] PARSED record_id={result.get('record_id')}")
-    return Event("NEW_TASK", {"task": result})
+    info(f"[WebhookReceivedHandler] PARSED record_id={result.get('record_id')} next=NEW_TASK")
+    return Event("NEW_TASK", {"record_id": result.get("record_id"), "task": result})
