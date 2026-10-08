@@ -46,7 +46,15 @@ async def handle_rule_done(event: Event) -> Event:
             task = decision.get("task")
             if not decision_record_id or not channel or not assignee or not isinstance(task, dict):
                 raise ValueError("RULE_DONE decision is incomplete")
-            channel_tasks.append(ChannelTask(record_id=decision_record_id, assignee=assignee, channel=channel, data=task))
+            channel_tasks.append(
+                ChannelTask(
+                    record_id=decision_record_id,
+                    assignee=assignee,
+                    channel=channel,
+                    data=task,
+                    route_rule=decision.get("rule_name"),
+                )
+            )
 
         info(f"[RuleDoneHandler] SUBMIT record_id={record_id} count={len(channel_tasks)} records={[t.record_id for t in channel_tasks]}")
         results = await asyncio.gather(*(_channel_manager.submit_and_wait(channel_task) for channel_task in channel_tasks))
