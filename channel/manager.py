@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from core.logger import error, info
+from event_bus import Event
 from methods.load_callable import load_callable
 
 ChannelExecutor = Callable[["ChannelTask"], Awaitable[Any]]
@@ -32,7 +33,12 @@ class _ChannelState:
     pending_config: dict[str, Any] | None = None
 
 class ChannelManager:
-    """业务 Channel 运行时。"""
+    """业务 Channel 运行时。
+
+    同一 Channel 内严格 FIFO。任务执行结束后：
+    1. 不等待结果记录事件，立即释放当前任务并继续下一个任务；
+    2. 将最终结果通过 EventBus 发布给记录员。
+    """
 
     def __init__(self) -> None:
         self._channels: dict[str, _ChannelState] = {}
@@ -96,6 +102,35 @@ class ChannelManager:
             return await future
         return None
 
+    @staticmethod
+    def _final_result(result: Any) -> str:
+        if isinstance(result, dict):
+            status = result.get("status")
+            if status == "UPDATED" and result.get("verified") is True:
+                return "SUCCESS"
+            if status in {"SUCCESS", "UNCHANGED", "FAILED", "EXECUTE_FAILED"}:
+                return status
+        raise ValueError(f"executor returned unsupported result: {result!r}")
+
+    @staticmethod
+    def _publish_execution_result(task: ChannelTask, result: str) -> None:
+        from event_bus import publish_default
+
+        event = Event(
+            "EXECUTION_RESULT",
+            {
+                "record_id": task.record_id,
+                "assignee": task.assignee,
+                "channel": task.channel,
+                "result": result,
+            },
+        )
+        publish_default(event)
+        info(
+            f"[ChannelManager] EXECUTION_RESULT_PUBLISHED "
+            f"record_id={task.record_id} result={result}"
+        )
+
     async def _worker(self, name: str, state: _ChannelState) -> None:
         info(f"[ChannelManager] WORKER_LOOP_START channel={name}")
         while True:
@@ -114,10 +149,17 @@ class ChannelManager:
                 result = await state.executor(task)
             except BaseException as exc:
                 error(f"[ChannelManager] EXECUTE_FAILED record_id={task.record_id} channel={name} error={type(exc).__name__}: {exc}")
+                self._publish_execution_result(task, "EXECUTE_FAILED")
                 if queued.result is not None and not queued.result.done():
                     queued.result.set_exception(exc)
             else:
-                info(f"[ChannelManager] EXECUTE_DONE record_id={task.record_id} channel={name} result={result!r}")
+                try:
+                    final_result = self._final_result(result)
+                except Exception as exc:
+                    error(f"[ChannelManager] RESULT_INVALID record_id={task.record_id} channel={name} error={type(exc).__name__}: {exc}")
+                    final_result = "EXECUTE_FAILED"
+                info(f"[ChannelManager] EXECUTE_DONE record_id={task.record_id} channel={name} result={final_result}")
+                self._publish_execution_result(task, final_result)
                 if queued.result is not None and not queued.result.done():
                     queued.result.set_result(result)
             finally:
