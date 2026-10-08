@@ -5,6 +5,11 @@
       "enabled": true,
       "module": "listeners.system_ledger",
       "function": "execute_system_ledger"
+    },
+    "garbage_cleaner": {
+      "enabled": true,
+      "module": "handlers.garbage_cleaner",
+      "function": "execute_garbage_cleaner"
     }
   }
 }
