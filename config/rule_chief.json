@@ -11,11 +11,19 @@
         },
         "author": {
           "is_person": true,
-          "types": ["person"]
+          "types": [
+            "person"
+          ]
         },
         "updated_properties": [
           "laTg"
-        ]
+        ],
+        "task_completed": {
+          "in": [
+            null,
+            "任务的已派发"
+          ]
+        }
       },
       "task": {
         "enabled": true,
@@ -24,6 +32,130 @@
       "route": {
         "assignee": "system-ledger",
         "channel": "system_ledger"
+      }
+    },
+    {
+      "name": "GarbageCleanerBot",
+      "enabled": true,
+      "match": {
+        "author": {
+          "is_bot": true,
+          "is_person": false,
+          "types": [
+            "bot"
+          ]
+        }
+      },
+      "task": {
+        "enabled": true,
+        "mode": "single"
+      },
+      "route": {
+        "assignee": "garbage-cleaner",
+        "channel": "garbage_cleaner"
+      },
+      "cleanup": {
+        "enabled": true,
+        "action": "DELETE",
+        "targets": [
+          "config/tasks/{record_id}.json",
+          "config/parse_history/{record_id}.json",
+          "data/webhook_events/{record_id}.json"
+        ]
+      }
+    },
+    {
+      "name": "GarbageCleanerSuccess",
+      "enabled": true,
+      "match": {
+        "assignee": {
+          "equals": "system-ledger"
+        },
+        "task_completed": {
+          "in": [
+            "SUCCESS",
+            "UNCHANGED"
+          ]
+        }
+      },
+      "task": {
+        "enabled": true,
+        "mode": "single"
+      },
+      "route": {
+        "assignee": "garbage-cleaner",
+        "channel": "garbage_cleaner"
+      },
+      "cleanup": {
+        "enabled": true,
+        "action": "DELETE",
+        "targets": [
+          "config/tasks/{record_id}.json",
+          "config/parse_history/{record_id}.json",
+          "data/webhook_events/{record_id}.json",
+          "config/任务派发清单/{record_id}.json"
+        ]
+      }
+    },
+    {
+      "name": "GarbageCleanerStale",
+      "enabled": true,
+      "match": {
+        "assignee": {
+          "is_null": true
+        },
+        "task_completed": {
+          "is_null": true
+        },
+        "created_time": {
+          "older_than_minutes": 5
+        }
+      },
+      "task": {
+        "enabled": true,
+        "mode": "single"
+      },
+      "route": {
+        "assignee": "garbage-cleaner",
+        "channel": "garbage_cleaner"
+      },
+      "cleanup": {
+        "enabled": true,
+        "action": "DELETE",
+        "targets": [
+          "config/tasks/{record_id}.json",
+          "config/parse_history/{record_id}.json",
+          "data/webhook_events/{record_id}.json"
+        ]
+      }
+    },
+    {
+      "name": "GarbageCleanerFailed",
+      "enabled": true,
+      "match": {
+        "assignee": {
+          "not_null": true
+        },
+        "task_completed": {
+          "in": [
+            "FAILED",
+            "EXECUTE_FAILED"
+          ]
+        }
+      },
+      "task": {
+        "enabled": true,
+        "mode": "single"
+      },
+      "route": {
+        "assignee": "garbage-cleaner",
+        "channel": "garbage_cleaner"
+      },
+      "cleanup": {
+        "enabled": true,
+        "action": "MOVE",
+        "source": "config/tasks/{record_id}.json",
+        "target": "config/有问题的任务清单/{record_id}.json"
       }
     }
   ]
