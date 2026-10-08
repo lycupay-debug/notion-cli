@@ -20,6 +20,21 @@
       "enabled": true,
       "module": "handlers.channel_done",
       "function": "handle_channel_done"
+    },
+    "EXECUTION_RESULT": {
+      "enabled": true,
+      "module": "handlers.record_keeper",
+      "function": "handle_execution_result"
+    },
+    "RECORD_DONE": {
+      "enabled": true,
+      "module": "handlers.record_done",
+      "function": "handle_record_done"
+    },
+    "GARBAGE_SCAN": {
+      "enabled": true,
+      "module": "handlers.garbage_scan",
+      "function": "handle_garbage_scan"
     }
   }
 }

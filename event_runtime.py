@@ -5,7 +5,7 @@ import json
 from collections.abc import Awaitable, Callable
 
 from core.logger import error, info
-from event_bus import Event, EventBus
+from event_bus import Event, EventBus, set_default_bus
 from methods.get_event_handlers_config_path import get_event_handlers_config_path
 from methods.load_callable import load_callable
 
@@ -17,8 +17,10 @@ class EventRuntime:
 
     def __init__(self) -> None:
         self.bus = EventBus()
+        set_default_bus(self.bus)
         self._loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
         self._started = False
+        self._maintenance_task: asyncio.Task[None] | None = None
         info("[EventRuntime] INIT")
         self.reload_handlers()
 
@@ -73,12 +75,41 @@ class EventRuntime:
         self.bus.replace_handlers(handlers)
         info(f"[EventRuntime] HANDLERS_RELOADED count={len(handlers)}")
 
+    async def _garbage_scan_loop(self) -> None:
+        config_path = self._project_root() / "config" / "garbage_cleaner.json"
+        while self._started:
+            try:
+                with config_path.open("r", encoding="utf-8") as file:
+                    config = json.load(file)
+                interval = float(config.get("scan_interval_seconds", 60))
+                if interval <= 0:
+                    raise ValueError("scan_interval_seconds must be > 0")
+            except Exception as exc:
+                error(
+                    f"[EventRuntime] GARBAGE_SCAN_CONFIG_FAILED "
+                    f"error={type(exc).__name__}: {exc}"
+                )
+                interval = 60
+
+            await asyncio.sleep(interval)
+            if not self._started:
+                return
+
+            info("[EventRuntime] GARBAGE_SCAN_TRIGGER")
+            self.bus.publish(Event("GARBAGE_SCAN", {}))
+
+    @staticmethod
+    def _project_root():
+        from pathlib import Path
+        return Path(__file__).resolve().parent
+
     def start(self) -> None:
         if self._started:
             info("[EventRuntime] START_SKIPPED already_started=true")
             return
         asyncio.set_event_loop(self._loop)
         self._started = True
+        self._maintenance_task = self._loop.create_task(self._garbage_scan_loop())
         info("[EventRuntime] START")
         self._loop.run_forever()
         info("[EventRuntime] LOOP_STOPPED")
@@ -94,5 +125,11 @@ class EventRuntime:
             info("[EventRuntime] STOP_SKIPPED already_stopped=true")
             return
         info("[EventRuntime] STOP")
-        self._loop.call_soon_threadsafe(self._loop.stop)
-        self._started = False
+        def _stop_loop() -> None:
+            self._started = False
+            if self._maintenance_task is not None:
+                self._maintenance_task.cancel()
+                self._maintenance_task = None
+            self._loop.stop()
+
+        self._loop.call_soon_threadsafe(_stop_loop)

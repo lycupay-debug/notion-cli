@@ -75,7 +75,7 @@ class RuleChief:
         for task_path in task_files:
             record_id = task_path.stem
 
-            if self._is_dispatched(record_id):
+            if self._is_dispatched(record_id, task_path):
                 info(
                     f"[RuleChief] SKIP record_id={record_id} "
                     f"reason=ALREADY_DISPATCHED"
@@ -106,7 +106,7 @@ class RuleChief:
                 )
                 continue
 
-            decision = self._decide_task(task)
+            decision = self._decide_task(task, task_path)
 
             if decision.status != "ROUTED":
                 info(
@@ -152,7 +152,7 @@ class RuleChief:
         )
         return decisions
 
-    def _decide_task(self, task: dict[str, Any]) -> RuleDecision:
+    def _decide_task(self, task: dict[str, Any], task_path: Path) -> RuleDecision:
         record_id = task.get("record_id")
         if not record_id:
             return RuleDecision(
@@ -185,6 +185,7 @@ class RuleChief:
             matched, reason = self._matches_with_reason(
                 rule.get("match") or {},
                 task,
+                task_path,
             )
             if not matched:
                 info(
@@ -232,8 +233,36 @@ class RuleChief:
             task=task,
         )
 
-    def _is_dispatched(self, record_id: str) -> bool:
-        return (self.dispatch_dir / f"{record_id}.json").exists()
+    def _is_dispatched(self, record_id: str, task_path: Path) -> bool:
+        dispatch_path = self.dispatch_dir / f"{record_id}.json"
+        if not dispatch_path.exists():
+            return False
+
+        try:
+            dispatch = self.store.load(dispatch_path)
+            task = self.store.load(task_path)
+        except Exception as exc:
+            info(
+                f"[RuleChief] DISPATCH_CHECK_FAILED record_id={record_id} "
+                f"error={type(exc).__name__}: {exc}"
+            )
+            return True
+
+        if not isinstance(dispatch, dict) or not isinstance(task, dict):
+            return True
+
+        same_assignee = dispatch.get("assignee") == task.get("assignee")
+        same_completion = dispatch.get("task_completed") == task.get("task_completed")
+
+        if same_assignee and same_completion:
+            return True
+
+        info(
+            f"[RuleChief] DISPATCH_STAGE_CHANGED record_id={record_id} "
+            f"dispatch=({dispatch.get('assignee')},{dispatch.get('task_completed')}) "
+            f"task=({task.get('assignee')},{task.get('task_completed')})"
+        )
+        return False
 
     def _write_dispatch_record(
         self,
@@ -252,6 +281,7 @@ class RuleChief:
         self,
         match: dict[str, Any],
         task: dict[str, Any],
+        task_path: Path,
     ) -> tuple[bool, str]:
         if not isinstance(match, dict):
             return False, "MATCH_NOT_OBJECT"
@@ -315,6 +345,58 @@ class RuleChief:
                         False,
                         f"author.types expected_any={expected_types} "
                         f"actual={actual_types}",
+                    )
+
+        for field_name in ("assignee", "task_completed"):
+            if field_name not in match:
+                continue
+
+            condition = match[field_name]
+            actual = task.get(field_name)
+
+            if isinstance(condition, dict):
+                if condition.get("is_null") is True and actual is not None:
+                    return False, f"{field_name} expected=null actual={actual}"
+
+                if condition.get("not_null") is True and actual is None:
+                    return False, f"{field_name} expected=NOT_NULL actual=null"
+
+                if "equals" in condition and actual != condition["equals"]:
+                    return False, f"{field_name} expected={condition['equals']} actual={actual}"
+
+                if "in" in condition:
+                    expected_values = condition["in"]
+                    if not isinstance(expected_values, list):
+                        return False, f"{field_name}.in EXPECTED_LIST"
+                    if actual not in expected_values:
+                        return False, f"{field_name} expected_any={expected_values} actual={actual}"
+            else:
+                if actual != condition:
+                    return False, f"{field_name} expected={condition} actual={actual}"
+
+        created_time = match.get("created_time")
+        if created_time is not None:
+            if not isinstance(created_time, dict):
+                return False, "created_time MATCH_NOT_OBJECT"
+
+            older_than_minutes = created_time.get("older_than_minutes")
+            if older_than_minutes is not None:
+                try:
+                    older_than_minutes = float(older_than_minutes)
+                except (TypeError, ValueError):
+                    return False, "created_time.older_than_minutes INVALID"
+
+                if older_than_minutes < 0:
+                    return False, "created_time.older_than_minutes NEGATIVE"
+
+                import time
+
+                age_seconds = time.time() - task_path.stat().st_ctime
+                required_seconds = older_than_minutes * 60
+                if age_seconds < required_seconds:
+                    return (
+                        False,
+                        f"created_time age_seconds={age_seconds:.1f} required_seconds={required_seconds:.1f}",
                     )
 
         if "updated_properties" in match:
