@@ -6,6 +6,20 @@ from core.logger import error, info
 from .dispatcher import EventDispatcher, EventHandler
 from .event import Event
 
+_default_bus: "EventBus | None" = None
+
+
+def set_default_bus(bus: "EventBus") -> None:
+    global _default_bus
+    _default_bus = bus
+    info("[EventBus] DEFAULT_BUS_SET")
+
+
+def publish_default(event: Event) -> asyncio.Task[None]:
+    if _default_bus is None:
+        raise RuntimeError("default EventBus is not configured")
+    return _default_bus.publish(event)
+
 
 class EventBus:
     """事件总线：只负责事件发布与分发。"""
