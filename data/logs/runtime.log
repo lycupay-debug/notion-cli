@@ -14,3 +14,694 @@
 2026-10-08T13:30:38+08:00 [INFO] [WebhookReceiver] SERVER_CREATED host=127.0.0.1 port=8080
 2026-10-08T13:30:38+08:00 [INFO] [WebhookReceiver] SERVER_THREAD_STARTED host=127.0.0.1 port=8080
 2026-10-08T13:30:38+08:00 [INFO] [EventRuntime] START
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] GARBAGE_SCAN_TRIGGER
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] PUBLISH event_type=GARBAGE_SCAN event_id=8f546887-a5dc-4964-a863-2efd92d9171a record_id=-
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] TASK_TRACKED active=1
+2026-10-08T13:31:38+08:00 [INFO] [EventDispatcher] DISPATCH event_type=GARBAGE_SCAN event_id=8f546887-a5dc-4964-a863-2efd92d9171a record_id=-
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] HANDLER_START event_type=GARBAGE_SCAN event_id=8f546887-a5dc-4964-a863-2efd92d9171a record_id=-
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SCAN_START task_dir=D:\notion-cli\config\tasks task_count=73 dispatch_dir=D:\notion-cli\config\任务派发清单
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=0b8df324-9372-4661-8efb-8efdd452c1d6 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=14a91676-f720-43a2-9f44-c0a638d6068c reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=1891a63c-4650-4df9-a93d-83e02e7b81b0 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=1cabd004-32f3-4b02-a720-46281b91d82c rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=1cabd004-32f3-4b02-a720-46281b91d82c rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=1cabd004-32f3-4b02-a720-46281b91d82c rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=1cabd004-32f3-4b02-a720-46281b91d82c rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=1cabd004-32f3-4b02-a720-46281b91d82c rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=1cabd004-32f3-4b02-a720-46281b91d82c assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=1e70bf0a-777c-44a2-8629-d8ceb78ae5da reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=1f00cc82-f33a-4fe4-84fd-35cf359ec666 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=2058ae02-7030-49db-bf6b-2c374e911c93 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=24180ce0-943c-4bd0-b977-f7ef66b49eb1 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=258a2276-e06a-4e87-b0ea-3fe353b2859d reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=310eff66-6674-4533-8b76-c4cb82fc47ee reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=33b251e0-4ee5-46fb-90da-aace90e59c42 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=36cb2a7a-84d9-46ba-b74b-1617c80b2954 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=3f37e77b-9874-491c-832c-cff602595532 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=556fa3a4-eb9d-477f-b470-a845a1140714 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=581afcc9-0ab0-4867-9305-28c05c000e72 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=587642a0-fb76-4b89-a771-2b7fedaafe63 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=5bb59f62-6432-42c6-8b20-a39458398dc4 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=5e7f8fa9-0066-4936-9d14-715258c18527 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=5e7f8fa9-0066-4936-9d14-715258c18527 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=5e7f8fa9-0066-4936-9d14-715258c18527 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=5e7f8fa9-0066-4936-9d14-715258c18527 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=5e7f8fa9-0066-4936-9d14-715258c18527 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=5e7f8fa9-0066-4936-9d14-715258c18527 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=6294655c-7a2f-40d9-b577-54655b2b4241 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=6294655c-7a2f-40d9-b577-54655b2b4241 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=6294655c-7a2f-40d9-b577-54655b2b4241 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=6294655c-7a2f-40d9-b577-54655b2b4241 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=6294655c-7a2f-40d9-b577-54655b2b4241 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=6294655c-7a2f-40d9-b577-54655b2b4241 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=63e033f7-2921-4341-88c3-67132cd115bd reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=6e9d1727-b275-4433-a1c6-665ab3a42987 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=70d0c9e0-a527-4656-b50c-f79cac5b90e1 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=769d3578-dd9d-4b49-b1a2-e4dafc82fd1b reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=7d65b193-6836-464b-bf6e-794c7431bf3c reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=802442c5-d28a-46f9-bf8d-84478a86f369 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=81c0d7bd-953e-4554-9c21-2db6219e5d8a reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=85ce029c-47f9-4a00-9d5d-fc7f5969458e reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=88c6e5b7-7d00-4b41-8d16-ba90dab47440 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=97803846-2af4-471d-bfc6-f5a24958bf20 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=97803846-2af4-471d-bfc6-f5a24958bf20 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=97803846-2af4-471d-bfc6-f5a24958bf20 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=97803846-2af4-471d-bfc6-f5a24958bf20 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=97803846-2af4-471d-bfc6-f5a24958bf20 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=97803846-2af4-471d-bfc6-f5a24958bf20 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=989c4486-6e21-4c8f-8b06-8eb7b5441593 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=9d2f2438-6d57-4a93-8e69-80eca374b00f reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=b077fd19-c34e-4695-8756-3fc47731d45b rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=b077fd19-c34e-4695-8756-3fc47731d45b rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=b077fd19-c34e-4695-8756-3fc47731d45b rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=b077fd19-c34e-4695-8756-3fc47731d45b rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=b077fd19-c34e-4695-8756-3fc47731d45b rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=b077fd19-c34e-4695-8756-3fc47731d45b assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=b2993bb5-7669-4f21-8679-e4465a8880b5 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=b341a4d8-932c-4fee-9d51-cf32d27714f9 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=bc789911-e317-4598-8ccc-1eba69b0d13f rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=bc789911-e317-4598-8ccc-1eba69b0d13f rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=bc789911-e317-4598-8ccc-1eba69b0d13f rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=bc789911-e317-4598-8ccc-1eba69b0d13f rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=bc789911-e317-4598-8ccc-1eba69b0d13f rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=bc789911-e317-4598-8ccc-1eba69b0d13f assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=c04b67f7-2c9d-4c99-bbf2-bd0b7f4d7416 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=c5f2462a-5d22-426a-a7a1-7e5f2eae3db3 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=d54a75ae-a579-4c00-83d6-edcc2239201e reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=d744e798-2d1d-4998-9481-636d2a8cc11e rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=d744e798-2d1d-4998-9481-636d2a8cc11e rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=d744e798-2d1d-4998-9481-636d2a8cc11e rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=d744e798-2d1d-4998-9481-636d2a8cc11e rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=d744e798-2d1d-4998-9481-636d2a8cc11e rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=d744e798-2d1d-4998-9481-636d2a8cc11e assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=d76a0abe-c096-4b25-a5b8-37375616878b reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=d9299d3c-69fb-48d9-8238-b913439385fc reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=d9326db7-b248-40b4-a7b5-9b4853efb312 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=e966a2f5-50a9-4eb5-8a0b-fd6bc5cbf247 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=ee337969-005f-44ba-8f8a-0b97786ed752 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=efdedf19-8fd1-46b2-ab94-50064cb951a0 reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SKIP record_id=f5e0774f-2a13-4799-bf2a-360f4e01cead reason=ALREADY_DISPATCHED
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK_TASK record_id=fb811e37-9f28-47d4-8796-e137dd20e203 rules=5
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=fb811e37-9f28-47d4-8796-e137dd20e203 rule=SystemLedger
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] FAIL record_id=fb811e37-9f28-47d4-8796-e137dd20e203 rule=SystemLedger reason=author.is_person expected=True actual=False
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] CHECK record_id=fb811e37-9f28-47d4-8796-e137dd20e203 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] ROUTED record_id=fb811e37-9f28-47d4-8796-e137dd20e203 rule=GarbageCleanerBot assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] DISPATCH_RECORDED record_id=fb811e37-9f28-47d4-8796-e137dd20e203 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleChief] SCAN_DONE task_count=73 routed=34
+2026-10-08T13:31:38+08:00 [INFO] [GarbageScan] DONE routed=34
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] HANDLER_END event_type=GARBAGE_SCAN event_id=8f546887-a5dc-4964-a863-2efd92d9171a record_id=- next_event=RULE_DONE
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] NEXT_EVENT event_type=RULE_DONE event_id=69370d18-e4fd-485c-a72a-80fa922c6774 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] PUBLISH event_type=RULE_DONE event_id=69370d18-e4fd-485c-a72a-80fa922c6774 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] TASK_TRACKED active=2
+2026-10-08T13:31:38+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=GARBAGE_SCAN event_id=8f546887-a5dc-4964-a863-2efd92d9171a record_id=-
+2026-10-08T13:31:38+08:00 [INFO] [EventDispatcher] DISPATCH event_type=RULE_DONE event_id=69370d18-e4fd-485c-a72a-80fa922c6774 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] HANDLER_START event_type=RULE_DONE event_id=69370d18-e4fd-485c-a72a-80fa922c6774 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] START record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] CONFIG_START channels=['system_ledger', 'garbage_cleaner']
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] CHANNEL_CREATED channel=system_ledger enabled=True
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] CHANNEL_CREATED channel=garbage_cleaner enabled=True
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] CONFIG_DONE active=['system_ledger', 'garbage_cleaner']
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] CHANNEL_CONFIG_LOADED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] SUBMIT record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 count=34 records=['14b67075-b997-4268-8cd7-ab3ef36422c9', '1cabd004-32f3-4b02-a720-46281b91d82c', '295acf00-f9cc-4c40-afb8-cde98a865c13', '29d7e8eb-eab4-4cee-8095-5759a81b4e0b', '4d139839-9b5e-4ea9-aac7-0e79caec3afa', '5940b54c-3d0f-4b7e-a10d-24f8b24998be', '5dcead08-34d8-42ac-af9f-7a48a03fb277', '5e7f8fa9-0066-4936-9d14-715258c18527', '5ff9374f-74ef-4f3d-ba0c-0ab30c35e895', '60cf3296-cba0-4eab-95d0-a21a5e555997', '6294655c-7a2f-40d9-b577-54655b2b4241', '67af0397-6134-4cbd-b0c5-3fcc38401855', '67e3f877-e927-45d1-a4dc-c74a1a88026d', '832e217e-4463-4cdd-9a3d-a768b09b5610', '92cd9e56-ef98-4e0f-9011-5065f088a5a8', '97803846-2af4-471d-bfc6-f5a24958bf20', '9b178418-74cc-46e3-a821-a2b74ecfbfb1', '9d58339c-d1e0-4537-b8ec-ebb9b449ec3b', 'a22e63a7-1149-4de1-a2d7-1cb9516d320c', 'b077fd19-c34e-4695-8756-3fc47731d45b', 'b7b4b27c-3305-4fca-8c0b-dd9706fd55a7', 'bc789911-e317-4598-8ccc-1eba69b0d13f', 'bc8597bb-2e00-43e5-84b3-949c866f2943', 'bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb', 'ceb47c44-45f5-49d9-9e40-acf9a79d23d2', 'd0d25136-fa5d-4002-9dcf-73cc0b6d6d0f', 'd5ded6b2-a8c7-4555-aea6-dd8663b70438', 'd744e798-2d1d-4998-9481-636d2a8cc11e', 'd74c1de6-7a60-412c-bfff-82bd5cf89561', 'e22c7902-a615-450b-9b6a-2d8c0c8c051e', 'e52b9266-7c1a-4eba-8373-5dab892ef6c8', 'f7d55b5a-7109-48cd-9358-ce3a8478e00f', 'f878ce84-ab77-4bc2-ad22-a247a8447f84', 'fb811e37-9f28-47d4-8796-e137dd20e203']
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] TASK_DONE active=1
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=0
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 channel=garbage_cleaner queue_size=1
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] WORKER_STARTED channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=1cabd004-32f3-4b02-a720-46281b91d82c assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=1
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=1cabd004-32f3-4b02-a720-46281b91d82c channel=garbage_cleaner queue_size=2
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=2
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 channel=garbage_cleaner queue_size=3
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=3
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b channel=garbage_cleaner queue_size=4
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=4
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa channel=garbage_cleaner queue_size=5
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=5
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be channel=garbage_cleaner queue_size=6
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=6
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 channel=garbage_cleaner queue_size=7
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=5e7f8fa9-0066-4936-9d14-715258c18527 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=7
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=5e7f8fa9-0066-4936-9d14-715258c18527 channel=garbage_cleaner queue_size=8
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=8
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 channel=garbage_cleaner queue_size=9
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=9
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 channel=garbage_cleaner queue_size=10
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=6294655c-7a2f-40d9-b577-54655b2b4241 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=10
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=6294655c-7a2f-40d9-b577-54655b2b4241 channel=garbage_cleaner queue_size=11
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=11
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 channel=garbage_cleaner queue_size=12
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=12
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d channel=garbage_cleaner queue_size=13
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=13
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 channel=garbage_cleaner queue_size=14
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=14
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 channel=garbage_cleaner queue_size=15
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=97803846-2af4-471d-bfc6-f5a24958bf20 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=15
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=97803846-2af4-471d-bfc6-f5a24958bf20 channel=garbage_cleaner queue_size=16
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=16
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 channel=garbage_cleaner queue_size=17
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=17
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b channel=garbage_cleaner queue_size=18
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=18
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c channel=garbage_cleaner queue_size=19
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=b077fd19-c34e-4695-8756-3fc47731d45b assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=19
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=b077fd19-c34e-4695-8756-3fc47731d45b channel=garbage_cleaner queue_size=20
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=20
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 channel=garbage_cleaner queue_size=21
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=bc789911-e317-4598-8ccc-1eba69b0d13f assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=21
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=bc789911-e317-4598-8ccc-1eba69b0d13f channel=garbage_cleaner queue_size=22
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=22
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 channel=garbage_cleaner queue_size=23
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=23
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb channel=garbage_cleaner queue_size=24
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=24
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 channel=garbage_cleaner queue_size=25
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=25
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f channel=garbage_cleaner queue_size=26
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=26
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 channel=garbage_cleaner queue_size=27
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=d744e798-2d1d-4998-9481-636d2a8cc11e assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=27
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=d744e798-2d1d-4998-9481-636d2a8cc11e channel=garbage_cleaner queue_size=28
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=28
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 channel=garbage_cleaner queue_size=29
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=29
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e channel=garbage_cleaner queue_size=30
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=30
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 channel=garbage_cleaner queue_size=31
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=31
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f channel=garbage_cleaner queue_size=32
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=32
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 channel=garbage_cleaner queue_size=33
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUE record_id=fb811e37-9f28-47d4-8796-e137dd20e203 assignee=garbage-cleaner channel=garbage_cleaner wait=True queue_size_before=33
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] ENQUEUED record_id=fb811e37-9f28-47d4-8796-e137dd20e203 channel=garbage_cleaner queue_size=34
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] WORKER_LOOP_START channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=33
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 path=D:\notion-cli\config\tasks\14b67075-b997-4268-8cd7-ab3ef36422c9.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 path=D:\notion-cli\config\parse_history\14b67075-b997-4268-8cd7-ab3ef36422c9.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 path=D:\notion-cli\data\webhook_events\14b67075-b997-4268-8cd7-ab3ef36422c9.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 channel=garbage_cleaner queue_size=33
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=1cabd004-32f3-4b02-a720-46281b91d82c channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=32
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=1cabd004-32f3-4b02-a720-46281b91d82c rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=1cabd004-32f3-4b02-a720-46281b91d82c path=D:\notion-cli\config\tasks\1cabd004-32f3-4b02-a720-46281b91d82c.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=1cabd004-32f3-4b02-a720-46281b91d82c path=D:\notion-cli\config\parse_history\1cabd004-32f3-4b02-a720-46281b91d82c.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=1cabd004-32f3-4b02-a720-46281b91d82c path=D:\notion-cli\data\webhook_events\1cabd004-32f3-4b02-a720-46281b91d82c.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=1cabd004-32f3-4b02-a720-46281b91d82c rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=1cabd004-32f3-4b02-a720-46281b91d82c channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=1cabd004-32f3-4b02-a720-46281b91d82c result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=1cabd004-32f3-4b02-a720-46281b91d82c channel=garbage_cleaner queue_size=32
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=31
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 path=D:\notion-cli\config\tasks\295acf00-f9cc-4c40-afb8-cde98a865c13.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 path=D:\notion-cli\config\parse_history\295acf00-f9cc-4c40-afb8-cde98a865c13.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 path=D:\notion-cli\data\webhook_events\295acf00-f9cc-4c40-afb8-cde98a865c13.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 channel=garbage_cleaner queue_size=31
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=30
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b path=D:\notion-cli\config\tasks\29d7e8eb-eab4-4cee-8095-5759a81b4e0b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b path=D:\notion-cli\config\parse_history\29d7e8eb-eab4-4cee-8095-5759a81b4e0b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b path=D:\notion-cli\data\webhook_events\29d7e8eb-eab4-4cee-8095-5759a81b4e0b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b channel=garbage_cleaner queue_size=30
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=29
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa path=D:\notion-cli\config\tasks\4d139839-9b5e-4ea9-aac7-0e79caec3afa.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa path=D:\notion-cli\config\parse_history\4d139839-9b5e-4ea9-aac7-0e79caec3afa.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa path=D:\notion-cli\data\webhook_events\4d139839-9b5e-4ea9-aac7-0e79caec3afa.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa channel=garbage_cleaner queue_size=29
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=28
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be path=D:\notion-cli\config\tasks\5940b54c-3d0f-4b7e-a10d-24f8b24998be.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be path=D:\notion-cli\config\parse_history\5940b54c-3d0f-4b7e-a10d-24f8b24998be.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be path=D:\notion-cli\data\webhook_events\5940b54c-3d0f-4b7e-a10d-24f8b24998be.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be channel=garbage_cleaner queue_size=28
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=27
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 path=D:\notion-cli\config\tasks\5dcead08-34d8-42ac-af9f-7a48a03fb277.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 path=D:\notion-cli\config\parse_history\5dcead08-34d8-42ac-af9f-7a48a03fb277.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 path=D:\notion-cli\data\webhook_events\5dcead08-34d8-42ac-af9f-7a48a03fb277.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 channel=garbage_cleaner queue_size=27
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=5e7f8fa9-0066-4936-9d14-715258c18527 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=26
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=5e7f8fa9-0066-4936-9d14-715258c18527 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5e7f8fa9-0066-4936-9d14-715258c18527 path=D:\notion-cli\config\tasks\5e7f8fa9-0066-4936-9d14-715258c18527.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5e7f8fa9-0066-4936-9d14-715258c18527 path=D:\notion-cli\config\parse_history\5e7f8fa9-0066-4936-9d14-715258c18527.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5e7f8fa9-0066-4936-9d14-715258c18527 path=D:\notion-cli\data\webhook_events\5e7f8fa9-0066-4936-9d14-715258c18527.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=5e7f8fa9-0066-4936-9d14-715258c18527 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=5e7f8fa9-0066-4936-9d14-715258c18527 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=5e7f8fa9-0066-4936-9d14-715258c18527 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=5e7f8fa9-0066-4936-9d14-715258c18527 channel=garbage_cleaner queue_size=26
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=25
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 path=D:\notion-cli\config\tasks\5ff9374f-74ef-4f3d-ba0c-0ab30c35e895.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 path=D:\notion-cli\config\parse_history\5ff9374f-74ef-4f3d-ba0c-0ab30c35e895.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 path=D:\notion-cli\data\webhook_events\5ff9374f-74ef-4f3d-ba0c-0ab30c35e895.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 channel=garbage_cleaner queue_size=25
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=24
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 path=D:\notion-cli\config\tasks\60cf3296-cba0-4eab-95d0-a21a5e555997.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 path=D:\notion-cli\config\parse_history\60cf3296-cba0-4eab-95d0-a21a5e555997.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 path=D:\notion-cli\data\webhook_events\60cf3296-cba0-4eab-95d0-a21a5e555997.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 channel=garbage_cleaner queue_size=24
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=6294655c-7a2f-40d9-b577-54655b2b4241 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=23
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=6294655c-7a2f-40d9-b577-54655b2b4241 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=6294655c-7a2f-40d9-b577-54655b2b4241 path=D:\notion-cli\config\tasks\6294655c-7a2f-40d9-b577-54655b2b4241.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=6294655c-7a2f-40d9-b577-54655b2b4241 path=D:\notion-cli\config\parse_history\6294655c-7a2f-40d9-b577-54655b2b4241.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=6294655c-7a2f-40d9-b577-54655b2b4241 path=D:\notion-cli\data\webhook_events\6294655c-7a2f-40d9-b577-54655b2b4241.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=6294655c-7a2f-40d9-b577-54655b2b4241 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=6294655c-7a2f-40d9-b577-54655b2b4241 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=6294655c-7a2f-40d9-b577-54655b2b4241 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=6294655c-7a2f-40d9-b577-54655b2b4241 channel=garbage_cleaner queue_size=23
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=22
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 path=D:\notion-cli\config\tasks\67af0397-6134-4cbd-b0c5-3fcc38401855.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 path=D:\notion-cli\config\parse_history\67af0397-6134-4cbd-b0c5-3fcc38401855.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 path=D:\notion-cli\data\webhook_events\67af0397-6134-4cbd-b0c5-3fcc38401855.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 channel=garbage_cleaner queue_size=22
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=21
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d path=D:\notion-cli\config\tasks\67e3f877-e927-45d1-a4dc-c74a1a88026d.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d path=D:\notion-cli\config\parse_history\67e3f877-e927-45d1-a4dc-c74a1a88026d.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d path=D:\notion-cli\data\webhook_events\67e3f877-e927-45d1-a4dc-c74a1a88026d.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d channel=garbage_cleaner queue_size=21
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=20
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 path=D:\notion-cli\config\tasks\832e217e-4463-4cdd-9a3d-a768b09b5610.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 path=D:\notion-cli\config\parse_history\832e217e-4463-4cdd-9a3d-a768b09b5610.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 path=D:\notion-cli\data\webhook_events\832e217e-4463-4cdd-9a3d-a768b09b5610.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 channel=garbage_cleaner queue_size=20
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=19
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 path=D:\notion-cli\config\tasks\92cd9e56-ef98-4e0f-9011-5065f088a5a8.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 path=D:\notion-cli\config\parse_history\92cd9e56-ef98-4e0f-9011-5065f088a5a8.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 path=D:\notion-cli\data\webhook_events\92cd9e56-ef98-4e0f-9011-5065f088a5a8.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 channel=garbage_cleaner queue_size=19
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=97803846-2af4-471d-bfc6-f5a24958bf20 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=18
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=97803846-2af4-471d-bfc6-f5a24958bf20 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=97803846-2af4-471d-bfc6-f5a24958bf20 path=D:\notion-cli\config\tasks\97803846-2af4-471d-bfc6-f5a24958bf20.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=97803846-2af4-471d-bfc6-f5a24958bf20 path=D:\notion-cli\config\parse_history\97803846-2af4-471d-bfc6-f5a24958bf20.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=97803846-2af4-471d-bfc6-f5a24958bf20 path=D:\notion-cli\data\webhook_events\97803846-2af4-471d-bfc6-f5a24958bf20.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=97803846-2af4-471d-bfc6-f5a24958bf20 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=97803846-2af4-471d-bfc6-f5a24958bf20 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=97803846-2af4-471d-bfc6-f5a24958bf20 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=97803846-2af4-471d-bfc6-f5a24958bf20 channel=garbage_cleaner queue_size=18
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=17
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 path=D:\notion-cli\config\tasks\9b178418-74cc-46e3-a821-a2b74ecfbfb1.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 path=D:\notion-cli\config\parse_history\9b178418-74cc-46e3-a821-a2b74ecfbfb1.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 path=D:\notion-cli\data\webhook_events\9b178418-74cc-46e3-a821-a2b74ecfbfb1.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 channel=garbage_cleaner queue_size=17
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=16
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b path=D:\notion-cli\config\tasks\9d58339c-d1e0-4537-b8ec-ebb9b449ec3b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b path=D:\notion-cli\config\parse_history\9d58339c-d1e0-4537-b8ec-ebb9b449ec3b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b path=D:\notion-cli\data\webhook_events\9d58339c-d1e0-4537-b8ec-ebb9b449ec3b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b channel=garbage_cleaner queue_size=16
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=15
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c path=D:\notion-cli\config\tasks\a22e63a7-1149-4de1-a2d7-1cb9516d320c.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c path=D:\notion-cli\config\parse_history\a22e63a7-1149-4de1-a2d7-1cb9516d320c.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c path=D:\notion-cli\data\webhook_events\a22e63a7-1149-4de1-a2d7-1cb9516d320c.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c channel=garbage_cleaner queue_size=15
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=b077fd19-c34e-4695-8756-3fc47731d45b channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=14
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=b077fd19-c34e-4695-8756-3fc47731d45b rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=b077fd19-c34e-4695-8756-3fc47731d45b path=D:\notion-cli\config\tasks\b077fd19-c34e-4695-8756-3fc47731d45b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=b077fd19-c34e-4695-8756-3fc47731d45b path=D:\notion-cli\config\parse_history\b077fd19-c34e-4695-8756-3fc47731d45b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=b077fd19-c34e-4695-8756-3fc47731d45b path=D:\notion-cli\data\webhook_events\b077fd19-c34e-4695-8756-3fc47731d45b.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=b077fd19-c34e-4695-8756-3fc47731d45b rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=b077fd19-c34e-4695-8756-3fc47731d45b channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=b077fd19-c34e-4695-8756-3fc47731d45b result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=b077fd19-c34e-4695-8756-3fc47731d45b channel=garbage_cleaner queue_size=14
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=13
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 path=D:\notion-cli\config\tasks\b7b4b27c-3305-4fca-8c0b-dd9706fd55a7.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 path=D:\notion-cli\config\parse_history\b7b4b27c-3305-4fca-8c0b-dd9706fd55a7.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 path=D:\notion-cli\data\webhook_events\b7b4b27c-3305-4fca-8c0b-dd9706fd55a7.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 channel=garbage_cleaner queue_size=13
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=bc789911-e317-4598-8ccc-1eba69b0d13f channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=12
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=bc789911-e317-4598-8ccc-1eba69b0d13f rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bc789911-e317-4598-8ccc-1eba69b0d13f path=D:\notion-cli\config\tasks\bc789911-e317-4598-8ccc-1eba69b0d13f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bc789911-e317-4598-8ccc-1eba69b0d13f path=D:\notion-cli\config\parse_history\bc789911-e317-4598-8ccc-1eba69b0d13f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bc789911-e317-4598-8ccc-1eba69b0d13f path=D:\notion-cli\data\webhook_events\bc789911-e317-4598-8ccc-1eba69b0d13f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=bc789911-e317-4598-8ccc-1eba69b0d13f rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=bc789911-e317-4598-8ccc-1eba69b0d13f channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=bc789911-e317-4598-8ccc-1eba69b0d13f result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=bc789911-e317-4598-8ccc-1eba69b0d13f channel=garbage_cleaner queue_size=12
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=11
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 path=D:\notion-cli\config\tasks\bc8597bb-2e00-43e5-84b3-949c866f2943.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 path=D:\notion-cli\config\parse_history\bc8597bb-2e00-43e5-84b3-949c866f2943.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 path=D:\notion-cli\data\webhook_events\bc8597bb-2e00-43e5-84b3-949c866f2943.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 channel=garbage_cleaner queue_size=11
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=10
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb path=D:\notion-cli\config\tasks\bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb path=D:\notion-cli\config\parse_history\bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb path=D:\notion-cli\data\webhook_events\bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb channel=garbage_cleaner queue_size=10
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=9
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 path=D:\notion-cli\config\tasks\ceb47c44-45f5-49d9-9e40-acf9a79d23d2.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 path=D:\notion-cli\config\parse_history\ceb47c44-45f5-49d9-9e40-acf9a79d23d2.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 path=D:\notion-cli\data\webhook_events\ceb47c44-45f5-49d9-9e40-acf9a79d23d2.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 channel=garbage_cleaner queue_size=9
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=8
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f path=D:\notion-cli\config\tasks\d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f path=D:\notion-cli\config\parse_history\d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f path=D:\notion-cli\data\webhook_events\d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f channel=garbage_cleaner queue_size=8
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=7
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 path=D:\notion-cli\config\tasks\d5ded6b2-a8c7-4555-aea6-dd8663b70438.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 path=D:\notion-cli\config\parse_history\d5ded6b2-a8c7-4555-aea6-dd8663b70438.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 path=D:\notion-cli\data\webhook_events\d5ded6b2-a8c7-4555-aea6-dd8663b70438.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 channel=garbage_cleaner queue_size=7
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=d744e798-2d1d-4998-9481-636d2a8cc11e channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=6
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=d744e798-2d1d-4998-9481-636d2a8cc11e rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d744e798-2d1d-4998-9481-636d2a8cc11e path=D:\notion-cli\config\tasks\d744e798-2d1d-4998-9481-636d2a8cc11e.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d744e798-2d1d-4998-9481-636d2a8cc11e path=D:\notion-cli\config\parse_history\d744e798-2d1d-4998-9481-636d2a8cc11e.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d744e798-2d1d-4998-9481-636d2a8cc11e path=D:\notion-cli\data\webhook_events\d744e798-2d1d-4998-9481-636d2a8cc11e.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=d744e798-2d1d-4998-9481-636d2a8cc11e rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=d744e798-2d1d-4998-9481-636d2a8cc11e channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=d744e798-2d1d-4998-9481-636d2a8cc11e result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=d744e798-2d1d-4998-9481-636d2a8cc11e channel=garbage_cleaner queue_size=6
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=5
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 path=D:\notion-cli\config\tasks\d74c1de6-7a60-412c-bfff-82bd5cf89561.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 path=D:\notion-cli\config\parse_history\d74c1de6-7a60-412c-bfff-82bd5cf89561.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 path=D:\notion-cli\data\webhook_events\d74c1de6-7a60-412c-bfff-82bd5cf89561.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 channel=garbage_cleaner queue_size=5
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=4
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e path=D:\notion-cli\config\tasks\e22c7902-a615-450b-9b6a-2d8c0c8c051e.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e path=D:\notion-cli\config\parse_history\e22c7902-a615-450b-9b6a-2d8c0c8c051e.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e path=D:\notion-cli\data\webhook_events\e22c7902-a615-450b-9b6a-2d8c0c8c051e.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e channel=garbage_cleaner queue_size=4
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=3
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 path=D:\notion-cli\config\tasks\e52b9266-7c1a-4eba-8373-5dab892ef6c8.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 path=D:\notion-cli\config\parse_history\e52b9266-7c1a-4eba-8373-5dab892ef6c8.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 path=D:\notion-cli\data\webhook_events\e52b9266-7c1a-4eba-8373-5dab892ef6c8.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 channel=garbage_cleaner queue_size=3
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=2
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f path=D:\notion-cli\config\tasks\f7d55b5a-7109-48cd-9358-ce3a8478e00f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f path=D:\notion-cli\config\parse_history\f7d55b5a-7109-48cd-9358-ce3a8478e00f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f path=D:\notion-cli\data\webhook_events\f7d55b5a-7109-48cd-9358-ce3a8478e00f.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f channel=garbage_cleaner queue_size=2
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=1
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 path=D:\notion-cli\config\tasks\f878ce84-ab77-4bc2-ad22-a247a8447f84.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 path=D:\notion-cli\config\parse_history\f878ce84-ab77-4bc2-ad22-a247a8447f84.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 path=D:\notion-cli\data\webhook_events\f878ce84-ab77-4bc2-ad22-a247a8447f84.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 channel=garbage_cleaner queue_size=1
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_START record_id=fb811e37-9f28-47d4-8796-e137dd20e203 channel=garbage_cleaner assignee=garbage-cleaner queue_remaining=0
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] START record_id=fb811e37-9f28-47d4-8796-e137dd20e203 rule=GarbageCleanerBot
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=fb811e37-9f28-47d4-8796-e137dd20e203 path=D:\notion-cli\config\tasks\fb811e37-9f28-47d4-8796-e137dd20e203.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=fb811e37-9f28-47d4-8796-e137dd20e203 path=D:\notion-cli\config\parse_history\fb811e37-9f28-47d4-8796-e137dd20e203.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DELETED record_id=fb811e37-9f28-47d4-8796-e137dd20e203 path=D:\notion-cli\data\webhook_events\fb811e37-9f28-47d4-8796-e137dd20e203.json
+2026-10-08T13:31:38+08:00 [INFO] [GarbageCleaner] DONE record_id=fb811e37-9f28-47d4-8796-e137dd20e203 rule=GarbageCleanerBot result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTE_DONE record_id=fb811e37-9f28-47d4-8796-e137dd20e203 channel=garbage_cleaner result=SUCCESS
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] EXECUTION_RESULT_SKIP record_id=fb811e37-9f28-47d4-8796-e137dd20e203 result=SUCCESS reason=TERMINAL_CLEANUP
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] TASK_RELEASED record_id=fb811e37-9f28-47d4-8796-e137dd20e203 channel=garbage_cleaner queue_size=0
+2026-10-08T13:31:38+08:00 [INFO] [ChannelManager] WORKER_IDLE channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=1cabd004-32f3-4b02-a720-46281b91d82c assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=295acf00-f9cc-4c40-afb8-cde98a865c13 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=29d7e8eb-eab4-4cee-8095-5759a81b4e0b assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=4d139839-9b5e-4ea9-aac7-0e79caec3afa assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=5940b54c-3d0f-4b7e-a10d-24f8b24998be assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=5dcead08-34d8-42ac-af9f-7a48a03fb277 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=5e7f8fa9-0066-4936-9d14-715258c18527 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=5ff9374f-74ef-4f3d-ba0c-0ab30c35e895 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=60cf3296-cba0-4eab-95d0-a21a5e555997 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=6294655c-7a2f-40d9-b577-54655b2b4241 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=67af0397-6134-4cbd-b0c5-3fcc38401855 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=67e3f877-e927-45d1-a4dc-c74a1a88026d assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=832e217e-4463-4cdd-9a3d-a768b09b5610 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=92cd9e56-ef98-4e0f-9011-5065f088a5a8 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=97803846-2af4-471d-bfc6-f5a24958bf20 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=9b178418-74cc-46e3-a821-a2b74ecfbfb1 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=9d58339c-d1e0-4537-b8ec-ebb9b449ec3b assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=a22e63a7-1149-4de1-a2d7-1cb9516d320c assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=b077fd19-c34e-4695-8756-3fc47731d45b assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=b7b4b27c-3305-4fca-8c0b-dd9706fd55a7 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=bc789911-e317-4598-8ccc-1eba69b0d13f assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=bc8597bb-2e00-43e5-84b3-949c866f2943 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=bf535e5b-cfae-4ffd-b49f-2b5bc5745bbb assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=ceb47c44-45f5-49d9-9e40-acf9a79d23d2 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=d0d25136-fa5d-4002-9dcf-73cc0b6d6d0f assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=d5ded6b2-a8c7-4555-aea6-dd8663b70438 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=d744e798-2d1d-4998-9481-636d2a8cc11e assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=d74c1de6-7a60-412c-bfff-82bd5cf89561 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=e22c7902-a615-450b-9b6a-2d8c0c8c051e assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=e52b9266-7c1a-4eba-8373-5dab892ef6c8 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=f7d55b5a-7109-48cd-9358-ce3a8478e00f assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=f878ce84-ab77-4bc2-ad22-a247a8447f84 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] COMPLETED record_id=fb811e37-9f28-47d4-8796-e137dd20e203 assignee=garbage-cleaner channel=garbage_cleaner
+2026-10-08T13:31:38+08:00 [INFO] [RuleDoneHandler] DONE record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 next=CHANNEL_DONE
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] HANDLER_END event_type=RULE_DONE event_id=69370d18-e4fd-485c-a72a-80fa922c6774 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 next_event=CHANNEL_DONE
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] NEXT_EVENT event_type=CHANNEL_DONE event_id=5997201e-df99-4ff9-9ef6-47ead97e94a4 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] PUBLISH event_type=CHANNEL_DONE event_id=5997201e-df99-4ff9-9ef6-47ead97e94a4 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] TASK_TRACKED active=2
+2026-10-08T13:31:38+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=RULE_DONE event_id=69370d18-e4fd-485c-a72a-80fa922c6774 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventDispatcher] DISPATCH event_type=CHANNEL_DONE event_id=5997201e-df99-4ff9-9ef6-47ead97e94a4 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] HANDLER_START event_type=CHANNEL_DONE event_id=5997201e-df99-4ff9-9ef6-47ead97e94a4 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [ChannelDoneHandler] START record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 count=34
+2026-10-08T13:31:38+08:00 [INFO] [ChannelDoneHandler] DONE record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventRuntime] HANDLER_END event_type=CHANNEL_DONE event_id=5997201e-df99-4ff9-9ef6-47ead97e94a4 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9 next_event=-
+2026-10-08T13:31:38+08:00 [INFO] [EventDispatcher] DISPATCH_DONE event_type=CHANNEL_DONE event_id=5997201e-df99-4ff9-9ef6-47ead97e94a4 record_id=14b67075-b997-4268-8cd7-ab3ef36422c9
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] TASK_DONE active=1
+2026-10-08T13:31:38+08:00 [INFO] [EventBus] TASK_DONE active=0
