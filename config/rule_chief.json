@@ -105,7 +105,7 @@
       "match": {
         "assignee": {"is_null": true},
         "task_completed": {"is_null": true},
-        "created_time": {"older_than_minutes": 5}
+        "created_time": {"older_than_minutes": 1}
       },
       "task": {"enabled": true, "mode": "single"},
       "route": {
