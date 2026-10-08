@@ -185,6 +185,7 @@ class RuleChief:
             matched, reason = self._matches_with_reason(
                 rule.get("match") or {},
                 task,
+                task_path,
             )
             if not matched:
                 info(
