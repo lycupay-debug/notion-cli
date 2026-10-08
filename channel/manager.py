@@ -125,7 +125,15 @@ class ChannelManager:
                 "result": result,
             },
         )
-        publish_default(event)
+        try:
+            publish_default(event)
+        except Exception as exc:
+            error(
+                f"[ChannelManager] EXECUTION_RESULT_PUBLISH_FAILED "
+                f"record_id={task.record_id} result={result} "
+                f"error={type(exc).__name__}: {exc}"
+            )
+            return
         info(
             f"[ChannelManager] EXECUTION_RESULT_PUBLISHED "
             f"record_id={task.record_id} result={result}"
