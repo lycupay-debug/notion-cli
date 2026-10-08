@@ -12,6 +12,12 @@
       "max_workers": 1,
       "module": "handlers.garbage_cleaner",
       "function": "execute_garbage_cleaner"
+    },
+    "random_sequence": {
+      "enabled": true,
+      "max_workers": 10,
+      "module": "listeners.random_sequence",
+      "function": "execute_random_sequence"
     }
   }
 }
