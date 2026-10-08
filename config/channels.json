@@ -3,11 +3,13 @@
   "channels": {
     "system_ledger": {
       "enabled": true,
+      "max_workers": 4,
       "module": "listeners.system_ledger",
       "function": "execute_system_ledger"
     },
     "garbage_cleaner": {
       "enabled": true,
+      "max_workers": 1,
       "module": "handlers.garbage_cleaner",
       "function": "execute_garbage_cleaner"
     }
