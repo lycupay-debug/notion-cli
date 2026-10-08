@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 from pathlib import Path
 
@@ -8,6 +9,18 @@ from event_bus import Event
 
 _ALLOWED_RESULTS = {"SUCCESS", "UNCHANGED", "FAILED", "EXECUTE_FAILED"}
 _TASK_DIR = Path("config") / "tasks"
+
+
+def _record_result(task_path: Path, record_id: str, result: str) -> None:
+    with task_path.open("r", encoding="utf-8") as file:
+        task_data = json.load(file)
+    if not isinstance(task_data, dict):
+        raise ValueError(f"task is not an object: {record_id}")
+
+    task_data["task_completed"] = result
+    with task_path.open("w", encoding="utf-8") as file:
+        json.dump(task_data, file, ensure_ascii=False, indent=2)
+        file.write("\n")
 
 
 async def handle_execution_result(event: Event) -> None:
@@ -23,15 +36,7 @@ async def handle_execution_result(event: Event) -> None:
 
     task_path = _TASK_DIR / f"{record_id}.json"
     try:
-        with task_path.open("r", encoding="utf-8") as file:
-            task_data = json.load(file)
-        if not isinstance(task_data, dict):
-            raise ValueError(f"task is not an object: {record_id}")
-
-        task_data["task_completed"] = result
-        with task_path.open("w", encoding="utf-8") as file:
-            json.dump(task_data, file, ensure_ascii=False, indent=2)
-            file.write("\n")
+        await asyncio.to_thread(_record_result, task_path, record_id, result)
     except Exception as exc:
         error(
             f"[RecordKeeper] FAILED record_id={record_id} "
