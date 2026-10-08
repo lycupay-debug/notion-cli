@@ -58,7 +58,7 @@ class RuleChief:
         由一次事件触发全量扫描 config/tasks。
 
         任务是否已经派发，不依赖内存状态，而是通过
-        config/task_dispatch_list/{record_id}.json 判断。
+        config/任务派发清单/{record_id}.json 判断。
         """
         with self._dispatch_lock:
             return self._scan_and_dispatch()
