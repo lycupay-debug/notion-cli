@@ -115,6 +115,15 @@ class ChannelManager:
 
     @staticmethod
     def _publish_execution_result(task: ChannelTask, result: str) -> None:
+        # GarbageCleaner 是生命周期终结 Channel。
+        # 清理成功后任务文件已经删除/移动，不能再交给 RecordKeeper 写回 tasks。
+        if task.assignee == "garbage-cleaner":
+            info(
+                f"[ChannelManager] EXECUTION_RESULT_SKIP "
+                f"record_id={task.record_id} result={result} reason=TERMINAL_CLEANUP"
+            )
+            return
+
         from event_bus import publish_default
 
         event = Event(
