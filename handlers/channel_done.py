@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from core.logger import info
+from core.logger import error, info
 from event_bus import Event
 
 
@@ -13,7 +13,5 @@ async def handle_channel_done(event: Event) -> None:
         raise ValueError("CHANNEL_DONE event is missing record_id")
 
     decisions = event.data.get("decisions")
-    info(
-        f"[ChannelDoneHandler] DONE record_id={record_id} "
-        f"count={len(decisions) if isinstance(decisions, list) else 1}"
-    )
+    info(f"[ChannelDoneHandler] START record_id={record_id} count={len(decisions) if isinstance(decisions, list) else 1}")
+    info(f"[ChannelDoneHandler] DONE record_id={record_id}")
