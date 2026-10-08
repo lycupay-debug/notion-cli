@@ -1,0 +1,28 @@
+{
+  "record_id": "91107b0e-c5d8-47b2-a04c-a4e7d1311219",
+  "assignee": "garbage-cleaner",
+  "task_completed": "任务的已派发",
+  "incomplete_reason": "",
+  "event_id": "ef02c6c6-709a-44ef-ad2f-fe93dc5561bc",
+  "event_type": "page.properties_updated",
+  "author": {
+    "is_bot": false,
+    "is_person": true,
+    "types": [
+      "person"
+    ]
+  },
+  "entity": {
+    "id": "3f37613b-20a9-8126-9400-ce6181a3aa3a",
+    "type": "page"
+  },
+  "parent": {
+    "id": "3f37613b-20a9-80cf-a023-c9bd691c6eef",
+    "type": "database",
+    "data_source_id": "3f37613b-20a9-80be-9269-000b34c8c046"
+  },
+  "updated_properties": [
+    "dxEY"
+  ],
+  "updated_blocks": []
+}
