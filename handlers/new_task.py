@@ -12,10 +12,13 @@ async def handle_new_task(event: Event) -> Event | None:
     if event.event_type != "NEW_TASK":
         raise ValueError(f"unexpected event type: {event.event_type}")
 
-    trigger_record_id = event.data.get("record_id")
+    record_id = event.data.get("record_id")
+    if not record_id:
+        raise ValueError("NEW_TASK event is missing record_id")
+
     info(
-        f"[NewTaskHandler] START trigger_record_id={trigger_record_id} "
-        "mode=FULL_TASK_SCAN"
+        f"[NewTaskHandler] START record_id={record_id} "
+        "mode=INCREMENTAL"
     )
 
     try:
@@ -24,15 +27,10 @@ async def handle_new_task(event: Event) -> Event | None:
         if not isinstance(rules, list):
             raise ValueError("rule chief config must contain array: rules")
 
-        info(
-            f"[NewTaskHandler] RULE_CONFIG_LOADED "
-            f"trigger_record_id={trigger_record_id} rules={len(rules)}"
-        )
+        decision_list = RuleChief(rules).decide(record_id)
+        routed = [decision for decision in decision_list if decision.status == "ROUTED"]
 
-        decisions = RuleChief(rules).decide()
-        routed = [decision for decision in decisions if decision.status == "ROUTED"]
-
-        for decision in decisions:
+        for decision in decision_list:
             info(
                 f"[NewTaskHandler] DECISION record_id={decision.record_id} "
                 f"rule={decision.rule_name or '-'} status={decision.status} "
@@ -43,20 +41,15 @@ async def handle_new_task(event: Event) -> Event | None:
 
         if not routed:
             info(
-                f"[NewTaskHandler] STOP trigger_record_id={trigger_record_id} "
-                "reason=NO_PENDING_ROUTED_TASK"
+                f"[NewTaskHandler] STOP record_id={record_id} "
+                "reason=NO_ROUTED_TASK"
             )
             return None
-
-        info(
-            f"[NewTaskHandler] ROUTED trigger_record_id={trigger_record_id} "
-            f"count={len(routed)} next={RULE_DONE_EVENT}"
-        )
 
         return Event(
             RULE_DONE_EVENT,
             {
-                "record_id": trigger_record_id or routed[0].record_id,
+                "record_id": record_id,
                 "decisions": [
                     {
                         "record_id": decision.record_id,
@@ -72,7 +65,7 @@ async def handle_new_task(event: Event) -> Event | None:
         )
     except Exception as exc:
         error(
-            f"[NewTaskHandler] FAILED trigger_record_id={trigger_record_id} "
+            f"[NewTaskHandler] FAILED record_id={record_id} "
             f"error={type(exc).__name__}: {exc}"
         )
         raise
