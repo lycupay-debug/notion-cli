@@ -11,24 +11,14 @@
         },
         "author": {
           "is_person": true,
-          "types": [
-            "person"
-          ]
+          "types": ["person"]
         },
-        "updated_properties": [
-          "dxEY"
-        ],
+        "updated_properties": ["dxEY"],
         "task_completed": {
-          "in": [
-            null,
-            "任务的已派发"
-          ]
+          "in": [null, "任务的已派发"]
         }
       },
-      "task": {
-        "enabled": true,
-        "mode": "single"
-      },
+      "task": {"enabled": true, "mode": "single"},
       "route": {
         "assignee": "random-sequence",
         "channel": "random_sequence"
@@ -44,24 +34,14 @@
         },
         "author": {
           "is_person": true,
-          "types": [
-            "person"
-          ]
+          "types": ["person"]
         },
-        "updated_properties": [
-          "laTg"
-        ],
+        "updated_properties": ["laTg"],
         "task_completed": {
-          "in": [
-            null,
-            "任务的已派发"
-          ]
+          "in": [null, "任务的已派发"]
         }
       },
-      "task": {
-        "enabled": true,
-        "mode": "single"
-      },
+      "task": {"enabled": true, "mode": "single"},
       "route": {
         "assignee": "system-ledger",
         "channel": "system_ledger"
@@ -74,15 +54,10 @@
         "author": {
           "is_bot": true,
           "is_person": false,
-          "types": [
-            "bot"
-          ]
+          "types": ["bot"]
         }
       },
-      "task": {
-        "enabled": true,
-        "mode": "single"
-      },
+      "task": {"enabled": true, "mode": "single"},
       "route": {
         "assignee": "garbage-cleaner",
         "channel": "garbage_cleaner"
@@ -102,19 +77,13 @@
       "enabled": true,
       "match": {
         "assignee": {
-          "equals": "system-ledger"
+          "in": ["system-ledger", "random-sequence"]
         },
         "task_completed": {
-          "in": [
-            "SUCCESS",
-            "UNCHANGED"
-          ]
+          "in": ["SUCCESS", "UNCHANGED"]
         }
       },
-      "task": {
-        "enabled": true,
-        "mode": "single"
-      },
+      "task": {"enabled": true, "mode": "single"},
       "route": {
         "assignee": "garbage-cleaner",
         "channel": "garbage_cleaner"
@@ -134,20 +103,11 @@
       "name": "GarbageCleanerStale",
       "enabled": true,
       "match": {
-        "assignee": {
-          "is_null": true
-        },
-        "task_completed": {
-          "is_null": true
-        },
-        "created_time": {
-          "older_than_minutes": 5
-        }
+        "assignee": {"is_null": true},
+        "task_completed": {"is_null": true},
+        "created_time": {"older_than_minutes": 5}
       },
-      "task": {
-        "enabled": true,
-        "mode": "single"
-      },
+      "task": {"enabled": true, "mode": "single"},
       "route": {
         "assignee": "garbage-cleaner",
         "channel": "garbage_cleaner"
@@ -166,20 +126,12 @@
       "name": "GarbageCleanerFailed",
       "enabled": true,
       "match": {
-        "assignee": {
-          "not_null": true
-        },
+        "assignee": {"not_null": true},
         "task_completed": {
-          "in": [
-            "FAILED",
-            "EXECUTE_FAILED"
-          ]
+          "in": ["FAILED", "EXECUTE_FAILED"]
         }
       },
-      "task": {
-        "enabled": true,
-        "mode": "single"
-      },
+      "task": {"enabled": true, "mode": "single"},
       "route": {
         "assignee": "garbage-cleaner",
         "channel": "garbage_cleaner"
