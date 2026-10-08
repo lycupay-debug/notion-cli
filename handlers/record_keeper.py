@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from core.logger import error, info
-from event_bus import Event
+from event_bus import Event, publish_default
 
 _ALLOWED_RESULTS = {"SUCCESS", "UNCHANGED", "FAILED", "EXECUTE_FAILED"}
 _TASK_DIR = Path("config") / "tasks"
@@ -47,4 +47,18 @@ async def handle_execution_result(event: Event) -> None:
     info(
         f"[RecordKeeper] RECORDED record_id={record_id} "
         f"task_completed={result} path={task_path}"
+    )
+
+    publish_default(
+        Event(
+            "RECORD_DONE",
+            {
+                "record_id": record_id,
+                "task_completed": result,
+            },
+        )
+    )
+    info(
+        f"[RecordKeeper] RECORD_DONE_PUBLISHED record_id={record_id} "
+        f"task_completed={result}"
     )
