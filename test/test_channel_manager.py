@@ -20,8 +20,9 @@ class TestChannelManager(unittest.IsolatedAsyncioTestCase):
             await asyncio.sleep(0.01)
             order.append(f"end:{task.record_id}")
             running -= 1
+            return {"status": "UNCHANGED"}
 
-        with patch("channel.manager.load_callable", return_value=executor):
+        with patch("channel.manager.load_callable", return_value=executor), patch("event_bus.publish_default"):
             manager.load_config({
                 "channels": {
                     "a": {
@@ -53,8 +54,9 @@ class TestChannelManager(unittest.IsolatedAsyncioTestCase):
             started.set()
             await release.wait()
             active -= 1
+            return {"status": "UNCHANGED"}
 
-        with patch("channel.manager.load_callable", return_value=executor):
+        with patch("channel.manager.load_callable", return_value=executor), patch("event_bus.publish_default"):
             manager.load_config({
                 "channels": {
                     "a": {"enabled": True, "module": "unused", "function": "unused"},
@@ -70,6 +72,62 @@ class TestChannelManager(unittest.IsolatedAsyncioTestCase):
         release.set()
         await manager.wait_for_idle("a")
         await manager.wait_for_idle("b")
+
+    async def test_execution_result_is_published_and_next_task_starts(self):
+        manager = ChannelManager()
+        order = []
+
+        async def executor(task):
+            order.append(f"execute:{task.record_id}")
+            return {"status": "SUCCESS"}
+
+        def publish(event):
+            order.append(f"publish:{event.data['record_id']}:{event.data['result']}")
+            return asyncio.create_task(asyncio.sleep(0))
+
+        with patch("channel.manager.load_callable", return_value=executor), patch("event_bus.publish_default", side_effect=publish):
+            manager.load_config({
+                "channels": {
+                    "a": {"enabled": True, "module": "unused", "function": "unused"},
+                }
+            })
+            await manager.submit(ChannelTask("1", "u", "a", {}))
+            await manager.submit(ChannelTask("2", "u", "a", {}))
+            await manager.wait_for_idle("a")
+
+        self.assertEqual(
+            order,
+            ["execute:1", "publish:1:SUCCESS", "execute:2", "publish:2:SUCCESS"],
+        )
+
+    async def test_execute_exception_publishes_execute_failed_and_next_task_runs(self):
+        manager = ChannelManager()
+        order = []
+
+        async def executor(task):
+            order.append(f"execute:{task.record_id}")
+            if task.record_id == "1":
+                raise RuntimeError("boom")
+            return {"status": "UNCHANGED"}
+
+        def publish(event):
+            order.append(f"publish:{event.data['record_id']}:{event.data['result']}")
+            return asyncio.create_task(asyncio.sleep(0))
+
+        with patch("channel.manager.load_callable", return_value=executor), patch("event_bus.publish_default", side_effect=publish):
+            manager.load_config({
+                "channels": {
+                    "a": {"enabled": True, "module": "unused", "function": "unused"},
+                }
+            })
+            await manager.submit(ChannelTask("1", "u", "a", {}))
+            await manager.submit(ChannelTask("2", "u", "a", {}))
+            await manager.wait_for_idle("a")
+
+        self.assertEqual(
+            order,
+            ["execute:1", "publish:1:EXECUTE_FAILED", "execute:2", "publish:2:UNCHANGED"],
+        )
 
 
 if __name__ == "__main__":
